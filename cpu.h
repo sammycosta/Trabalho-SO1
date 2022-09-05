@@ -35,7 +35,7 @@ atributo _context) e criar um novo contexto usando makecontext().*/
             _context.uc_stack.ss_size = STACK_SIZE;
             _context.uc_stack.ss_flags = 0;
             _stack = (char *)_context.uc_stack.ss_sp;
-            makecontext(&_context, (func)(null), sizeof...(an), an...);
+            makecontext(&_context, (void(*)())(func), sizeof...(an), an...);
         }
         // usar makecontext(ucontext_t *, (void *)(), int, ...); ?
 
