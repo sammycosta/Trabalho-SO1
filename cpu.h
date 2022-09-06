@@ -27,14 +27,14 @@ atributo _context) e criar um novo contexto usando makecontext().*/
         template <typename... Tn>
         Context(void (*func)(Tn...), Tn... an)
         {
-            //         ping = new CPU::Context(func_ping, (char *) ping_name.data());
+            // if pra ver se função válida?
 
+            this->_stack = new char[STACK_SIZE];
             getcontext(&_context);
-            _context.uc_link = 0;
-            _context.uc_stack.ss_sp = malloc(STACK_SIZE);
-            _context.uc_stack.ss_size = STACK_SIZE;
-            _context.uc_stack.ss_flags = 0;
-            _stack = (char *)_context.uc_stack.ss_sp;
+            this->_context.uc_link = 0;
+            this->_context.uc_stack.ss_sp = (void *)(this->_stack);
+            this->_context.uc_stack.ss_size = STACK_SIZE;
+            this->_context.uc_stack.ss_flags = 0;
             makecontext(&_context, (void(*)())(func), sizeof...(an), an...);
         }
         // usar makecontext(ucontext_t *, (void *)(), int, ...); ?

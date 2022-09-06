@@ -21,7 +21,8 @@ void CPU::Context::load()
 CPU::Context::~Context()
 {
     // adicionar implementação
-    free(_stack);
+    // if ponteiro válido:
+    delete(_stack);
 }
 
 /* irá trocar o contexto usando os dois contextos recebidos como parâmetro (de “from” para “to”). */
