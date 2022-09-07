@@ -18,26 +18,17 @@ public:
     public:
         Context() { _stack = 0; }
 
-        /* construtor parametrizado que recebe uma função
-como primeiro parâmetro e os argumentos para essa função na seguinte. A declaração, para
-quem tem dificuldades com C++, usa variadic templates. A função passada como parâmetro é a
-função executada no contexto. Esse construtor deve alocar memória para a pilha do novo
-contexto a ser criado, além de inicializar todos os campos da estrutura ucontext_t (através do
-atributo _context) e criar um novo contexto usando makecontext().*/
         template <typename... Tn>
         Context(void (*func)(Tn...), Tn... an)
         {
-            // if pra ver se função válida?
-
             this->_stack = new char[STACK_SIZE];
-            getcontext(&_context);
+            getcontext(&(this->_context));
             this->_context.uc_link = 0;
             this->_context.uc_stack.ss_sp = (void *)(this->_stack);
             this->_context.uc_stack.ss_size = STACK_SIZE;
             this->_context.uc_stack.ss_flags = 0;
-            makecontext(&_context, (void(*)())(func), sizeof...(an), an...);
+            makecontext(&_context, (void (*)())(func), sizeof...(an), an...);
         }
-        // usar makecontext(ucontext_t *, (void *)(), int, ...); ?
 
         ~Context();
 

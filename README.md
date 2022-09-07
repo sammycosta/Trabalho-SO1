@@ -1,11 +1,11 @@
-- [ ] Cpu.h
-- [ ] Cpu.cc
-- [ ] Traits
-- [ ] MakeFile
+- [X] Cpu.h
+- [X] Cpu.cc
+- [X] Traits
+- [X] MakeFile -> alterações no futuro possíveis
 
-### Requisitos
-- [ ] Compilando sem erros
-- [ ] Execução sem falha de segmentação
-- [ ] Sem variáveis globais e sem leak de memória (valgrind)
-- [ ] Saída correta do exemplo
-- [ ] Organização
+### Requisitos T1
+- [X] Compilando sem erros
+- [X] Execução sem falha de segmentação
+- [X] Sem variáveis globais e sem leak de memória (valgrind)
+- [X] Saída correta do exemplo
+- [X] Organização
