@@ -22,12 +22,17 @@ public:
         Context(void (*func)(Tn...), Tn... an)
         {
             this->_stack = new char[STACK_SIZE];
-            getcontext(&(this->_context));
-            this->_context.uc_link = 0;
-            this->_context.uc_stack.ss_sp = (void *)(this->_stack);
-            this->_context.uc_stack.ss_size = STACK_SIZE;
-            this->_context.uc_stack.ss_flags = 0;
-            makecontext(&_context, (void (*)())(func), sizeof...(an), an...);
+            if (this->_stack != nullptr) {
+                getcontext(&(this->_context));
+                this->_context.uc_link = 0;
+                this->_context.uc_stack.ss_sp = (void *)(this->_stack);
+                this->_context.uc_stack.ss_size = STACK_SIZE;
+                this->_context.uc_stack.ss_flags = 0;
+                makecontext(&(this->_context), (void (*)())(func), sizeof...(an), an...);
+            } else {
+                std::cout << "Erro ao criar contexto" << std::endl;
+            }
+            
         }
 
         ~Context();

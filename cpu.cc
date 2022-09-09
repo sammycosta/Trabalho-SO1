@@ -12,7 +12,10 @@ void CPU::Context::save()
 /* Carrega contexto que está salvo na variável _context da classe */
 void CPU::Context::load()
 {
-    setcontext(&(this->_context));
+    if (&this->_context != nullptr) 
+    {
+        setcontext(&(this->_context));
+    }
 }
 
 /* Destrutor */
