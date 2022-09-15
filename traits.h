@@ -17,7 +17,7 @@ class CPU; // declaração das classes criadas nos trabalhos devem ser colocadas
 template <typename T>
 struct Traits
 {
-    static const unsigned int STACK_SIZE;
+
 };
 
 template <>

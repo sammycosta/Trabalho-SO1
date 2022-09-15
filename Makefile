@@ -1,11 +1,17 @@
 CC = g++
 CFLAGS = -Wall -g
 
-main: main_class.cc main_class.h cpu.o main.cc
-	$(CC) $(CFLAGS) -o main main_class.cc main.cc cpu.o
+main: cpu.o main_class.o  main.o
+	$(CC) $(CFLAGS) -o main main_class.o main.o cpu.o
 
 cpu.o: cpu.cc traits.h cpu.h
 	$(CC) $(CFLAGS) -c cpu.cc 
+
+main_class.o: main_class.cc main_class.h cpu.h traits.h
+	$(CC) $(CFLAGS) -c main_class.cc
+
+main.o: main.cc main_class.h cpu.h
+	$(CC) $(CFLAGS) -c main.cc 
 
 clean:
 	rm -f main *.o
