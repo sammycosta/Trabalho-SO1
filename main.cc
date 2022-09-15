@@ -1,14 +1,12 @@
-#include "cpu.h"
-#include <iostream>
+#include "thread.h"
+#include "system.h"
 #include "main_class.h"
 
 __USING_API 
 
-
 int main(void)
 {
-
-    Main::run();
-
-    return 0;
+    System::init();
+    Main *m = new Main();
+    delete m;
 }
