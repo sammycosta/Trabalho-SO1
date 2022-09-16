@@ -33,23 +33,38 @@ public:
      * Deve encapsular a chamada para a troca de contexto realizada pela class CPU.
      * Valor de retorno é negativo se houve erro, ou zero.
      */ 
-    static int switch_context(Thread * prev, Thread * next);
+    static int switch_context(Thread * prev, Thread * next) {
+        if (prev && next) {
+            CPU::switch_context(prev->_context, next->_context);
+            return -1; 
+        } else {
+            return 0;
+        }
+       
+    }
 
     /*
      * Termina a thread.
      * exit_code é o código de término devolvido pela tarefa (ignorar agora, vai ser usado mais tarde).
      * Quando a thread encerra, o controle deve retornar à main. 
      */  
-    void thread_exit (int exit_code);
+    void thread_exit (int exit_code) {
+        delete(this->context());
+        // como retornar o controle???
+    }
 
     /*
      * Retorna o ID da thread.
      */ 
-    int id();
+    int id() { return this->_id; }
 
     /*
      * Qualquer outro método que você achar necessário para a solução.
      */ 
+
+    Context * context() {
+        return this->_context;
+    }
 
 private:
     int _id;
@@ -60,6 +75,13 @@ private:
      * Qualquer outro atributo que você achar necessário para a solução.
      */ 
 };
+
+template<typename ... Tn>
+    Thread::Thread(void (* entry)(Tn ...), Tn ... an) {
+        this->_context = new Context(entry, an...);
+        //não sei se funciona!
+    }
+
 
 __END_API
 
