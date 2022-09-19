@@ -34,7 +34,7 @@ template <>
 struct Traits<Debug> : public Traits<void>
 {
     // Os níveis de debug devem ser declarados e habilitados no arquivo traits.h
-    static const bool error = false;
+    static const bool error = true;
     static const bool warning = false;
     static const bool info = false;
     static const bool trace = true;

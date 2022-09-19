@@ -18,13 +18,14 @@ int Thread::switch_context(Thread *prev, Thread *next)
   }
   else
   {
-    db<Thread>(ERR) << "Erro na troca de contexto!";
+    db<Thread>(ERR) << "Erro na troca de contexto!\n";
     return -1; // Erro. Opção: Try/Catch?
   }
 }
 
 void Thread::thread_exit(int exit_code)
 {
+  db<Thread>(TRC) << "Thread " << this->id() << " finalizada\n";
   switch_context(this, main());
   delete (this->context());
   // o controle deve retornar a main. ou seja...?
