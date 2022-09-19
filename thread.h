@@ -74,14 +74,14 @@ template <typename... Tn>
 inline Thread::Thread(void (*entry)(Tn...), Tn... an)
 {
     // provavelmente falta mais algumas coisas (ponteiro pra função? id? running?)
-    if (_last_id == -1)
-    {
-        set_main(this);
-        set_running(this);
-    }
 
     this->_context = new Context(entry, an...);
     if (this->_context) {
+        if (_last_id == -1)
+        {
+            set_main(this);
+            set_running(this);
+        }
         this->_id = _last_id + 1;
         _last_id += 1;
         db<Thread>(TRC) << "Construiu thread " << this->_last_id << "\n";
