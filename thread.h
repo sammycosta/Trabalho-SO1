@@ -75,12 +75,12 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
     if (_last_id == -1)
     {
         _main = this;
-        // _running = this;
+        _running = this;
     }
 
     this->_id = _last_id + 1;
     this->_context = new Context(entry, an...);
-    db<Thread>(TRC) << "Construiu thread " << _last_id << "\n";
+    db<Thread>(TRC) << "Construiu thread " << this->_last_id << "\n";
 
     // não sei se funciona!
 }
