@@ -70,6 +70,8 @@ private:
 template <typename... Tn>
 inline Thread::Thread(void (*entry)(Tn...), Tn... an)
 {
+    // provavelmente falta mais algumas coisas (ponteiro pra função? id? running?)
+    this->_running = entry;
     this->_context = new Context(entry, an...);
     // não sei se funciona!
 }

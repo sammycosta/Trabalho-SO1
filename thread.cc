@@ -19,6 +19,7 @@ int Thread::switch_context(Thread *prev, Thread *next)
 void Thread::thread_exit(int exit_code)
 {
   delete (this->context());
+  // o controle deve retornar a main. ou seja...?
   // como retornar o controle???
 }
 
