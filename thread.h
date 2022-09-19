@@ -25,6 +25,7 @@ public:
      * Retorna a Thread que está em execução.
      */
     static Thread *running() { return _running; }
+    static Thread *main() { return _main; }
 
     /*
      * Método para trocar o contexto entre duas thread, a anterior (prev)
@@ -55,6 +56,7 @@ public:
         return this->_context;
     }
     static void set_running(Thread *now_running) { _running = now_running; };
+    static void set_main(Thread *now_running) { _running = now_running; };
 
 private:
     int _id;                    // contém o ID da Thread.
@@ -74,8 +76,8 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
     // provavelmente falta mais algumas coisas (ponteiro pra função? id? running?)
     if (_last_id == -1)
     {
-        _main = this;
-        _running = this;
+        set_main(this);
+        set_running(this);
     }
 
     this->_id = _last_id + 1;
