@@ -4,14 +4,19 @@
 
 __BEGIN_API
 
+int Thread::_last_id = -1;
+
 int Thread::switch_context(Thread *prev, Thread *next)
 {
   if (prev && next)
   {
     CPU::switch_context(prev->_context, next->_context);
+    // set_running(next);
+    return 1;
   }
   else
   {
+    db<Thread>(ERR) << "Erro na troca de contexto!";
     return -1; // Erro. Opção: Try/Catch?
   }
 }

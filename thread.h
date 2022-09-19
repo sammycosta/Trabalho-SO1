@@ -2,7 +2,6 @@
 #define thread_h
 
 #include "cpu.h"
-#include "traits.h"
 #include "debug.h"
 
 __BEGIN_API
@@ -55,26 +54,37 @@ public:
     {
         return this->_context;
     }
+    static void set_running(Thread *now_running) { _running = now_running; };
 
 private:
     int _id;                    // contém o ID da Thread.
     Context *volatile _context; //  contém o contexto da Thread.
     static Thread *_running;    // ponteiro para a Thread que estiver em execução.
     // Toda vez que uma nova Thread for executada, este ponteiro deve ser atualizado.
-
     /*
      * Qualquer outro atributo que você achar necessário para a solução.
      */
+    static Thread *_main; // ponteiro para main (primeira thread salva sempre)
+    static int _last_id;
 };
 
 template <typename... Tn>
 inline Thread::Thread(void (*entry)(Tn...), Tn... an)
 {
     // provavelmente falta mais algumas coisas (ponteiro pra função? id? running?)
-    this->_running = entry;
+    if (_last_id == -1)
+    {
+        _main = this;
+        // _running = this;
+    }
+
+    this->_id = _last_id + 1;
     this->_context = new Context(entry, an...);
+    db<Thread>(TRC) << "Construiu thread " << _last_id << "\n";
+
     // não sei se funciona!
 }
+
 __END_API
 
 #endif
