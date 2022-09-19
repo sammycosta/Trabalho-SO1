@@ -11,13 +11,15 @@
 
 __BEGIN_API
 
-class CPU; // declaração das classes criadas nos trabalhos devem ser colocadas aqui
+class CPU;   // declaração das classes criadas nos trabalhos devem ser colocadas aqui
+class Debug; // precisei adicionar, dúvida de quais mais.
+// Acredito que preciso declarar classes tudo aqui pra poder criar debug delas aqui
+class Thread;
 
 // declaração da classe Traits
 template <typename T>
 struct Traits
 {
-
 };
 
 template <>
@@ -27,6 +29,15 @@ struct Traits<CPU>
     static const unsigned int STACK_SIZE = 64000;
 };
 
+template <>
+struct Traits<Debug> : public Traits<void>
+{
+    // Os níveis de debug devem ser declarados e habilitados no arquivo traits.h
+    static const bool error = false;
+    static const bool warning = false;
+    static const bool info = false;
+    static const bool trace = false;
+};
 __END_API
 
 #endif
