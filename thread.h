@@ -79,6 +79,7 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
     }
 
     this->_id = _last_id + 1;
+    _last_id += 1;
     this->_context = new Context(entry, an...);
     db<Thread>(TRC) << "Construiu thread " << this->_last_id << "\n";
 
