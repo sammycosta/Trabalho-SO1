@@ -80,11 +80,16 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
         set_running(this);
     }
 
-    this->_id = _last_id + 1;
-    _last_id += 1;
     this->_context = new Context(entry, an...);
-    db<Thread>(TRC) << "Construiu thread " << this->_last_id << "\n";
-
+    if (this->_context) {
+        this->_id = _last_id + 1;
+        _last_id += 1;
+        db<Thread>(TRC) << "Construiu thread " << this->_last_id << "\n";
+    } else {
+        db<Thread>(ERR) << "Erro ao construir thread!" << "\n";
+        exit(-1);
+    }
+    
     // não sei se funciona!
 }
 
