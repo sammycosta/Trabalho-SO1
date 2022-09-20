@@ -4,7 +4,7 @@
 
 __BEGIN_API
 
-int Thread::_last_id = -1;
+int Thread::_last_id = 0;
 Thread *Thread::_running = nullptr;
 Thread *Thread::_main = nullptr;
 
@@ -19,7 +19,7 @@ int Thread::switch_context(Thread *prev, Thread *next)
   else
   {
     db<Thread>(ERR) << "Erro na troca de contexto!\n";
-    return -1; // Erro. Opção: Try/Catch?
+    return -1;
   }
 }
 

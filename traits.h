@@ -30,10 +30,10 @@ struct Traits<CPU>
     static const unsigned int STACK_SIZE = 64000;
 };
 
+// Os níveis de debug devem ser declarados e habilitados neste arquivo
 template <>
 struct Traits<Debug> : public Traits<void>
 {
-    // Os níveis de debug devem ser declarados e habilitados no arquivo traits.h
     static const bool error = true;
     static const bool warning = false;
     static const bool info = false;

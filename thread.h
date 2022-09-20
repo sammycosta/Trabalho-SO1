@@ -25,6 +25,10 @@ public:
      * Retorna a Thread que está em execução.
      */
     static Thread *running() { return _running; }
+
+    /*
+     * Retorna a Thread main (primeira Thread criada)
+     */
     static Thread *main() { return _main; }
 
     /*
@@ -48,49 +52,56 @@ public:
     int id();
 
     /*
-     * Qualquer outro método que você achar necessário para a solução.
+     * Retorna o contexto da thread.
      */
+    Context *context() { return this->_context; }
 
-    Context *context()
-    {
-        return this->_context;
-    }
+    /*
+     * Atualiza atributo que guarda a Thread em execução (running)
+     @param Thread*
+     */
     static void set_running(Thread *now_running) { _running = now_running; };
-    static void set_main(Thread *now_running) { _running = now_running; };
+
+    /*
+     * Salva uma Thread como main no atributo _main
+     @param Thread*
+     */
+    static void set_main(Thread *now_main) { _main = now_main; };
 
 private:
     int _id;                    // contém o ID da Thread.
     Context *volatile _context; //  contém o contexto da Thread.
     static Thread *_running;    // ponteiro para a Thread que estiver em execução.
-    // Toda vez que uma nova Thread for executada, este ponteiro deve ser atualizado.
-    /*
-     * Qualquer outro atributo que você achar necessário para a solução.
-     */
+
     static Thread *_main; // ponteiro para main (primeira thread salva sempre)
-    static int _last_id;
+    static int _last_id;  // controle dos ids atribuitos às threads
 };
 
 template <typename... Tn>
 inline Thread::Thread(void (*entry)(Tn...), Tn... an)
 {
-    // provavelmente falta mais algumas coisas (ponteiro pra função? id? running?)
-
     this->_context = new Context(entry, an...);
-    if (this->_context) {
-        if (_last_id == -1)
+
+    // Testa se context foi criado com sucesso
+    if (this->_context)
+    {
+        if (_last_id == 0)
         {
             set_main(this);
             set_running(this);
         }
-        this->_id = _last_id + 1;
-        _last_id += 1;
+        this->_id = _last_id;
+
         db<Thread>(TRC) << "Construiu thread " << this->_last_id << "\n";
-    } else {
-        db<Thread>(ERR) << "Erro ao construir thread!" << "\n";
+
+        _last_id++;
+    }
+    else
+    {
+        db<Thread>(ERR) << "Erro ao construir thread!"
+                        << "\n";
         exit(-1);
     }
-    
-    // não sei se funciona!
 }
 
 __END_API
