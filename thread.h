@@ -27,11 +27,6 @@ public:
     static Thread *running() { return _running; }
 
     /*
-     * Retorna a Thread main (primeira Thread criada)
-     */
-    static Thread *main() { return _main; }
-
-    /*
      * Método para trocar o contexto entre duas thread, a anterior (prev)
      * e a próxima (next).
      * Deve encapsular a chamada para a troca de contexto realizada pela class CPU.
@@ -62,19 +57,12 @@ public:
      */
     static void set_running(Thread *now_running) { _running = now_running; };
 
-    /*
-     * Salva uma Thread como main no atributo _main
-     @param Thread*
-     */
-    static void set_main(Thread *now_main) { _main = now_main; };
-
 private:
     int _id;                    // contém o ID da Thread.
     Context *volatile _context; //  contém o contexto da Thread.
     static Thread *_running;    // ponteiro para a Thread que estiver em execução.
 
-    static Thread *_main; // ponteiro para main (primeira thread salva sempre)
-    static int _last_id;  // controle dos ids atribuitos às threads
+    static int _last_id; // controle dos ids atribuitos às threads
 };
 
 template <typename... Tn>
@@ -85,18 +73,13 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
     // Testa se context foi criado com sucesso
     if (this->_context)
     {
-        if (_last_id == 0)
-        {
-            set_main(this);
-            set_running(this);
-        }
         this->_id = _last_id;
         _last_id++;
-        db<Thread>(TRC) << "Construiu thread " << this->_id << "\n";
+        db<Thread>(TRC) << "Construiu Thread " << this->_id << "\n";
     }
     else
     {
-        db<Thread>(ERR) << "Erro ao construir thread!"
+        db<Thread>(ERR) << "Erro no construtor Thread::Thread()\n"
                         << "\n";
         exit(-1);
     }

@@ -7,24 +7,30 @@ __BEGIN_API
 void CPU::Context::save()
 {
     getcontext(&(this->_context));
+    db<CPU>(TRC) << "CPU::Context::save() chamado\n";
 }
 
 /* Carrega contexto que está salvo na variável _context da classe */
 void CPU::Context::load()
 {
-    if (&this->_context != nullptr) 
+    if (&this->_context != nullptr)
     {
         setcontext(&(this->_context));
     }
+    db<CPU>(TRC) << "CPU::Context::load() chamado\n";
 }
 
 /* Destrutor */
 CPU::Context::~Context()
 {
-    // if ponteiro válido:
     if (this->_stack != nullptr)
     {
+        db<CPU>(TRC) << "CPU::Context::~Context() chamado\n";
         delete (this->_stack);
+    }
+    else
+    {
+        db<CPU>(WRN) << "CPU::Context::~Context() Tentou deletar ponteiro nulo\n";
     }
 }
 
@@ -35,6 +41,10 @@ void CPU::switch_context(Context *from, Context *to)
     {
         // Salva o contexto atual em “a” (primeiro argumento) e restaura o contexto previamente salvo em “b” (segundo argumento)
         swapcontext(&(from->_context), &(to->_context));
+    }
+    else
+    {
+        db<CPU>(ERR) << "Erro em CPU::Context::switch_context()\n";
     }
 }
 

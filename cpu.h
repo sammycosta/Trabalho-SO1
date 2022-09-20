@@ -21,7 +21,7 @@ public:
 
         template <typename... Tn>
         Context(void (*func)(Tn...), Tn... an);
-        
+
         ~Context();
 
         void save();
@@ -40,22 +40,24 @@ public:
 
 template <typename... Tn>
 inline CPU::Context::Context(void (*func)(Tn...), Tn... an)
+{
+    save();
+    this->_stack = new char[STACK_SIZE];
+    if (this->_stack)
     {
-        save();
-        this->_stack = new char[STACK_SIZE];
-        if (this->_stack) {
-            this->_context.uc_link = 0;
-            this->_context.uc_stack.ss_sp = (void *)(this->_stack);
-            this->_context.uc_stack.ss_size = STACK_SIZE;
-            this->_context.uc_stack.ss_flags = 0;
-            makecontext(&(this->_context), (void (*)())(func), sizeof...(an), an...);
-            db<CPU>(TRC) << "Contexto criado com sucesso.\n";
-        } else {
-            db<CPU>(ERR) << "Erro ao criar contexto!\n";
-            exit(-1);
-        }
-        
+        this->_context.uc_link = 0;
+        this->_context.uc_stack.ss_sp = (void *)(this->_stack);
+        this->_context.uc_stack.ss_size = STACK_SIZE;
+        this->_context.uc_stack.ss_flags = 0;
+        makecontext(&(this->_context), (void (*)())(func), sizeof...(an), an...);
+        db<CPU>(TRC) << "Contexto CPU::Context criado com sucesso.\n";
     }
+    else
+    {
+        db<CPU>(ERR) << "Erro no construtor CPU::Context::Context()\n";
+        exit(-1);
+    }
+}
 
 __END_API
 
