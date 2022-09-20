@@ -91,10 +91,8 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
             set_running(this);
         }
         this->_id = _last_id;
-
-        db<Thread>(TRC) << "Construiu thread " << this->_last_id << "\n";
-
         _last_id++;
+        db<Thread>(TRC) << "Construiu thread " << this->_id << "\n";
     }
     else
     {
