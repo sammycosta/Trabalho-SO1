@@ -4,6 +4,7 @@
 #include <ucontext.h>
 #include <iostream>
 #include "traits.h"
+#include "debug.h"
 
 __BEGIN_API
 
@@ -48,8 +49,9 @@ inline CPU::Context::Context(void (*func)(Tn...), Tn... an)
             this->_context.uc_stack.ss_size = STACK_SIZE;
             this->_context.uc_stack.ss_flags = 0;
             makecontext(&(this->_context), (void (*)())(func), sizeof...(an), an...);
+            db<CPU>(TRC) << "Contexto criado com sucesso.\n";
         } else {
-            std::cout << "Erro ao criar contexto" << std::endl;
+            db<CPU>(ERR) << "Erro ao criar contexto!\n";
             exit(-1);
         }
         
