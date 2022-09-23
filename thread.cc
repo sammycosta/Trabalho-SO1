@@ -13,9 +13,8 @@ int Thread::switch_context(Thread *prev, Thread *next)
   {
     db<Thread>(TRC) << "Thread::switch_context() da Thread " << prev->id() << " para a Thread " << next->id() << "\n";
 
-    CPU::switch_context(prev->_context, next->_context);
     set_running(next);
-    return 0;
+    return CPU::switch_context(prev->_context, next->_context);
   }
   else
   {
@@ -28,6 +27,7 @@ void Thread::thread_exit(int exit_code)
 {
   db<Thread>(TRC) << "Thread::thread_exit() chamado para a Thread" << this->id() << "\n";
   delete (this->context());
+  _last_id --;
 }
 
 int Thread::id() { return this->_id; }

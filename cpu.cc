@@ -35,16 +35,18 @@ CPU::Context::~Context()
 }
 
 /* Irá trocar o contexto usando os dois contextos recebidos como parâmetro (de “from” para “to”). */
-void CPU::switch_context(Context *from, Context *to)
+int CPU::switch_context(Context *from, Context *to)
 {
     if (from != nullptr && to != nullptr)
     {
         // Salva o contexto atual em “a” (primeiro argumento) e restaura o contexto previamente salvo em “b” (segundo argumento)
         swapcontext(&(from->_context), &(to->_context));
+        return 0;
     }
     else
     {
         db<CPU>(ERR) << "Erro em CPU::Context::switch_context()\n";
+        return -1;
     }
 }
 
