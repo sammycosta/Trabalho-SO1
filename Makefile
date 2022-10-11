@@ -16,10 +16,10 @@ main.o: main.cc main_class.h cpu.h system.h
 debug.o: debug.cc debug.h traits.h
 	$(CC) $(CFLAGS) -c debug.cc
 
-system.o: system.cc traits.h
+system.o: system.cc traits.h thread.h debug.h
 	$(CC) $(CFLAGS) -c system.cc
 
-thread.o: thread.cc thread.h traits.h
+thread.o: thread.cc thread.h traits.h list.h
 	$(CC) $(CFLAGS) -c thread.cc
 
 clean:

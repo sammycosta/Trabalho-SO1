@@ -26,6 +26,9 @@ int Thread::switch_context(Thread *prev, Thread *next)
 void Thread::thread_exit(int exit_code)
 {
   db<Thread>(TRC) << "Thread::thread_exit() chamado para a Thread" << this->id() << "\n";
+  this->_state = FINISHING;
+  _ready.remove(this);
+  switch_context(this, &_main); // imagino que isso seja feito
   delete (this->context());
   _last_id--;
 }
@@ -68,22 +71,23 @@ inline void Thread::init(void (*main)(void *))
 inline void Thread::yield()
 {
   // debug
-  Thread *next_exec = Thread::_ready.head()->object();
-
-  if (_running->_state != FINISHING && (&_main)->_state != RUNNING)
+  if (_running->_state != FINISHING)
   {
-    // Atualiza prioridade da tarefa
-    _running->_link = _running, std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+    Thread *next_exec = Thread::_ready.head()->object();
+
+    if ((&_main)->_state != RUNNING)
+    {
+      // Atualiza prioridade da tarefa
+      _running->_link = _running, std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+    }
+    _running->_state = READY;
+    _ready.remove(_running);           // preciso tirar pra reinserir né?
+    _ready.insert(&(_running->_link)); // reinsere
+    Thread *last_running = _running;
+    Thread::set_running(next_exec);
+    next_exec->_state = RUNNING;
+    switch_context(last_running, _running);
   }
-
-  _running->_state = READY;
-  _ready.remove(_running);           // preciso tirar pra reinserir né?
-  _ready.insert(&(_running->_link)); // reinsere
-  Thread *last_running = _running;
-
-  Thread::set_running(next_exec);
-  next_exec->_state = RUNNING;
-  switch_context(last_running, _running);
 }
 
 __END_API
