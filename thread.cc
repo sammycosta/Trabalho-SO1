@@ -32,7 +32,7 @@ void Thread::thread_exit(int exit_code)
 
 int Thread::id() { return this->_id; }
 
-static void Thread::dispatcher()
+inline void Thread::dispatcher()
 {
 
   // debug TRC
@@ -54,11 +54,11 @@ static void Thread::dispatcher()
   Thread::switch_context(&_dispatcher, &_main);
 }
 
-static void Thread::init(void (*main)(void *))
+inline void Thread::init(void (*main)(void *))
 {
   // a gente deve usar o construtor pra inicializar? Como fazer isso???
-  _main = Thread(main);
-  _dispatcher = Thread(); // como criar a dispatcher?
+  _main = Thread((void (*)())(main));
+  _dispatcher = Thread(dispatcher); // como criar a dispatcher?
   _main._state = RUNNING;
   _running = &_main;
 

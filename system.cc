@@ -2,6 +2,7 @@
 #include "traits.h"
 #include "system.h"
 #include "debug.h"
+#include "thread.h" // pra parar de dar erro
 
 __BEGIN_API
 
