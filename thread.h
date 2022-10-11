@@ -100,7 +100,9 @@ public:
     /*
      * Destrutor de uma thread. Realiza todo os procedimentos para manter a consistência da classe.
      */
-    ~Thread() { thread_exit(0); };
+    ~Thread(){
+        // _last_id--;
+    };
 
     /*
      * Qualquer outro método que você achar necessário para a solução.
@@ -139,10 +141,13 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
         this->_id = _last_id;
         _last_id++;
         // alterado link porque como estava antes não compilava
-        _link = this, std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
-        _state = READY;
+
+        int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+        this->_link = Ready_Queue::Element(this, now);
+        this->_state = READY;
         _ready.insert(&_link);
-        db<Thread>(TRC) << "Construiu Thread " << this->_id << "\n";
+        db<Thread>(TRC) << "Thread::Construiu Thread " << this->_id << "\n";
+        db<Thread>(TRC) << "contador: " << _last_id << "\n";
     }
     else
     {

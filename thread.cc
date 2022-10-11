@@ -5,6 +5,7 @@
 
 __BEGIN_API
 
+/* Inicialização de variáveis */
 typedef Ordered_List<Thread> Ready_Queue;
 
 int Thread::_last_id = 0;
@@ -12,7 +13,7 @@ Thread *Thread::_running = nullptr;
 Thread Thread::_main;
 CPU::Context Thread::_main_context;
 Thread Thread::_dispatcher;
-Ready_Queue Thread::_ready;
+Ready_Queue Thread::_ready = Ready_Queue();
 
 int Thread::switch_context(Thread *prev, Thread *next)
 {
@@ -34,10 +35,7 @@ void Thread::thread_exit(int exit_code)
 {
   db<Thread>(TRC) << "Thread::thread_exit() chamado para a Thread" << this->id() << "\n";
   this->_state = FINISHING;
-  _ready.remove(this);
-  switch_context(this, &_main); // imagino que isso seja feito
-  delete (this->context());
-  _last_id--;
+  switch_context(this, &_dispatcher); // imagino que isso seja feito
 }
 
 int Thread::id() { return this->_id; }
@@ -45,11 +43,14 @@ int Thread::id() { return this->_id; }
 inline void Thread::dispatcher()
 {
 
-  // debug TRC
+  db<Thread>(TRC) << "Dispatcher chamado\n";
+
   while (Thread::_last_id > 1)
   {
     Thread *next_exec = Thread::_ready.head()->object();
     _dispatcher._state = READY;
+    int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+    _dispatcher._link.rank(now);
     _ready.insert(&_dispatcher._link);
     Thread::set_running(next_exec);
     next_exec->_state = RUNNING;
@@ -67,6 +68,7 @@ inline void Thread::dispatcher()
 void Thread::init(void (*main)(void *))
 {
   // a gente deve usar o construtor pra inicializar? Como fazer isso???
+  db<Thread>(TRC) << "Thread::init foi chamado\n";
   _main = Thread((void (*)())(main));
   _dispatcher = Thread(dispatcher); // como criar a dispatcher?
   _main._state = RUNNING;
@@ -77,10 +79,21 @@ void Thread::init(void (*main)(void *))
 
 void Thread::yield()
 {
-  // debug
+  db<Thread>(TRC) << "Yield chamado com running sendo" << _running->_id << "\n";
   if (_running->_state != FINISHING)
   {
     Thread *next_exec = Thread::_ready.head()->object();
+    Ready_Queue::Element *e = Thread::_ready.head();
+
+    // while (true)
+    // {
+    //   db<Thread>(TRC) << e->object()->_id << " thread na fila \n";
+    //   if (e->next() == nullptr)
+    //   {
+    //     break;
+    //   }
+    //   Ready_Queue::Element *e = e->next();
+    // }
 
     if ((&_main)->_state != RUNNING)
     {
@@ -94,6 +107,7 @@ void Thread::yield()
     Thread *last_running = _running;
     Thread::set_running(next_exec);
     next_exec->_state = RUNNING;
+    db<Thread>(TRC) << "Yield, running agora é" << _running->_id << "\n";
     switch_context(last_running, _running);
   }
 }
