@@ -1,11 +1,18 @@
 #include <iostream>
 #include "thread.h"
 #include "traits.h"
+#include "list.h"
 
 __BEGIN_API
 
+typedef Ordered_List<Thread> Ready_Queue;
+
 int Thread::_last_id = 0;
 Thread *Thread::_running = nullptr;
+Thread Thread::_main;
+CPU::Context Thread::_main_context;
+Thread Thread::_dispatcher;
+Ready_Queue Thread::_ready;
 
 int Thread::switch_context(Thread *prev, Thread *next)
 {
@@ -57,7 +64,7 @@ inline void Thread::dispatcher()
   Thread::switch_context(&_dispatcher, &_main);
 }
 
-inline void Thread::init(void (*main)(void *))
+void Thread::init(void (*main)(void *))
 {
   // a gente deve usar o construtor pra inicializar? Como fazer isso???
   _main = Thread((void (*)())(main));
@@ -68,7 +75,7 @@ inline void Thread::init(void (*main)(void *))
   _main._context->load(); // Set user context -> deve começar a executar sua função
 }
 
-inline void Thread::yield()
+void Thread::yield()
 {
   // debug
   if (_running->_state != FINISHING)
