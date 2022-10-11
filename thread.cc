@@ -85,7 +85,8 @@ void Thread::yield()
     if ((&_main)->_state != RUNNING)
     {
       // Atualiza prioridade da tarefa
-      _running->_link = _running, std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+      int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+      _running->_link.rank(now);
     }
     _running->_state = READY;
     _ready.remove(_running);           // preciso tirar pra reinserir né?
