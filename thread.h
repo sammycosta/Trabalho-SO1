@@ -125,8 +125,9 @@ private:
 };
 
 template <typename... Tn>
-inline Thread::Thread(void (*entry)(Tn...), Tn... an) : /* inicialização de _link */
+inline Thread::Thread(void (*entry)(Tn...), Tn... an)
 {
+    /* inicialização de _link */
     // IMPLEMENTAÇÃO DO CONSTRUTOR
 
     // construtor antigo (precisa ser alterado)
@@ -137,7 +138,8 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an) : /* inicialização de _l
     {
         this->_id = _last_id;
         _last_id++;
-        _link(this, (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count()));
+        // alterado link porque como estava antes não compilava
+        _link = this, std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
         _state = READY;
         _ready.insert(&_link);
         db<Thread>(TRC) << "Construiu Thread " << this->_id << "\n";

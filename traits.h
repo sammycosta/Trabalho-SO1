@@ -15,6 +15,7 @@ class CPU; // declaração das classes criadas nos trabalhos devem ser colocadas
 class Debug;
 class Thread;
 class System;
+class Lists;
 
 // declaração da classe Traits
 template <typename T>
@@ -49,6 +50,12 @@ struct Traits<System> : public Traits<void>
 
 template <>
 struct Traits<Thread> : public Traits<void>
+{
+    static const bool debugged = false;
+};
+
+template <>
+struct Traits<Lists> : public Traits<void>
 {
     static const bool debugged = false;
 };

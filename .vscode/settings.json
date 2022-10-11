@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.html": "html",
+    ".sequelizerc": "javascript",
+    ".stylelintrc": "json",
+    ".prettierrc": "json",
+    "*.tsx": "typescriptreact",
+    "*.java": "java",
+    "chrono": "cpp"
+  }
+}
