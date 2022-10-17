@@ -49,6 +49,7 @@ inline void Thread::dispatcher()
 
   while (_last_id > 1)
   {
+    // _ready.insert((&_running)._link);
     db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
     Thread *next_exec = Thread::_ready.remove_head()->object();
     _dispatcher._state = READY;
@@ -56,13 +57,17 @@ inline void Thread::dispatcher()
     _dispatcher._link.rank(now);
     _ready.insert(&_dispatcher._link);
     db<Thread>(TRC) << "saiu do insert\n";
+
     Thread::set_running(next_exec);
     next_exec->_state = RUNNING;
+
+    Thread::switch_context(&_dispatcher, next_exec);
+
     if (next_exec->_state == FINISHING)
     {
       _ready.remove(&next_exec->_link);
     }
-    Thread::switch_context(&_dispatcher, next_exec);
+
     db<Thread>(TRC) << "last_id: " << Thread::_last_id << "\n";
   }
   _dispatcher._state = FINISHING;
