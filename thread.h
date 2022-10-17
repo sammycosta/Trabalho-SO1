@@ -100,9 +100,7 @@ public:
     /*
      * Destrutor de uma thread. Realiza todo os procedimentos para manter a consistência da classe.
      */
-    ~Thread(){
-        // _last_id--;
-    };
+    ~Thread(){};
 
     /*
      * Qualquer outro método que você achar necessário para a solução.

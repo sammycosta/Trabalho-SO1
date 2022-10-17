@@ -35,6 +35,8 @@ void Thread::thread_exit(int exit_code)
 {
   db<Thread>(TRC) << "Thread::thread_exit() chamado para a Thread" << this->id() << "\n";
   this->_state = FINISHING;
+  _last_id--;
+  // yield();
   switch_context(this, &_dispatcher); // imagino que isso seja feito
 }
 
@@ -45,23 +47,27 @@ inline void Thread::dispatcher()
 
   db<Thread>(TRC) << "Dispatcher chamado\n";
 
-  while (Thread::_last_id > 1)
+  while (_last_id > 1)
   {
-    Thread *next_exec = Thread::_ready.head()->object();
+    db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
+    Thread *next_exec = Thread::_ready.remove_head()->object();
     _dispatcher._state = READY;
     int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     _dispatcher._link.rank(now);
     _ready.insert(&_dispatcher._link);
+    db<Thread>(TRC) << "saiu do insert\n";
     Thread::set_running(next_exec);
     next_exec->_state = RUNNING;
-    Thread::switch_context(&_dispatcher, next_exec);
     if (next_exec->_state == FINISHING)
     {
       _ready.remove(&next_exec->_link);
     }
+    Thread::switch_context(&_dispatcher, next_exec);
+    db<Thread>(TRC) << "last_id: " << Thread::_last_id << "\n";
   }
   _dispatcher._state = FINISHING;
   _ready.remove(&_dispatcher._link);
+  db<Thread>(TRC) << "voltando pra main... " << Thread::_main.id() << "\n";
   Thread::switch_context(&_dispatcher, &_main);
 }
 
@@ -73,43 +79,50 @@ void Thread::init(void (*main)(void *))
   _dispatcher = Thread(dispatcher); // como criar a dispatcher?
   _main._state = RUNNING;
   _running = &_main;
+  /*db<Thread>(TRC) << _ready.head()->object()->id() << "\n";
+  if (!_ready.empty())
+  {
+    _ready.remove_head();
+    db<Thread>(TRC) << _ready.size();
+    db<Thread>(TRC) << "main removida ";
+  }*/
+
   // trocar contexto pra main
+
   _main._context->load(); // Set user context -> deve começar a executar sua função
 }
 
 void Thread::yield()
 {
-  db<Thread>(TRC) << "Yield chamado com running sendo" << _running->_id << "\n";
+  db<Thread>(TRC) << "Yield chamado com running sendo " << _running->_id << "\n";
+  db<Thread>(TRC) << "head: " << _ready.head()->object()->id() << "\n";
+  db<Thread>(TRC) << "ready_size: " << _ready.size() << "\n";
+  Thread *next_exec = Thread::_ready.remove_head()->object();
+
+  // db<Thread>(TRC) << "running: " << _running->_id << " running state: " << _running->_state << " main state: " << _main._state << " \n";
+
+  if ((_main)._state != RUNNING && _running->_state != FINISHING)
+  {
+    // Atualiza prioridade da tarefa
+    db<Thread>(TRC) << "Yield dentro do if para inserir, com running state: " << _running->_state << "\n";
+    int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+    _running->_link.rank(now);
+  }
+
   if (_running->_state != FINISHING)
   {
-    Thread *next_exec = Thread::_ready.head()->object();
-    Ready_Queue::Element *e = Thread::_ready.head();
-
-    // while (true)
-    // {
-    //   db<Thread>(TRC) << e->object()->_id << " thread na fila \n";
-    //   if (e->next() == nullptr)
-    //   {
-    //     break;
-    //   }
-    //   Ready_Queue::Element *e = e->next();
-    // }
-
-    if ((&_main)->_state != RUNNING)
-    {
-      // Atualiza prioridade da tarefa
-      int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
-      _running->_link.rank(now);
-    }
     _running->_state = READY;
-    _ready.remove(_running);           // preciso tirar pra reinserir né?
+    //_ready.remove(_running);           // preciso tirar pra reinserir né?
     _ready.insert(&(_running->_link)); // reinsere
-    Thread *last_running = _running;
-    Thread::set_running(next_exec);
-    next_exec->_state = RUNNING;
-    db<Thread>(TRC) << "Yield, running agora é" << _running->_id << "\n";
-    switch_context(last_running, _running);
   }
+
+  db<Thread>(TRC) << "passou if"
+                  << "\n";
+  Thread *last_running = _running;
+  Thread::set_running(next_exec);
+  next_exec->_state = RUNNING;
+  db<Thread>(TRC) << "Yield, running agora é" << _running->_id << "\n";
+  switch_context(last_running, _running);
 }
 
 __END_API
