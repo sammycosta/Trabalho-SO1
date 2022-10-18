@@ -53,6 +53,7 @@ inline void Thread::dispatcher()
     db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
     Thread *next_exec = Thread::_ready.remove_head()->object();
     _dispatcher._state = READY;
+    _ready.remove(&_dispatcher);
     int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     _dispatcher._link.rank(now);
     _ready.insert(&_dispatcher._link);
@@ -66,13 +67,16 @@ inline void Thread::dispatcher()
     if (next_exec->_state == FINISHING)
     {
       db<Thread>(TRC) << "id Thread removida: " << next_exec->_id << "\n";
-      _ready.remove(&next_exec->_link);
+      _ready.remove(next_exec);
+      db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
     }
 
     db<Thread>(TRC) << "last_id: " << Thread::_last_id << "\n";
   }
   _dispatcher._state = FINISHING;
-  _ready.remove(&_dispatcher._link);
+  _ready.remove(&_dispatcher);
+  db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
+  db<Thread>(TRC) << "fila: " << _ready.head()->object() << "/n";
   db<Thread>(TRC) << "voltando pra main... " << Thread::_main.id() << "\n";
   Thread::switch_context(&_dispatcher, &_main);
 }
@@ -81,17 +85,10 @@ void Thread::init(void (*main)(void *))
 {
   // a gente deve usar o construtor pra inicializar? Como fazer isso???
   db<Thread>(TRC) << "Thread::init foi chamado\n";
-  _main = *(new Thread((void (*)())(main)));
-  _dispatcher = *(new Thread(dispatcher)); // como criar a dispatcher?
+  new (&_main) Thread(main, (void *)"main");
+  new (&_dispatcher) Thread(dispatcher); // como criar a dispatcher?
   _main._state = RUNNING;
   _running = &_main;
-  /*db<Thread>(TRC) << _ready.head()->object()->id() << "\n";
-  if (!_ready.empty())
-  {
-    _ready.remove_head();
-    db<Thread>(TRC) << _ready.size();
-    db<Thread>(TRC) << "main removida ";
-  }*/
 
   // trocar contexto pra main
 
