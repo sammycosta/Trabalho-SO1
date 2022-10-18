@@ -15,7 +15,6 @@ CPU::Context Thread::_main_context;
 Thread Thread::_dispatcher;
 Ready_Queue Thread::_ready;
 
-
 int Thread::switch_context(Thread *prev, Thread *next)
 {
   if (prev && next)
@@ -90,6 +89,7 @@ void Thread::init(void (*main)(void *))
 {
   // a gente deve usar o construtor pra inicializar? Como fazer isso???
   db<Thread>(TRC) << "Thread::init foi chamado\n";
+  new (&_ready) Ready_Queue();
   new (&_main) Thread(main, (void *)"main");
   new (&_dispatcher) Thread(dispatcher); // como criar a dispatcher?
 

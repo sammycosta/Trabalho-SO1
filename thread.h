@@ -139,11 +139,7 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an) : _link(this, std::chrono:
         _last_id++;
         // alterado link porque como estava antes não compilava
 
-        if (this->_id < 0)
-        {
-            new (&_ready) Ready_Queue();
-        }
-        else
+        if (this->_id > 0)
         {
             this->_state = READY;
             _ready.insert(&_link);
