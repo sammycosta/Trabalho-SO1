@@ -140,10 +140,14 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an)
         _last_id++;
         // alterado link porque como estava antes não compilava
 
-        int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
-        this->_link = Ready_Queue::Element(this, now);
-        this->_state = READY;
-        _ready.insert(&_link);
+        if (this->_id > 0)
+        {
+            int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+            this->_link = *(new Ready_Queue::Element(this, now));
+            this->_state = READY;
+            _ready.insert(&_link);
+        }
+
         db<Thread>(TRC) << "Thread::Construiu Thread " << this->_id << "\n";
         db<Thread>(TRC) << "contador: " << _last_id << "\n";
     }

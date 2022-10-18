@@ -13,7 +13,7 @@ Thread *Thread::_running = nullptr;
 Thread Thread::_main;
 CPU::Context Thread::_main_context;
 Thread Thread::_dispatcher;
-Ready_Queue Thread::_ready = Ready_Queue();
+Ready_Queue Thread::_ready = *(new Ready_Queue());
 
 int Thread::switch_context(Thread *prev, Thread *next)
 {
@@ -47,7 +47,7 @@ inline void Thread::dispatcher()
 
   db<Thread>(TRC) << "Dispatcher chamado\n";
 
-  while (_last_id > 1)
+  while (_last_id > 2)
   {
     // _ready.insert((&_running)._link);
     db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
@@ -65,6 +65,7 @@ inline void Thread::dispatcher()
 
     if (next_exec->_state == FINISHING)
     {
+      db<Thread>(TRC) << "id Thread removida: " << next_exec->_id << "\n";
       _ready.remove(&next_exec->_link);
     }
 
@@ -80,8 +81,8 @@ void Thread::init(void (*main)(void *))
 {
   // a gente deve usar o construtor pra inicializar? Como fazer isso???
   db<Thread>(TRC) << "Thread::init foi chamado\n";
-  _main = Thread((void (*)())(main));
-  _dispatcher = Thread(dispatcher); // como criar a dispatcher?
+  _main = *(new Thread((void (*)())(main)));
+  _dispatcher = *(new Thread(dispatcher)); // como criar a dispatcher?
   _main._state = RUNNING;
   _running = &_main;
   /*db<Thread>(TRC) << _ready.head()->object()->id() << "\n";
