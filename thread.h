@@ -125,25 +125,26 @@ private:
 };
 
 template <typename... Tn>
-inline Thread::Thread(void (*entry)(Tn...), Tn... an)
+inline Thread::Thread(void (*entry)(Tn...), Tn... an) : _link(this, std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count())
 {
     /* inicialização de _link */
     // IMPLEMENTAÇÃO DO CONSTRUTOR
 
     // construtor antigo (precisa ser alterado)
-    this->_context = new Context(entry, an...);
 
-    // Testa se context foi criado com sucesso
+    this->_context = new Context(entry, an...);
     if (this->_context)
     {
         this->_id = _last_id;
         _last_id++;
         // alterado link porque como estava antes não compilava
 
-        if (this->_id > 0)
+        if (this->_id < 0)
         {
-            int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
-            this->_link = *(new Ready_Queue::Element(this, now));
+            new (&_ready) Ready_Queue();
+        }
+        else
+        {
             this->_state = READY;
             _ready.insert(&_link);
         }

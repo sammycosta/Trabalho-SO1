@@ -13,7 +13,8 @@ Thread *Thread::_running = nullptr;
 Thread Thread::_main;
 CPU::Context Thread::_main_context;
 Thread Thread::_dispatcher;
-Ready_Queue Thread::_ready = *(new Ready_Queue());
+Ready_Queue Thread::_ready;
+
 
 int Thread::switch_context(Thread *prev, Thread *next)
 {
@@ -81,7 +82,6 @@ inline void Thread::dispatcher()
   _dispatcher._state = FINISHING;
   _ready.remove(&_dispatcher);
   db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
-  db<Thread>(TRC) << "fila: " << _ready.head()->object() << "/n";
   db<Thread>(TRC) << "voltando pra main... " << Thread::_main.id() << "\n";
   Thread::switch_context(&_dispatcher, &_main);
 }
@@ -92,7 +92,6 @@ void Thread::init(void (*main)(void *))
   db<Thread>(TRC) << "Thread::init foi chamado\n";
   new (&_main) Thread(main, (void *)"main");
   new (&_dispatcher) Thread(dispatcher); // como criar a dispatcher?
-  new(&_main_context)CPU::Context();
 
   _main._state = RUNNING;
   _running = &_main;
@@ -109,7 +108,7 @@ void Thread::yield()
   db<Thread>(TRC) << "ready_size: " << _ready.size() << "\n";
   Thread *next_exec = Thread::_ready.remove_head()->object();
 
-  // db<Thread>(TRC) << "running: " << _running->_id << " running state: " << _running->_state << " main state: " << _main._state << " \n";
+  db<Thread>(TRC) << "main state: " << (_main)._state << "\n";
 
   if ((_main)._state != RUNNING && _running->_state != FINISHING)
   {
@@ -117,15 +116,15 @@ void Thread::yield()
     db<Thread>(TRC) << "Yield dentro do if para inserir, com running state: " << _running->_state << "\n";
     int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     _running->_link.rank(now);
+    _ready.insert(&(_running->_link)); // reinsere
   }
-
   if (_running->_state != FINISHING)
   {
     _running->_state = READY;
-    _ready.insert(&(_running->_link)); // reinsere
   }
 
-  db<Thread>(TRC) << "passou if" << "\n";
+  db<Thread>(TRC) << "passou if"
+                  << "\n";
   Thread *last_running = _running;
   Thread::set_running(next_exec);
   next_exec->_state = RUNNING;
