@@ -36,8 +36,12 @@ void Thread::thread_exit(int exit_code)
   db<Thread>(TRC) << "Thread::thread_exit() chamado para a Thread" << this->id() << "\n";
   this->_state = FINISHING;
   _last_id--;
-  // yield();
-  switch_context(this, &_dispatcher); // imagino que isso seja feito
+  switch_context(this, &_dispatcher);
+}
+
+Thread::~Thread()
+{
+  delete _context;
 }
 
 int Thread::id() { return this->_id; }
@@ -51,6 +55,7 @@ inline void Thread::dispatcher()
   {
     // _ready.insert((&_running)._link);
     db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
+    db<Thread>(TRC) << "head antes de remover: " << Thread::_ready.head()->object()->id() << "\n";
     Thread *next_exec = Thread::_ready.remove_head()->object();
     _dispatcher._state = READY;
     _ready.remove(&_dispatcher);
@@ -87,6 +92,8 @@ void Thread::init(void (*main)(void *))
   db<Thread>(TRC) << "Thread::init foi chamado\n";
   new (&_main) Thread(main, (void *)"main");
   new (&_dispatcher) Thread(dispatcher); // como criar a dispatcher?
+  new(&_main_context)CPU::Context();
+
   _main._state = RUNNING;
   _running = &_main;
 
@@ -115,12 +122,10 @@ void Thread::yield()
   if (_running->_state != FINISHING)
   {
     _running->_state = READY;
-    //_ready.remove(_running);           // preciso tirar pra reinserir né?
     _ready.insert(&(_running->_link)); // reinsere
   }
 
-  db<Thread>(TRC) << "passou if"
-                  << "\n";
+  db<Thread>(TRC) << "passou if" << "\n";
   Thread *last_running = _running;
   Thread::set_running(next_exec);
   next_exec->_state = RUNNING;
