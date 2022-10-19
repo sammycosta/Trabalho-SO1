@@ -140,7 +140,7 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an) : _link(this, std::chrono:
         }
 
         db<Thread>(TRC) << "Thread::Construiu Thread " << this->_id << "\n";
-        db<Thread>(TRC) << "contador: " << _last_id << "\n";
+        db<Thread>(TRC) << "Contador: " << _last_id << "\n";
     }
     else
     {
