@@ -53,7 +53,6 @@ inline void Thread::dispatcher()
 
   while (_last_id > 2)
   {
-    // _ready.insert((&_running)._link);
     db<Thread>(TRC) << "_ready.size(): " << Thread::_ready.size() << "\n";
     db<Thread>(TRC) << "head antes de remover: " << Thread::_ready.head()->object()->id() << "\n";
     Thread *next_exec = Thread::_ready.remove_head()->object();
@@ -87,16 +86,13 @@ inline void Thread::dispatcher()
 
 void Thread::init(void (*main)(void *))
 {
-  // a gente deve usar o construtor pra inicializar? Como fazer isso???
   db<Thread>(TRC) << "Thread::init foi chamado\n";
   new (&_ready) Ready_Queue();
   new (&_main) Thread(main, (void *)"main");
-  new (&_dispatcher) Thread(dispatcher); // como criar a dispatcher?
+  new (&_dispatcher) Thread(dispatcher);
 
   _main._state = RUNNING;
   _running = &_main;
-
-  // trocar contexto pra main
 
   _main._context->load(); // Set user context -> deve começar a executar sua função
 }
@@ -118,6 +114,7 @@ void Thread::yield()
     _running->_link.rank(now);
     _ready.insert(&(_running->_link)); // reinsere
   }
+
   if (_running->_state != FINISHING)
   {
     _running->_state = READY;
