@@ -133,6 +133,7 @@ private:
     Ready_Queue::Element _link;
     volatile State _state;
     static int _last_id;
+    int _exit_code;
 
     /*
      * Qualquer outro atributo que você achar necessário para a solução.

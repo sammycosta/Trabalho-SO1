@@ -81,11 +81,11 @@ void Thread::init(void (*main)(void *))
   new (&_ready) Ready_Queue();
   new (&_main) Thread(main, (void *)"main");
   new (&_dispatcher) Thread(dispatcher);
-  new(&_main_context)CPU::Context();
+  new (&_main_context) CPU::Context();
 
   _running = &_main;
   _main._state = RUNNING;
-  
+
   CPU::switch_context(&_main_context, _main.context());
 }
 
@@ -115,4 +115,34 @@ void Thread::yield()
   switch_context(last_running, _running);
 }
 
+int Thread::join()
+{
+  db<Thread>(TRC) << "Join chamado pela thread " << this->_id << "\n";
+
+  /** Blocks the current thread until the thread identified by *this finishes its execution.
+The completion of the thread identified by *this synchronizes with the corresponding successful return from join().
+No synchronization is performed on *this itself. Concurrently calling join() on the same thread object from multiple threads constitutes a data race that results in undefined behavior.
+**/
+
+  if (this->_state != FINISHING && this != _running)
+  {
+    _running->suspend();
+    return _exit_code; // ainda nao inicializado, onde fazer isso?
+  }
+}
+
+void Thread::suspend()
+{
+  db<Thread>(TRC) << "Suspend chamado \n";
+
+  // remove da fila de prontos? coloca ela numa estrutura de suspensas? muda state?
+  _ready.remove(this);
+  yield();
+}
+
+void Thread::resume()
+{
+  db<Thread>(TRC) << "Resume chamado";
+  // devolve pra fila de prontos? onde pego a thread suspensa, nova estrutura?
+}
 __END_API
