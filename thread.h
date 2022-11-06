@@ -77,7 +77,6 @@ public:
     static void set_running(Thread *now_running) { _running = now_running; };
 
     /*
-     * NOVO MÉTODO DESTE TRABALHO.
      * Daspachante (disptacher) de threads.
      * Executa enquanto houverem threads do usuário.
      * Chama o escalonador para definir a próxima tarefa a ser executada.
@@ -85,7 +84,6 @@ public:
     static void dispatcher();
 
     /*
-     * NOVO MÉTODO DESTE TRABALHO.
      * Realiza a inicialização da class Thread.
      * Cria as Threads main e dispatcher.
      */
@@ -103,8 +101,25 @@ public:
     ~Thread();
 
     /*
-     * Qualquer outro método que você achar necessário para a solução.
+     * Este método deve suspender a thread em execução até que a thread “alvo” finalize.
+     * O inteiro retornado por join() é o argumento recebido por thread_exit(), ou seja, exit_code (novo atributo _exit_code necessário na classe
+     * Thread – pergunta: quando o atributo _exit_code deve ser inicializado?).
+     * Como tratar a suspensão e o resumo de uma Thread?
      */
+    int join();
+
+    /*
+     * Suspende a Thread até que resume() seja chamado.
+     * Como tratar as Threads suspensas dentro do SO?
+     * Deve-se usar uma nova fila?
+     * Deve-se fazer alguma alteração no estado (enum State) da Thread?
+     */
+    void suspend();
+
+    /*
+     * Coloca uma Thread que estava suspensa de volta para a fila de prontos.
+     */
+    void resume();
 
 private:
     int _id;
