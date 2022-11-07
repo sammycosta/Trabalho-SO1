@@ -34,6 +34,18 @@ void Thread::thread_exit(int exit_code)
 {
   db<Thread>(TRC) << "Thread::thread_exit() chamado para a Thread" << this->id() << "\n";
   this->_state = FINISHING;
+
+  this->_exit_code = exit_code;
+  // if (this->_waiting_thread)
+  // {
+  //   this->_waiting_thread->resume();
+  //   this->_waiting_thread = nullptr;
+  // }
+  for (unsigned int i = 0; i < this->_waiting.size(); i++)
+  {
+    this->_waiting.remove_head()->object()->resume();
+  }
+
   _last_id--;
   yield();
 }
@@ -126,9 +138,10 @@ No synchronization is performed on *this itself. Concurrently calling join() on 
 
   if (this->_state != FINISHING && this != _running)
   {
+    this->_waiting.insert(&(_running->_link));
     _running->suspend();
-    return _exit_code; // ainda nao inicializado, onde fazer isso?
   }
+  return _exit_code; // ainda nao inicializado, onde fazer isso?
 }
 
 void Thread::suspend()
@@ -136,13 +149,19 @@ void Thread::suspend()
   db<Thread>(TRC) << "Suspend chamado \n";
 
   // remove da fila de prontos? coloca ela numa estrutura de suspensas? muda state?
-  _ready.remove(this);
+  if (this != &_main)
+  {
+    _ready.remove(this);
+  }
+  // this->_state = SUSPENDED;
   yield();
 }
 
 void Thread::resume()
 {
-  db<Thread>(TRC) << "Resume chamado";
+  db<Thread>(TRC) << "Resume chamado para thread" << this->_id << "\n";
   // devolve pra fila de prontos? onde pego a thread suspensa, nova estrutura?
+  _ready.insert(&(this->_link));
+  this->_state = READY;
 }
 __END_API
