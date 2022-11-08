@@ -107,7 +107,7 @@ void Thread::yield()
 
   Thread *next_running = Thread::_ready.remove_head()->object();
 
-  if ((_main)._state != RUNNING && _running->_state != FINISHING)
+  if ((_main)._state != RUNNING && _running->_state != FINISHING && _running->_state != SUSPENDED)
   {
     int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     _running->_link.rank(now);         // Atualiza prioridade da tarefa
@@ -153,7 +153,7 @@ void Thread::suspend()
   {
     _ready.remove(this);
   }
-  // this->_state = SUSPENDED;
+  this->_state = SUSPENDED;
   yield();
 }
 
