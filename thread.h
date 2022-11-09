@@ -135,7 +135,7 @@ private:
     volatile State _state;
     static int _last_id;
     int _exit_code;
-    Thread *_waiting_thread;
+    Thread *_waiting_thread = nullptr;
 
     /*
      * Qualquer outro atributo que você achar necessário para a solução.

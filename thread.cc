@@ -38,12 +38,12 @@ void Thread::thread_exit(int exit_code)
   _last_id--;
 
   Thread *to_resume = _waiting_thread;
-  _waiting_thread = nullptr;
 
   if (to_resume)
   {
     if (to_resume == &_main)
     {
+      // Se é a main, não posso reinseri-la na fila
       (&_main)->_state = RUNNING;
       switch_context(this, &_main);
     }
@@ -118,9 +118,9 @@ void Thread::yield()
     _ready.insert(&(_running->_link)); // Reinsere a que está em execução
   }
 
-  if (_running->_state != FINISHING)
+  if (_running->_state != FINISHING || _running->_state != SUSPENDED)
   {
-    _running->_state = READY; // Atualiza READY para todas exceto se FINISHING
+    _running->_state = READY; // Atualiza READY para todas exceto se FINISHING ou SUSPENDED
   }
 
   Thread *last_running = _running;
@@ -135,7 +135,6 @@ int Thread::join()
 {
   db<Thread>(TRC) << "Join chamado com this sendo " << this->_id << " e running sendo " << _running->_id << "\n";
 
-  // Checa _waiting_thread == nullptr para não sobrescrever a variável por um erro
   if (this->_state != FINISHING && this != _running && _waiting_thread == nullptr)
   {
     this->_waiting_thread = _running;
@@ -144,6 +143,7 @@ int Thread::join()
   else
   {
     db<Thread>(ERR) << "Erro ao fazer join";
+    return -1;
   }
 
   return _exit_code;
