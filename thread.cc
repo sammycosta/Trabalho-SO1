@@ -34,19 +34,24 @@ void Thread::thread_exit(int exit_code)
 {
   db<Thread>(TRC) << "Thread::thread_exit() chamado para a Thread" << this->id() << "\n";
   this->_state = FINISHING;
-
   this->_exit_code = exit_code;
-  // if (this->_waiting_thread)
-  // {
-  //   this->_waiting_thread->resume();
-  //   this->_waiting_thread = nullptr;
-  // }
-  for (unsigned int i = 0; i < this->_waiting.size(); i++)
-  {
-    this->_waiting.remove_head()->object()->resume();
-  }
-
   _last_id--;
+
+  Thread *to_resume = _waiting_thread;
+  _waiting_thread = nullptr;
+
+  if (to_resume)
+  {
+    if (to_resume == &_main)
+    {
+      (&_main)->_state = RUNNING;
+      switch_context(this, &_main);
+    }
+    else
+    {
+      to_resume->resume();
+    }
+  }
   yield();
 }
 
@@ -90,7 +95,6 @@ inline void Thread::dispatcher()
 void Thread::init(void (*main)(void *))
 {
   db<Thread>(TRC) << "Thread::init foi chamado\n";
-  new (&_ready) Ready_Queue();
   new (&_main) Thread(main, (void *)"main");
   new (&_dispatcher) Thread(dispatcher);
   new (&_main_context) CPU::Context();
@@ -129,26 +133,25 @@ void Thread::yield()
 
 int Thread::join()
 {
-  db<Thread>(TRC) << "Join chamado pela thread " << this->_id << "\n";
+  db<Thread>(TRC) << "Join chamado com this sendo " << this->_id << " e running sendo " << _running->_id << "\n";
 
-  /** Blocks the current thread until the thread identified by *this finishes its execution.
-The completion of the thread identified by *this synchronizes with the corresponding successful return from join().
-No synchronization is performed on *this itself. Concurrently calling join() on the same thread object from multiple threads constitutes a data race that results in undefined behavior.
-**/
-
-  if (this->_state != FINISHING && this != _running)
+  // Checa _waiting_thread == nullptr para não sobrescrever a variável por um erro
+  if (this->_state != FINISHING && this != _running && _waiting_thread == nullptr)
   {
-    this->_waiting.insert(&(_running->_link));
+    this->_waiting_thread = _running;
     _running->suspend();
   }
-  return _exit_code; // ainda nao inicializado, onde fazer isso?
+  else
+  {
+    db<Thread>(ERR) << "Erro ao fazer join";
+  }
+
+  return _exit_code;
 }
 
 void Thread::suspend()
 {
-  db<Thread>(TRC) << "Suspend chamado \n";
-
-  // remove da fila de prontos? coloca ela numa estrutura de suspensas? muda state?
+  db<Thread>(TRC) << "Suspend chamado para thread " << this->_id << "\n";
   if (this != &_main)
   {
     _ready.remove(this);
@@ -160,8 +163,10 @@ void Thread::suspend()
 void Thread::resume()
 {
   db<Thread>(TRC) << "Resume chamado para thread" << this->_id << "\n";
-  // devolve pra fila de prontos? onde pego a thread suspensa, nova estrutura?
-  _ready.insert(&(this->_link));
-  this->_state = READY;
+  if (this->_state == SUSPENDED)
+  {
+    _ready.insert(&(this->_link));
+    this->_state = READY;
+  }
 }
 __END_API

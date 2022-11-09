@@ -135,7 +135,6 @@ private:
     volatile State _state;
     static int _last_id;
     int _exit_code;
-    Ready_Queue _waiting;
     Thread *_waiting_thread;
 
     /*
@@ -157,8 +156,6 @@ inline Thread::Thread(void (*entry)(Tn...), Tn... an) : _link(this, std::chrono:
             this->_state = READY;
             _ready.insert(&_link);
         }
-
-        // new (&this->_waiting) Ready_Queue();
 
         db<Thread>(TRC) << "Thread::Construiu Thread " << this->_id << "\n";
         db<Thread>(TRC) << "Contador: " << _last_id << "\n";
