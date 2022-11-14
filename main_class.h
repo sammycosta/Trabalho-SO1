@@ -5,6 +5,7 @@
 #include "cpu.h"
 #include "traits.h"
 #include "thread.h"
+#include "semaphore.h"
 
 __BEGIN_API
 
@@ -41,6 +42,8 @@ public:
         ping_pong_threads[3] = new Thread(body, (char *) pong_name.data(), 3);
         ping_pong_threads[4] = new Thread(body, (char *) pung_name.data(), 4);
 
+        sem = new Semaphore();
+
         for (int i = 0; i < 2; i++) {
             std::cout << "main: " << i << "\n";
             Main::do_work(WORKLOAD);
@@ -69,12 +72,15 @@ public:
 
 
         std::cout << (char *) name << ": fim\n";
+        
+        delete sem;
 
         delete ping_pong_threads[0];
         delete ping_pong_threads[1];
         delete ping_pong_threads[2];
         delete ping_pong_threads[3];
         delete ping_pong_threads[4];
+        
     }
 
     ~Main() {}
@@ -89,11 +95,13 @@ private:
 
         std::cout << name << ": inicio\n";
 
+        sem->p();
         for (i = 0; i < ITERATIONS; i++)
         {
             std::cout << name << ": " << i << "\n" ;
             Thread::yield();
         }
+        sem->v();
         std::cout << name << ": fim\n";
 
 
@@ -102,6 +110,7 @@ private:
 
     private:
         static Thread *ping_pong_threads[5];
+        static Semaphore *sem;
 };
 
 __END_API
