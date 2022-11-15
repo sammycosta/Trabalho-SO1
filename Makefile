@@ -22,5 +22,8 @@ system.o: system.cc traits.h
 thread.o: thread.cc thread.h traits.h list.h
 	$(CC) $(CFLAGS) -c thread.cc
 
+semaphore.o: semaphore.cc semaphore.h traits.h thread.h
+	$(CC) $(CFLAGS) -c semaphore.cc
+
 clean:
 	rm -f main *.o

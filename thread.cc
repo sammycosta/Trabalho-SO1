@@ -111,16 +111,17 @@ void Thread::yield()
 
   Thread *next_running = Thread::_ready.remove_head()->object();
 
-  if ((_main)._state != RUNNING && _running->_state != FINISHING && _running->_state != SUSPENDED)
+  if ((_main)._state != RUNNING && _running->_state == RUNNING)
   {
     int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     _running->_link.rank(now);         // Atualiza prioridade da tarefa
     _ready.insert(&(_running->_link)); // Reinsere a que está em execução
   }
 
-  if (_running->_state != FINISHING || _running->_state != SUSPENDED)
+  // mudei os if que checa finishing ou suspendo pra == running p nao adicionar waiting
+  if (_running->_state == RUNNING)
   {
-    _running->_state = READY; // Atualiza READY para todas exceto se FINISHING ou SUSPENDED
+    _running->_state = READY; // Atualiza READY para todas exceto se FINISHING ou SUSPENDED ou WAITING
   }
 
   Thread *last_running = _running;
@@ -169,4 +170,27 @@ void Thread::resume()
     this->_state = READY;
   }
 }
+
+Thread::Ready_Queue::Element Thread::get_link()
+{
+  return this->_link;
+}
+
+Thread *Thread::sleep()
+{
+  _running->_state = WAITING;
+  if (_running != &_main)
+  {
+    _ready.remove(_running);
+  }
+  /* Yield não reinsere na fila se for WAITING*/
+  yield();
+}
+
+void Thread::wakeup(Thread *t)
+{
+  t->_state = READY;
+  _ready.insert(&(t->_link));
+}
+
 __END_API

@@ -11,7 +11,13 @@ __BEGIN_API
 class Semaphore
 {
 public:
-    Semaphore(int v = 1);
+    typedef Ordered_List<Thread> Sleep_Queue;
+
+    Semaphore(int v = 1)
+    {
+        this->value = v;
+    };
+
     ~Semaphore();
 
     /* Este método deve implementar a operação p (ou sleep) de um semáforo. Deve-se decrementar o
@@ -48,6 +54,9 @@ private:
 
 private:
     // DECLARAÇÃO DOS ATRIBUTOS DO SEMÁFORO
+
+    volatile int value; // adicionei
+    Sleep_Queue sleep_queue;
 };
 
 __END_API

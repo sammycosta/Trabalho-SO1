@@ -24,7 +24,8 @@ public:
         RUNNING,
         READY,
         FINISHING,
-        SUSPENDED
+        SUSPENDED,
+        WAITING
     };
 
     /*
@@ -122,6 +123,12 @@ public:
      */
     void resume();
 
+    Ready_Queue::Element get_link();
+
+    static Thread *sleep();
+
+    static void wakeup(Thread *t);
+
 private:
     int _id;
     Context *volatile _context;
@@ -136,10 +143,6 @@ private:
     static int _last_id;
     int _exit_code;
     Thread *_waiting_thread = nullptr;
-
-    /*
-     * Qualquer outro atributo que você achar necessário para a solução.
-     */
 };
 
 template <typename... Tn>
