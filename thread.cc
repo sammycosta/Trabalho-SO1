@@ -171,9 +171,9 @@ void Thread::resume()
   }
 }
 
-Thread::Ready_Queue::Element Thread::get_link()
+Thread::Ready_Queue::Element *Thread::get_link()
 {
-  return this->_link;
+  return &(this->_link);
 }
 
 Thread *Thread::sleep()
@@ -183,8 +183,7 @@ Thread *Thread::sleep()
   {
     _ready.remove(_running);
   }
-  /* Yield não reinsere na fila se for WAITING*/
-  yield();
+  return _running;
 }
 
 void Thread::wakeup(Thread *t)

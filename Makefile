@@ -1,13 +1,13 @@
 CC = g++
 CFLAGS = -Wall -g
 
-main: cpu.o main_class.o main.o debug.o system.o thread.o
-	$(CC) $(CFLAGS) -o main main_class.o main.o cpu.o debug.o system.o thread.o
+main: cpu.o main_class.o main.o debug.o system.o thread.o semaphore.o
+	$(CC) $(CFLAGS) -o main main_class.o main.o cpu.o debug.o system.o thread.o semaphore.o
 
 cpu.o: cpu.cc traits.h cpu.h
 	$(CC) $(CFLAGS) -c cpu.cc 
 
-main_class.o: main_class.cc main_class.h cpu.h traits.h
+main_class.o: main_class.cc main_class.h cpu.h traits.h semaphore.h
 	$(CC) $(CFLAGS) -c main_class.cc
 
 main.o: main.cc main_class.h cpu.h system.h

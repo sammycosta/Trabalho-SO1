@@ -123,7 +123,7 @@ public:
      */
     void resume();
 
-    Ready_Queue::Element get_link();
+    Ready_Queue::Element *get_link();
 
     static Thread *sleep();
 
