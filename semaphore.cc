@@ -6,38 +6,16 @@ __BEGIN_API
 
 int Semaphore::finc(volatile int &number)
 {
-  // não sei sei se é assim
   db<Semaphore>(TRC) << "finc chamado\n";
-  int one = 1;
-  /*__asm__("lock;"
-          "xadd %%ebx, %%eax"
-          : "=a"(number)
-          : "a"(number), "b"(one)
-          : "memory"); */
-  __asm__("lock;"
-          "xadd %[first], %[second]"
-          : [first] "+r"(number)
-          : [second] "r"(one));
-  return number;
+
+  return CPU::finc(number);
 }
 
 int Semaphore::fdec(volatile int &number)
 {
-  // não sei sei se é assim
   db<Semaphore>(TRC) << "fdec chamado\n";
 
-  int minus_one = -1;
-  // __asm__("lock;"
-  //         "xadd %%ebx, %%eax"
-  //         : "=a"(number)
-  //         : "a"(number), "b"(minus_one)
-  //         : "memory");
-  __asm__("lock;"
-          "xadd %[first], %[second]"
-          : [first] "+r"(number)
-          : [second] "r"(minus_one));
-
-  return number;
+  return CPU::fdec(number);
 }
 
 void Semaphore::p()

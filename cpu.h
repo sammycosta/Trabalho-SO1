@@ -36,6 +36,11 @@ public:
 
 public:
     static int switch_context(Context *from, Context *to);
+    /* Incremento atômico utilizando xadd e lock do assembly */
+    static int finc(volatile int &number);
+
+    /* Decremento atômico utilizando xadd e lock do assembly */
+    static int fdec(volatile int &number);
 };
 
 template <typename... Tn>

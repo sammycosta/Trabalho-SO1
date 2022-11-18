@@ -50,4 +50,35 @@ int CPU::switch_context(Context *from, Context *to)
     }
 }
 
+int CPU::finc(volatile int &number)
+{
+    int one = 1;
+    // __asm__ __volatile__("lock;"
+    //                      "xadd %0, %2"
+    //                      //: "=a"(number)
+    //                      : "a"(one), "b"(one)
+    //                      : "memory");
+    __asm__ __volatile__("lock;"
+                         "xadd %[first], %[second]"
+                         : [first] "+r"(number)
+                         : [second] "r"(one));
+    return number;
+}
+
+int CPU::fdec(volatile int &number)
+{
+    int minus_one = -1;
+    // __asm__ __volatile__("lock;"
+    //                      "xadd %0, %2"
+    //                      //: "=a"(number)
+    //                      : "a"(minus_one), "b"(minus_one)
+    //                      : "memory");
+    __asm__ __volatile__("lock;"
+                         "xadd %[first], %[second]"
+                         : [first] "+r"(number)
+                         : [second] "r"(minus_one));
+
+    return number;
+}
+
 __END_API
