@@ -22,11 +22,7 @@ void Semaphore::p()
 {
   // leitura precisa ser atômica?
   db<Semaphore>(TRC) << "p chamado\n";
-  if (this->value > 0)
-  {
-    fdec(this->value);
-  }
-  else
+  if (fdec(this->value) < 0)
   {
     sleep();
   }
