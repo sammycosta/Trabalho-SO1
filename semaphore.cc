@@ -20,7 +20,6 @@ int Semaphore::fdec(volatile int &number)
 
 void Semaphore::p()
 {
-  // leitura precisa ser atômica?
   db<Semaphore>(TRC) << "p chamado\n";
   if (fdec(this->value) < 0)
   {
@@ -40,7 +39,7 @@ void Semaphore::sleep()
   db<Semaphore>(TRC) << "sleep chamado\n";
   Thread *to_sleep = Thread::sleep();
   this->sleep_queue.insert(to_sleep->get_link());
-  Thread::yield(); // Pensamentos
+  Thread::yield();
 }
 
 void Semaphore::wakeup()

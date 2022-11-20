@@ -30,7 +30,7 @@ struct Traits<CPU>
 {
     // Adicionar aqui a declaração do tamanho da Pilha
     static const unsigned int STACK_SIZE = 64000;
-    static const bool debugged = false;
+    static const bool debugged = true;
 };
 
 // Os níveis de debug devem ser declarados e habilitados neste arquivo
@@ -58,7 +58,7 @@ struct Traits<Thread> : public Traits<void>
 template <>
 struct Traits<Lists> : public Traits<void>
 {
-    static const bool debugged = true;
+    static const bool debugged = false;
 };
 
 template <>

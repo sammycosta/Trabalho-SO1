@@ -54,9 +54,11 @@ int CPU::finc(volatile int &number)
 {
     int sum = 1;
     __asm__ __volatile__("lock xadd %0, %2"
-                         : "=a"(sum)
-                         : "a"(sum), "m"(number)
+                         : "=a"(number)
+                         : "a"(number), "m"(sum)
                          : "memory");
+
+    db<CPU>(TRC) << "CPU::finc() sum = " << sum << "\n";
     return sum;
 }
 
@@ -65,9 +67,11 @@ int CPU::fdec(volatile int &number)
 
     int sum = -1;
     __asm__ __volatile__("lock xadd %0, %2"
-                         : "=a"(sum)
-                         : "a"(sum), "m"(number)
+                         : "=a"(number)
+                         : "a"(number), "m"(sum)
                          : "memory");
+
+    db<CPU>(TRC) << "CPU::fdec() sum = " << sum << "\n";
     return sum;
 }
 

@@ -10,7 +10,7 @@ cpu.o: cpu.cc traits.h cpu.h
 main_class.o: main_class.cc main_class.h cpu.h traits.h semaphore.h
 	$(CC) $(CFLAGS) -c main_class.cc
 
-main.o: main.cc main_class.h cpu.h system.h
+main.o: main.cc main_class.h cpu.h system.h thread.h
 	$(CC) $(CFLAGS) -c main.cc 
 
 debug.o: debug.cc debug.h traits.h
@@ -22,7 +22,7 @@ system.o: system.cc traits.h
 thread.o: thread.cc thread.h traits.h list.h
 	$(CC) $(CFLAGS) -c thread.cc
 
-semaphore.o: semaphore.cc semaphore.h traits.h thread.h
+semaphore.o: semaphore.cc semaphore.h traits.h thread.h cpu.h
 	$(CC) $(CFLAGS) -c semaphore.cc
 
 clean:

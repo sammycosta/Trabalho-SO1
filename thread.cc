@@ -36,22 +36,32 @@ void Thread::thread_exit(int exit_code)
   this->_state = FINISHING;
   this->_exit_code = exit_code;
   _last_id--;
+  bool main_sleeping = false;
 
-  Thread *to_resume = _waiting_thread;
-
-  if (to_resume)
+  for (unsigned int i = 0; i < this->_suspended_queue.size(); i++)
   {
-    if (to_resume == &_main)
+    Thread *to_resume = this->_suspended_queue.remove_head()->object();
+    if (to_resume)
     {
-      // Se é a main, não posso reinseri-la na fila
-      (&_main)->_state = RUNNING;
-      switch_context(this, &_main);
-    }
-    else
-    {
-      to_resume->resume();
+      if (to_resume == &_main)
+      {
+        // Deve ser tratada separadamente
+        main_sleeping = true;
+      }
+      else
+      {
+        to_resume->resume();
+      }
     }
   }
+
+  if (main_sleeping)
+  {
+    // Se é a main, não posso reinseri-la na fila
+    (&_main)->_state = RUNNING;
+    switch_context(this, &_main);
+  }
+
   yield();
 }
 
@@ -69,6 +79,7 @@ inline void Thread::dispatcher()
   {
     db<Thread>(TRC) << "Início do loop dispatcher\n";
     db<Thread>(TRC) << "Head antes de remover: " << Thread::_ready.head()->object()->id() << "\n";
+
     Thread *next_running = Thread::_ready.remove_head()->object(); // escolhe a próxima thread para executar
     _dispatcher._state = READY;
     _ready.insert(&_dispatcher._link); // reinsire dispatcher na fila
@@ -118,7 +129,6 @@ void Thread::yield()
     _ready.insert(&(_running->_link)); // Reinsere a que está em execução
   }
 
-  // mudei os if que checa finishing ou suspendo pra == running p nao adicionar waiting
   if (_running->_state == RUNNING)
   {
     _running->_state = READY; // Atualiza READY para todas exceto se FINISHING ou SUSPENDED ou WAITING
@@ -136,9 +146,9 @@ int Thread::join()
 {
   db<Thread>(TRC) << "Join chamado com this sendo " << this->_id << " e running sendo " << _running->_id << "\n";
 
-  if (this->_state != FINISHING && this != _running && _waiting_thread == nullptr)
+  if (this->_state != FINISHING && this != _running)
   {
-    this->_waiting_thread = _running;
+    this->_suspended_queue.insert(&(_running->_link));
     _running->suspend();
   }
   else
@@ -179,10 +189,6 @@ Thread::Ready_Queue::Element *Thread::get_link()
 Thread *Thread::sleep()
 {
   _running->_state = WAITING;
-  if (_running != &_main)
-  {
-    _ready.remove(_running);
-  }
   return _running;
 }
 
