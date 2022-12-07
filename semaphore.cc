@@ -21,7 +21,7 @@ int Semaphore::fdec(volatile int &number)
 void Semaphore::p()
 {
   db<Semaphore>(TRC) << "p chamado\n";
-  if (fdec(this->value) < 0)
+  if (fdec(this->value) < 1) // era pra ser assim?
   {
     sleep();
   }
@@ -30,8 +30,10 @@ void Semaphore::p()
 void Semaphore::v()
 {
   db<Semaphore>(TRC) << "v chamado\n";
-  finc(this->value);
-  wakeup();
+  if (finc(this->value) < 0)
+  {
+    wakeup();
+  }
 }
 
 void Semaphore::sleep()
