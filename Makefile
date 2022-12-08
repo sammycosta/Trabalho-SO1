@@ -1,29 +1,52 @@
+
+# Cody Barnson
+# Thur Mar 31, 2016
+# Makefile for allegro game project
+
+# declaration of variables
 CC = g++
-CFLAGS = -Wall -g
+CCFLAGS = -Wall -g -std=c++11 -I/usr/include/allegro5
 
-main: cpu.o main_class.o main.o debug.o system.o thread.o semaphore.o
-	$(CC) $(CFLAGS) -o main main_class.o main.o cpu.o debug.o system.o thread.o semaphore.o
+# file names
+NONTEST = main.cc main.o
 
-cpu.o: cpu.cc traits.h cpu.h
-	$(CC) $(CFLAGS) -c cpu.cc 
+SOURCES = $(filter-out $(NONMAIN), $(wildcard *.cc))
+OBJECTS = $(SOURCES:.cc=.o)
 
-main_class.o: main_class.cc main_class.h cpu.h traits.h semaphore.h
-	$(CC) $(CFLAGS) -c main_class.cc
+LIBDIR = -L/usr/lib/x86_64-linux-gnu
 
-main.o: main.cc main_class.h cpu.h system.h thread.h
-	$(CC) $(CFLAGS) -c main.cc 
+LNFLAGS = -lallegro -lallegro_primitives -lallegro_image -lallegro_font \
+-lallegro_ttf
+LNFLAGST= -lallegro -lallegro_primitives -lallegro_image -lallegro_font \
+-lallegro_ttf -ldl -lcppunit
 
-debug.o: debug.cc debug.h traits.h
-	$(CC) $(CFLAGS) -c debug.cc
 
-system.o: system.cc traits.h
-	$(CC) $(CFLAGS) -c system.cc
+# main target
+all: main
 
-thread.o: thread.cc thread.h traits.h list.h
-	$(CC) $(CFLAGS) -c thread.cc
+main: $(OBJECTS)
+	$(CC) $(LIBDIR) -o $@ $^ $(LNFLAGS)
 
-semaphore.o: semaphore.cc semaphore.h traits.h thread.h cpu.h
-	$(CC) $(CFLAGS) -c semaphore.cc
+# pull in dependency info for existing .o files
+-include $(OBJECTS:.o=.d) $(OBJECTST:.o=.d)
 
-clean:
-	rm -f main *.o
+# compile and generate dependency info
+%.o: %.cc
+	$(CC) -c $(CCFLAGS) $< -o $@
+	$(CC) -M $(CCFLAGS) $*.cc > $*.d
+
+# automatic variables
+# $< contains the first dependency file name
+# $@ contains the target file name
+
+# phony targets --> avoid conflict with file of the same name, and
+#                   improve performance
+.PHONY: clean
+
+# clean out the directory but keep executables with command "clean"
+clean : 
+	rm -f *~ *.o *.d *.gch main
+
+
+
+
