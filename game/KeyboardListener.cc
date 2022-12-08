@@ -3,6 +3,16 @@
 
 KeyboardListener::KeyboardListener()
 {
+    // al_init() ??
+
+    // install keyboard
+    if (!al_install_keyboard())
+    {
+        std::cerr << "Could not install keyboard\n";
+    }
+
+    // register keyboard
+    al_register_event_source(_eventQueue, al_get_keyboard_event_source());
 }
 
 KeyboardListener::~KeyboardListener()

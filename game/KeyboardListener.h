@@ -17,6 +17,7 @@ public:
 
 private:
     act::action input(ALLEGRO_KEYBOARD_STATE &);
+    ALLEGRO_EVENT_QUEUE *_eventQueue;
 
     UserSpaceship *userSpaceship;
 };

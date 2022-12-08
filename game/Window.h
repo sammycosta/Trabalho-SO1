@@ -5,7 +5,8 @@
 #include <memory>
 #include <string>
 #include "../Sprite.h"
-#include "Vector.h"
+#include "../library_threads/thread.h"
+// #include "../Vector.h"
 #include "UserSpaceship.h"
 
 class Window
@@ -16,7 +17,7 @@ public:
 
   void run();
 
-  void gameLoop();
+  void gameLoop(float &prevTime);
   void draw();
   void drawShip(int flags);
   void drawBackground();
@@ -48,9 +49,14 @@ private:
   int _displayWidth;
   int _displayHeight;
   int _fps;
+  ALLEGRO_TIMER *_timer;
+  ALLEGRO_EVENT_QUEUE *_eventQueue;
   ALLEGRO_DISPLAY *_display;
+  bool _finish;
 
   UserSpaceship *userSpaceship;
+
+  Thread *thread = new Thread();
 };
 
 #endif

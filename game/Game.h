@@ -8,10 +8,8 @@
 class Game
 {
 public:
-
-
 private:
-
+    bool _finish;
 };
 
 #endif

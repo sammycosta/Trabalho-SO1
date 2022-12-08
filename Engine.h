@@ -30,7 +30,7 @@ public:
    void init();
    void run();
    void draw(); // WINDOW
-   void update(double dt);
+   void update(double dt); 
 
    void gameLoop(float &prevTime); // WINDOW
 
