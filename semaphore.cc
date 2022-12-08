@@ -21,7 +21,7 @@ int Semaphore::fdec(volatile int &number)
 void Semaphore::p()
 {
   db<Semaphore>(TRC) << "p chamado\n";
-  if (fdec(this->value) < 1) // era pra ser assim?
+  if (fdec(this->value) < 1)
   {
     sleep();
   }
@@ -51,6 +51,7 @@ void Semaphore::wakeup()
   {
     Thread *next = this->sleep_queue.remove_head()->object();
     Thread::wakeup(next);
+    Thread::yield();
   }
 }
 
@@ -60,8 +61,13 @@ void Semaphore::wakeup_all()
   int size = this->sleep_queue.size();
   for (int i = 0; i < size; i++)
   {
-    wakeup();
+    if (!this->sleep_queue.empty())
+    {
+      Thread *next = this->sleep_queue.remove_head()->object();
+      Thread::wakeup(next);
+    }
   }
+  Thread::yield();
 }
 
 Semaphore::~Semaphore()
