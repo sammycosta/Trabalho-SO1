@@ -5,4 +5,13 @@
 #include <memory>
 #include <string>
 
+class Game
+{
+public:
+
+
+private:
+
+};
+
 #endif
