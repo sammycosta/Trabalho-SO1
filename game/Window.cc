@@ -7,10 +7,26 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
-Window::Window(int w, int h, int fps) : _displayWidth(w), _displayHeight(h),
-                                        _fps(fps)
+Point Window::bgMid; /**<point used by the background to draw from */
+Point Window::fgMid;
+Point Window::fg2Mid;
+Vector Window::bgSpeed; /**<background movement speed */
+Vector Window::fgSpeed;
+std::shared_ptr<Sprite> Window::bg; /**<shared pointer to background animation */
+std::shared_ptr<Sprite> Window::fg;
+ALLEGRO_EVENT_QUEUE Window::*_eventQueue;
+ALLEGRO_EVENT_QUEUE Window::*_timerQueue;
+bool Window::_finish;
+UserSpaceship Window::*userSpaceship;
+
+Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpaceship *userspaceship) : _displayWidth(w),
+                                                                                                       _displayHeight(h),
+                                                                                                       _fps(fps)
 
 {
+    _timerQueue = timerQueue;
+    userSpaceship = userspaceship;
+
     if ((_display = al_create_display(_displayWidth, _displayHeight)) == NULL)
     {
         std::cout << "Cannot initialize the display\n";
@@ -21,29 +37,24 @@ Window::Window(int w, int h, int fps) : _displayWidth(w), _displayHeight(h),
     al_init_font_addon();
     al_init_ttf_addon();
     al_init_image_addon();
-    // initialize our timers
-    if ((_timer = al_create_timer(1.0 / _fps)) == NULL)
-    {
-        std::cout << "error, could not create timer\n";
-        exit(1);
-    }
+
+    // fila de display
     if ((_eventQueue = al_create_event_queue()) == NULL)
     {
         std::cout << "error, could not create event queue\n";
         exit(1);
     }
-    // register our allegro _eventQueue
     al_register_event_source(_eventQueue, al_get_display_event_source(_display));
-    al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
-    al_start_timer(_timer);
 
-    this->loadBackgroundSprite();
+    loadBackgroundSprite();
+
+    window_thread = new Thread(run);
 }
 
 Window::~Window()
 {
-    if (_timer != NULL)
-        al_destroy_timer(_timer);
+    // if (_timer != NULL)
+    //     al_destroy_timer(_timer);
     if (_eventQueue != NULL)
         al_destroy_event_queue(_eventQueue);
     if (_display != NULL)
@@ -54,6 +65,11 @@ Window::~Window()
 
 void Window::run()
 {
+    float prevTime = 0;
+    while (!_finish)
+    {
+        gameLoop(prevTime);
+    }
 }
 
 void Window::gameLoop(float &prevTime)
@@ -98,10 +114,10 @@ void Window::draw()
 
 void Window::drawShip(int flags)
 {
-    std::shared_ptr<Sprite> sprite = this->userSpaceship->getSpaceShip();
-    int row = this->userSpaceship->getRow();
-    int col = this->userSpaceship->getCol();
-    Point centre = this->userSpaceship->getCentre();
+    std::shared_ptr<Sprite> sprite = userSpaceship->getSpaceShip();
+    int row = UserSpaceship::getRow();
+    int col = UserSpaceship::getCol();
+    Point centre = userSpaceship->getCentre();
     sprite->draw_region(row, col, 47.0, 40.0, centre, flags);
 }
 
@@ -124,7 +140,7 @@ void Window::loadBackgroundSprite()
 
 void Window::update(double dt)
 {
-    this->userSpaceship->update(dt);
+    userSpaceship->update(dt);
     // background
     bgMid = bgMid + bgSpeed * dt;
     if (bgMid.x >= 800)

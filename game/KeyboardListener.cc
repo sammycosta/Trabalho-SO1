@@ -1,9 +1,19 @@
 #include "KeyboardListener.h"
 #include <iostream>
 
-KeyboardListener::KeyboardListener()
+ALLEGRO_EVENT_QUEUE KeyboardListener::*_timerQueue;
+UserSpaceship KeyboardListener::*userSpaceship;
+
+KeyboardListener::KeyboardListener(ALLEGRO_EVENT_QUEUE *timerQueue)
 {
     // al_init() ??
+
+    // create keyboard listener queue for keyboard event
+    if ((_eventQueue = al_create_event_queue()) == NULL)
+    {
+        std::cout << "error, could not create event queue\n";
+        exit(1);
+    }
 
     // install keyboard
     if (!al_install_keyboard())
@@ -13,6 +23,8 @@ KeyboardListener::KeyboardListener()
 
     // register keyboard
     al_register_event_source(_eventQueue, al_get_keyboard_event_source());
+
+    _timerQueue = timerQueue;
 }
 
 KeyboardListener::~KeyboardListener()
@@ -21,28 +33,31 @@ KeyboardListener::~KeyboardListener()
 
 void KeyboardListener::run()
 {
-    ALLEGRO_KEYBOARD_STATE kb;
-    al_get_keyboard_state(&kb);
-    input(kb);
+    while (true)
+    {
+        ALLEGRO_KEYBOARD_STATE kb;
+        al_get_keyboard_state(&kb); // de onde ele pega?? se não usa a fila
+        input(kb);
+    }
 }
 
 act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
 {
     if (al_key_down(&kb, ALLEGRO_KEY_UP))
     {
-        this->userSpaceship->decreaseVerticalSpeed();
+        userSpaceship->decreaseVerticalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_RIGHT))
     {
-        this->userSpaceship->increaseHorizontalSpeed();
+        userSpaceship->increaseHorizontalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_DOWN))
     {
-        this->userSpaceship->increaseVerticalSpeed();
+        userSpaceship->increaseVerticalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_LEFT))
     {
-        this->userSpaceship->decreaseHorizontalSpeed();
+        userSpaceship->decreaseHorizontalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_1))
     {

@@ -1,11 +1,19 @@
 #include "UserSpaceship.h"
 
-UserSpaceship::UserSpaceship()
+std::shared_ptr<Sprite> UserSpaceship::spaceShip;
+Point UserSpaceship::centre;
+Vector UserSpaceship::speed;
+int UserSpaceship::row; /**<row of animation to be played */
+int UserSpaceship::col; /**< column of animation to be played */
+ALLEGRO_EVENT_QUEUE UserSpaceship::*_timerQueue;
+
+UserSpaceship::UserSpaceship(ALLEGRO_EVENT_QUEUE *timerQueue)
 {
     // Create Ship
-    this->centre = Point(215, 245);
-    this->color = al_map_rgb(0, 200, 0);
+    centre = Point(215, 245);
+    color = al_map_rgb(0, 200, 0);
     loadSprite();
+    _timerQueue = timerQueue;
 }
 
 UserSpaceship::~UserSpaceship()
@@ -15,72 +23,88 @@ UserSpaceship::~UserSpaceship()
 
 void UserSpaceship::run()
 {
+    float prevTime = 0;
+    while (true)
+    {
+        ALLEGRO_EVENT event;
+        float crtTime;
+
+        // get event
+        al_wait_for_event(_timerQueue, &event);
+        // timer
+        if (event.type == ALLEGRO_EVENT_TIMER)
+        {
+            crtTime = al_current_time();
+            update(crtTime - prevTime);
+            prevTime = crtTime;
+        }
+    }
 }
 
 void UserSpaceship::update(double dt)
 {
     // Spaceship
-    this->centre = this->centre + this->speed * dt;
-    selectShipAnimation();      // must happen before we reset our speed
-    this->speed = Vector(0, 0); // reset our speed
+    centre = centre + speed * dt;
+    selectShipAnimation(); // must happen before we reset our speed
+    speed = Vector(0, 0);  // reset our speed
     checkBoundary();
 }
 
 void UserSpaceship::increaseVerticalSpeed()
 {
-    this->speed.y += 250;
+    speed.y += 250;
 }
 
 void UserSpaceship::increaseHorizontalSpeed()
 {
-    this->speed.x += 250;
+    speed.x += 250;
 }
 
 void UserSpaceship::decreaseVerticalSpeed()
 {
-    this->speed.y -= 250;
+    speed.y -= 250;
 }
 
 void UserSpaceship::decreaseHorizontalSpeed()
 {
-    this->speed.x -= 250;
+    speed.x -= 250;
 }
 
 void UserSpaceship::checkBoundary()
 {
     // check x bound and adjust if out
-    if (this->centre.x > 800 - 16)
-        this->centre.x = 800 - 16;
-    else if (this->centre.x < 16)
-        this->centre.x = 16;
+    if (centre.x > 800 - 16)
+        centre.x = 800 - 16;
+    else if (centre.x < 16)
+        centre.x = 16;
     // check y bound and adjust if out
-    if (this->centre.y > 600 - 16)
-        this->centre.y = 600 - 16;
-    else if (this->centre.y < 16)
-        this->centre.y = 16;
+    if (centre.y > 600 - 16)
+        centre.y = 600 - 16;
+    else if (centre.y < 16)
+        centre.y = 16;
 }
 
 void UserSpaceship::selectShipAnimation()
 {
-    if (this->speed.x > 0)
+    if (speed.x > 0)
     {
-        this->col = 1;
-        if (this->speed.y > 0)
-            this->row = 2;
-        else if (this->speed.y < 0)
-            this->row = 0;
+        col = 1;
+        if (speed.y > 0)
+            row = 2;
+        else if (speed.y < 0)
+            row = 0;
         else
-            this->row = 1;
+            row = 1;
     }
     else
     {
-        this->col = 0;
-        if (this->speed.y > 0)
-            this->row = 2;
-        else if (this->speed.y < 0)
-            this->row = 0;
+        col = 0;
+        if (speed.y > 0)
+            row = 2;
+        else if (speed.y < 0)
+            row = 0;
         else
-            this->row = 1;
+            row = 1;
     }
 }
 
@@ -94,4 +118,21 @@ void UserSpaceship::loadSprite()
     spaceShip = std::make_shared<Sprite>("Sprite2.png"); // espaçonave do usuário
     // delete path
     al_destroy_path(path);
+}
+
+inline int UserSpaceship::getRow()
+{
+    return row;
+}
+inline int UserSpaceship::getCol()
+{
+    return col;
+}
+inline Point UserSpaceship::getCentre()
+{
+    return centre;
+}
+inline std::shared_ptr<Sprite> UserSpaceship::getSpaceShip()
+{
+    return spaceShip;
 }
