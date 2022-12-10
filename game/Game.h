@@ -7,8 +7,8 @@
 #include "Window.h"
 #include "UserSpaceship.h"
 #include "KeyboardListener.h"
-#include "../library_threads/traits.h"
-#include "../library_threads/thread.h"
+#include "./library_threads/traits.h"
+#include "./library_threads/thread.h"
 
 __USING_API
 

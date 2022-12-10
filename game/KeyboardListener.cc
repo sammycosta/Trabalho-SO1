@@ -1,9 +1,6 @@
 #include "KeyboardListener.h"
 #include <iostream>
 
-ALLEGRO_EVENT_QUEUE KeyboardListener::*_timerQueue;
-UserSpaceship KeyboardListener::*userSpaceship;
-
 KeyboardListener::KeyboardListener(ALLEGRO_EVENT_QUEUE *timerQueue)
 {
     // al_init() ??
@@ -31,13 +28,13 @@ KeyboardListener::~KeyboardListener()
 {
 }
 
-void KeyboardListener::run()
+void KeyboardListener::run(KeyboardListener *listener)
 {
     while (true)
     {
         ALLEGRO_KEYBOARD_STATE kb;
         al_get_keyboard_state(&kb); // de onde ele pega?? se não usa a fila
-        input(kb);
+        listener->input(kb);
     }
 }
 

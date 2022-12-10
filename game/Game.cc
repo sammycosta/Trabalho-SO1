@@ -23,9 +23,8 @@ Game::Game()
 
     Window *window = new Window(800, 600, 60, _eventQueue, userSpaceship);
 
-    userSpaceship->userThread = new Thread (UserSpaceship::run);
-    keyboardListener->kb_thread = new Thread(KeyboardListener::run);
-
+    userSpaceship->userThread = new Thread(UserSpaceship::run, userSpaceship);
+    keyboardListener->kb_thread = new Thread(KeyboardListener::run, keyboardListener);
 }
 
 Game::~Game()

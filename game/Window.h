@@ -4,11 +4,11 @@
 #include <allegro5/allegro.h>
 #include <memory>
 #include <string>
-#include "../Vector.h"
-#include "../Point.h"
+#include "Vector.h"
+#include "Point.h"
 #include "UserSpaceship.h"
-#include "../library_threads/traits.h"
-#include "../library_threads/thread.h"
+#include "./library_threads/traits.h"
+#include "./library_threads/thread.h"
 
 __USING_API
 
@@ -18,14 +18,14 @@ public:
   Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpaceship *userspaceship);
   ~Window();
 
-  static void run();
+  static void run(Window *win);
 
-  static void gameLoop(float &prevTime);
-  static void draw();
-  static void drawShip(int flags);
-  static void drawBackground();
+  void gameLoop(float &prevTime);
+  void draw();
+  void drawShip(int flags);
+  void drawBackground();
   void loadBackgroundSprite();
-  static void update(double dt);
+  void update(double dt);
 
   inline int getWidth() const
   {
@@ -43,23 +43,23 @@ public:
   Thread *window_thread;
 
 private:
-  static Point bgMid; /**<point used by the background to draw from */
-  static Point fgMid;
-  static Point fg2Mid;
-  static Vector bgSpeed; /**<background movement speed */
-  static Vector fgSpeed;
-  static std::shared_ptr<Sprite> bg; /**<shared pointer to background animation */
-  static std::shared_ptr<Sprite> fg;
+  Point bgMid; /**<point used by the background to draw from */
+  Point fgMid;
+  Point fg2Mid;
+  Vector bgSpeed; /**<background movement speed */
+  Vector fgSpeed;
+  std::shared_ptr<Sprite> bg; /**<shared pointer to background animation */
+  std::shared_ptr<Sprite> fg;
 
   int _displayWidth;
   int _displayHeight;
   int _fps;
-  static ALLEGRO_EVENT_QUEUE *_eventQueue;
-  static ALLEGRO_EVENT_QUEUE *_timerQueue;
+  ALLEGRO_EVENT_QUEUE *_eventQueue;
+  ALLEGRO_EVENT_QUEUE *_timerQueue;
   ALLEGRO_DISPLAY *_display;
-  static bool _finish;
+  bool _finish;
 
-  static UserSpaceship *userSpaceship;
+  UserSpaceship *userSpaceship;
 };
 
 #endif

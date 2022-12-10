@@ -5,11 +5,11 @@
 #include <memory>
 #include <string>
 
-#include "../Sprite.h"
-#include "../Vector.h"
-#include "../Action.h"
-#include "../library_threads/traits.h"
-#include "../library_threads/thread.h"
+#include "Sprite.h"
+#include "Vector.h"
+#include "Action.h"
+#include "./library_threads/traits.h"
+#include "./library_threads/thread.h"
 
 __USING_API
 
@@ -18,33 +18,45 @@ class UserSpaceship
 public:
     UserSpaceship(ALLEGRO_EVENT_QUEUE *_timerQueue);
     ~UserSpaceship();
-    static void run();
+    static void run(UserSpaceship *ship);
 
-    static void update(double dt);
+    void update(double dt);
     void increaseVerticalSpeed();
     void increaseHorizontalSpeed();
     void decreaseVerticalSpeed();
     void decreaseHorizontalSpeed();
 
-    static inline int getRow();
-    static inline int getCol();
-    static inline Point getCentre();
-    static inline std::shared_ptr<Sprite> getSpaceShip();
+    inline int getRow() const
+    {
+        return row;
+    }
+    inline int getCol() const
+    {
+        return col;
+    }
+    inline Point getCentre() const
+    {
+        return centre;
+    }
+    inline std::shared_ptr<Sprite> getSpaceShip() const
+    {
+        return spaceShip;
+    }
 
     Thread *userThread;
 
 private:
-    static void checkBoundary();
-    static void selectShipAnimation();
+    void checkBoundary();
+    void selectShipAnimation();
     void loadSprite();
 
-    static std::shared_ptr<Sprite> spaceShip;
-    static Point centre;
+    std::shared_ptr<Sprite> spaceShip;
+    Point centre;
     ALLEGRO_COLOR color; /**< ship color */
-    static Vector speed;
-    static int row; /**<row of animation to be played */
-    static int col; /**< column of animation to be played */
-    static ALLEGRO_EVENT_QUEUE *_timerQueue;
+    Vector speed;
+    int row; /**<row of animation to be played */
+    int col; /**< column of animation to be played */
+    ALLEGRO_EVENT_QUEUE *_timerQueue;
 };
 
 #endif

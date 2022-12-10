@@ -1,12 +1,5 @@
 #include "UserSpaceship.h"
 
-std::shared_ptr<Sprite> UserSpaceship::spaceShip;
-Point UserSpaceship::centre;
-Vector UserSpaceship::speed;
-int UserSpaceship::row; /**<row of animation to be played */
-int UserSpaceship::col; /**< column of animation to be played */
-ALLEGRO_EVENT_QUEUE UserSpaceship::*_timerQueue;
-
 UserSpaceship::UserSpaceship(ALLEGRO_EVENT_QUEUE *timerQueue)
 {
     // Create Ship
@@ -21,7 +14,7 @@ UserSpaceship::~UserSpaceship()
     spaceShip.reset();
 }
 
-void UserSpaceship::run()
+void UserSpaceship::run(UserSpaceship *ship)
 {
     float prevTime = 0;
     while (true)
@@ -30,12 +23,12 @@ void UserSpaceship::run()
         float crtTime;
 
         // get event
-        al_wait_for_event(_timerQueue, &event);
+        al_wait_for_event(ship->_timerQueue, &event);
         // timer
         if (event.type == ALLEGRO_EVENT_TIMER)
         {
             crtTime = al_current_time();
-            update(crtTime - prevTime);
+            ship->update(crtTime - prevTime);
             prevTime = crtTime;
         }
     }
@@ -118,21 +111,4 @@ void UserSpaceship::loadSprite()
     spaceShip = std::make_shared<Sprite>("Sprite2.png"); // espaçonave do usuário
     // delete path
     al_destroy_path(path);
-}
-
-inline int UserSpaceship::getRow()
-{
-    return row;
-}
-inline int UserSpaceship::getCol()
-{
-    return col;
-}
-inline Point UserSpaceship::getCentre()
-{
-    return centre;
-}
-inline std::shared_ptr<Sprite> UserSpaceship::getSpaceShip()
-{
-    return spaceShip;
 }

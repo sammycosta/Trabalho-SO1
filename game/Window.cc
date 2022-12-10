@@ -7,18 +7,6 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
-Point Window::bgMid; /**<point used by the background to draw from */
-Point Window::fgMid;
-Point Window::fg2Mid;
-Vector Window::bgSpeed; /**<background movement speed */
-Vector Window::fgSpeed;
-std::shared_ptr<Sprite> Window::bg; /**<shared pointer to background animation */
-std::shared_ptr<Sprite> Window::fg;
-ALLEGRO_EVENT_QUEUE Window::*_eventQueue;
-ALLEGRO_EVENT_QUEUE Window::*_timerQueue;
-bool Window::_finish;
-UserSpaceship Window::*userSpaceship;
-
 Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpaceship *userspaceship) : _displayWidth(w),
                                                                                                        _displayHeight(h),
                                                                                                        _fps(fps)
@@ -48,7 +36,7 @@ Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpace
 
     loadBackgroundSprite();
 
-    window_thread = new Thread(run);
+    window_thread = new Thread(run, this);
 }
 
 Window::~Window()
@@ -63,12 +51,12 @@ Window::~Window()
     bg.reset();
 }
 
-void Window::run()
+void Window::run(Window *win)
 {
     float prevTime = 0;
-    while (!_finish)
+    while (!win->_finish)
     {
-        gameLoop(prevTime);
+        win->gameLoop(prevTime);
     }
 }
 
@@ -115,8 +103,8 @@ void Window::draw()
 void Window::drawShip(int flags)
 {
     std::shared_ptr<Sprite> sprite = userSpaceship->getSpaceShip();
-    int row = UserSpaceship::getRow();
-    int col = UserSpaceship::getCol();
+    int row = userSpaceship->getRow();
+    int col = userSpaceship->getCol();
     Point centre = userSpaceship->getCentre();
     sprite->draw_region(row, col, 47.0, 40.0, centre, flags);
 }

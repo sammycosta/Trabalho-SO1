@@ -191,8 +191,8 @@ KeyboardListener.o: KeyboardListener.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/c++/11/cerrno /usr/include/c++/11/bits/charconv.h \
- /usr/include/c++/11/bits/basic_string.tcc ../Action.h UserSpaceship.h \
- ../Sprite.h ../Point.h /usr/include/c++/11/cmath /usr/include/math.h \
+ /usr/include/c++/11/bits/basic_string.tcc Action.h UserSpaceship.h \
+ Sprite.h Point.h /usr/include/c++/11/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
@@ -202,9 +202,9 @@ KeyboardListener.o: KeyboardListener.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/ctime /usr/include/allegro5/allegro_image.h \
- ../Vector.h ../library_threads/traits.h ../library_threads/thread.h \
- ../library_threads/cpu.h /usr/include/ucontext.h \
+ /usr/include/c++/11/ctime /usr/include/allegro5/allegro_image.h Vector.h \
+ library_threads/traits.h library_threads/thread.h library_threads/cpu.h \
+ /usr/include/ucontext.h \
  /usr/include/x86_64-linux-gnu/bits/indirect-return.h \
  /usr/include/x86_64-linux-gnu/sys/ucontext.h \
  /usr/include/x86_64-linux-gnu/bits/types/stack_t.h \
@@ -225,7 +225,7 @@ KeyboardListener.o: KeyboardListener.cc /usr/include/stdc-predef.h \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc ../library_threads/traits.h \
- ../library_threads/debug.h ../library_threads/list.h \
+ /usr/include/c++/11/bits/istream.tcc library_threads/traits.h \
+ library_threads/debug.h library_threads/list.h \
  /usr/include/c++/11/chrono /usr/include/c++/11/ratio \
  /usr/include/c++/11/limits /usr/include/c++/11/bits/parse_numbers.h
