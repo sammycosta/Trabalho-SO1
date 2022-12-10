@@ -8,8 +8,8 @@
 #include "Sprite.h"
 #include "Vector.h"
 #include "Action.h"
-#include "./library_threads/traits.h"
-#include "./library_threads/thread.h"
+#include "traits.h"
+#include "thread.h"
 
 __USING_API
 
