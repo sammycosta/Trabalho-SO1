@@ -4,19 +4,23 @@
 #include <allegro5/allegro.h>
 #include <memory>
 #include <string>
+#include <list>
 
 #include "Sprite.h"
 #include "Vector.h"
 #include "Action.h"
 #include "traits.h"
 #include "thread.h"
+#include "Projectile.h"
+#include <iostream>
+#include "Bullet.h"
 
 __USING_API
 
 class UserSpaceship
 {
 public:
-    UserSpaceship(ALLEGRO_EVENT_QUEUE *_timerQueue);
+    UserSpaceship(ALLEGRO_TIMER *timer);
     ~UserSpaceship();
     static void run(UserSpaceship *ship);
 
@@ -25,6 +29,8 @@ public:
     void increaseHorizontalSpeed();
     void decreaseVerticalSpeed();
     void decreaseHorizontalSpeed();
+    void addBullet();
+    void addMissile();
 
     inline int getRow() const
     {
@@ -42,13 +48,13 @@ public:
     {
         return spaceShip;
     }
-
-    Thread *userThread;
+    void drawProjectiles();
 
 private:
     void checkBoundary();
     void selectShipAnimation();
     void loadSprite();
+    void updateProjectiles(double dt);
 
     std::shared_ptr<Sprite> spaceShip;
     Point centre;
@@ -56,7 +62,12 @@ private:
     Vector speed;
     int row; /**<row of animation to be played */
     int col; /**< column of animation to be played */
-    ALLEGRO_EVENT_QUEUE *_timerQueue;
+    ALLEGRO_TIMER *_timer;
+    ALLEGRO_EVENT_QUEUE *_eventQueue;
+
+    std::list<std::shared_ptr<Projectile>> _proj;
+    Vector projectileSpeed;
+    ALLEGRO_TIMER *_bulletTimer;
 };
 
 #endif

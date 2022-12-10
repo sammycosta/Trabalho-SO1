@@ -202,10 +202,11 @@ Game.o: Game.cc /usr/include/stdc-predef.h Game.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/ctime UserSpaceship.h Sprite.h \
- /usr/include/allegro5/allegro_image.h /usr/include/c++/11/iostream \
- /usr/include/c++/11/ostream /usr/include/c++/11/ios \
- /usr/include/c++/11/bits/ios_base.h \
+ /usr/include/c++/11/ctime UserSpaceship.h /usr/include/c++/11/list \
+ /usr/include/c++/11/bits/stl_list.h /usr/include/c++/11/bits/list.tcc \
+ Sprite.h /usr/include/allegro5/allegro_image.h \
+ /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
+ /usr/include/c++/11/ios /usr/include/c++/11/bits/ios_base.h \
  /usr/include/c++/11/bits/locale_classes.h \
  /usr/include/c++/11/bits/locale_classes.tcc \
  /usr/include/c++/11/system_error \
@@ -228,4 +229,5 @@ Game.o: Game.cc /usr/include/stdc-predef.h Game.h \
  /usr/include/x86_64-linux-gnu/bits/types/stack_t.h debug.h list.h \
  /usr/include/c++/11/chrono /usr/include/c++/11/ratio \
  /usr/include/c++/11/limits /usr/include/c++/11/bits/parse_numbers.h \
+ Projectile.h /usr/include/allegro5/allegro_primitives.h Bullet.h \
  KeyboardListener.h

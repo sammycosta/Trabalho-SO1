@@ -1,7 +1,7 @@
 #include "KeyboardListener.h"
 #include <iostream>
 
-KeyboardListener::KeyboardListener(ALLEGRO_EVENT_QUEUE *timerQueue)
+KeyboardListener::KeyboardListener(UserSpaceship *ship)
 {
     // al_init() ??
 
@@ -20,8 +20,7 @@ KeyboardListener::KeyboardListener(ALLEGRO_EVENT_QUEUE *timerQueue)
 
     // register keyboard
     al_register_event_source(_eventQueue, al_get_keyboard_event_source());
-
-    _timerQueue = timerQueue;
+    userSpaceship = ship;
 }
 
 KeyboardListener::~KeyboardListener()
@@ -32,8 +31,9 @@ void KeyboardListener::run(KeyboardListener *listener)
 {
     while (true)
     {
+        std::cout << "run keyboardListener \n";
         ALLEGRO_KEYBOARD_STATE kb;
-        al_get_keyboard_state(&kb); // de onde ele pega?? se não usa a fila
+        al_get_keyboard_state(&kb);
         listener->input(kb);
         Thread::yield();
     }
@@ -65,6 +65,7 @@ act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
     if (al_key_down(&kb, ALLEGRO_KEY_SPACE))
     {
         std::cout << "tiro normal\n";
+        userSpaceship->addBullet();
         return act::action::FIRE_SECONDARY;
     }
     if (al_key_down(&kb, ALLEGRO_KEY_ESCAPE))

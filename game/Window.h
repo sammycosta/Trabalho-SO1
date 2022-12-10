@@ -15,7 +15,7 @@ __USING_API
 class Window
 {
 public:
-  Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpaceship *userspaceship);
+  Window(int w, int h, int fps, ALLEGRO_TIMER *_timer, UserSpaceship *userspaceship);
   ~Window();
 
   static void run(Window *win);
@@ -40,8 +40,6 @@ public:
     return _fps;
   }
 
-  Thread *window_thread;
-
 private:
   Point bgMid; /**<point used by the background to draw from */
   Point fgMid;
@@ -55,7 +53,7 @@ private:
   int _displayHeight;
   int _fps;
   ALLEGRO_EVENT_QUEUE *_eventQueue;
-  ALLEGRO_EVENT_QUEUE *_timerQueue;
+  ALLEGRO_TIMER *_timer;
   ALLEGRO_DISPLAY *_display;
   bool _finish;
 

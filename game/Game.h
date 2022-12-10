@@ -21,6 +21,7 @@ public:
     {
         al_init();
         // initialize our timers
+        _fps = 60;
         if ((_timer = al_create_timer(1.0 / _fps)) == NULL)
         {
             std::cout << "error, could not create timer\n";
@@ -34,14 +35,24 @@ public:
         al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
         al_start_timer(_timer);
 
-        UserSpaceship *userSpaceship = new UserSpaceship(_eventQueue);
+        UserSpaceship *userSpaceship = new UserSpaceship(_timer);
         std::cout << "game\n";
-        KeyboardListener *keyboardListener = new KeyboardListener(_eventQueue);
+        KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship);
 
-        Window *window = new Window(800, 600, 60, _eventQueue, userSpaceship);
+        Window *window = new Window(800, 600, 60, _timer, userSpaceship);
 
-        userSpaceship->userThread = new Thread(UserSpaceship::run, userSpaceship);
-        keyboardListener->kb_thread = new Thread(KeyboardListener::run, keyboardListener);
+        _window_thread = new Thread(Window::run, window);
+        _userThread = new Thread(UserSpaceship::run, userSpaceship);
+        _kb_thread = new Thread(KeyboardListener::run, keyboardListener);
+
+        int ec;
+        ec = _window_thread->join();
+        ec = _userThread->join();
+        ec = _kb_thread->join();
+
+        delete (_window_thread);
+        delete (_userThread);
+        delete (_kb_thread);
     }
 
 private:
@@ -52,6 +63,9 @@ private:
     static ALLEGRO_TIMER *_timer;
     static int _fps;
     static ALLEGRO_EVENT_QUEUE *_eventQueue;
+    static Thread *_window_thread;
+    static Thread *_userThread;
+    static Thread *_kb_thread;
 };
 
 #endif

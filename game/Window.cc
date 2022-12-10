@@ -7,12 +7,12 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
-Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpaceship *userspaceship) : _displayWidth(w),
-                                                                                                       _displayHeight(h),
-                                                                                                       _fps(fps)
+Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *userspaceship) : _displayWidth(w),
+                                                                                            _displayHeight(h),
+                                                                                            _fps(fps)
 
 {
-    _timerQueue = timerQueue;
+    _timer = timer;
     userSpaceship = userspaceship;
 
     if ((_display = al_create_display(_displayWidth, _displayHeight)) == NULL)
@@ -33,10 +33,9 @@ Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpace
         exit(1);
     }
     al_register_event_source(_eventQueue, al_get_display_event_source(_display));
+    al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
 
     loadBackgroundSprite();
-
-    window_thread = new Thread(run, this);
     std::cout << "window\n";
 }
 
@@ -82,6 +81,7 @@ void Window::gameLoop(float &prevTime)
     // timer
     if (event.type == ALLEGRO_EVENT_TIMER)
     {
+        std::cout << "evento timer";
         crtTime = al_current_time();
         update(crtTime - prevTime);
         prevTime = crtTime;
@@ -110,6 +110,7 @@ void Window::drawShip(int flags)
     int col = userSpaceship->getCol();
     Point centre = userSpaceship->getCentre();
     sprite->draw_region(row, col, 47.0, 40.0, centre, flags);
+    userSpaceship->drawProjectiles();
 }
 
 void Window::drawBackground()
@@ -119,6 +120,13 @@ void Window::drawBackground()
 
 void Window::loadBackgroundSprite()
 {
+    // represents the middle of the image width-wise, and top height-wise
+    bgMid = Point(0, 0);
+    fgMid = Point(800, 0);
+    fg2Mid = Point(300, 300);
+    bgSpeed = Vector(50, 0);
+    fgSpeed = Vector(-90, 0);
+
     // Go to resources directory
     ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
     al_append_path_component(path, "resources");
@@ -131,8 +139,8 @@ void Window::loadBackgroundSprite()
 
 void Window::update(double dt)
 {
-    userSpaceship->update(dt);
     // background
+    std::cout << "update bg window \n";
     bgMid = bgMid + bgSpeed * dt;
     if (bgMid.x >= 800)
     {

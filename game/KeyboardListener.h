@@ -10,17 +10,14 @@
 class KeyboardListener
 {
 public:
-    KeyboardListener(ALLEGRO_EVENT_QUEUE *timerQueue);
+    KeyboardListener(UserSpaceship *ship);
     ~KeyboardListener();
 
     static void run(KeyboardListener *listener);
 
-    Thread *kb_thread;
-
 private:
     act::action input(ALLEGRO_KEYBOARD_STATE &);
     ALLEGRO_EVENT_QUEUE *_eventQueue;
-    ALLEGRO_EVENT_QUEUE *_timerQueue;
 
     UserSpaceship *userSpaceship;
 };

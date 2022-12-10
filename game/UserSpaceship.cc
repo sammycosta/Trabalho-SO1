@@ -2,17 +2,22 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-UserSpaceship::UserSpaceship(ALLEGRO_EVENT_QUEUE *timerQueue)
+UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer)
 {
     al_init();
-    // create the display
     // initialize addons
     al_init_primitives_addon();
     al_init_image_addon();
+    if ((_eventQueue = al_create_event_queue()) == NULL)
+    {
+        std::cout << "error, could not create event queue\n";
+        exit(1);
+    }
     // Create Ship
     loadSprite();
     std::cout << "aaa\n";
-    _timerQueue = timerQueue;
+    _timer = timer;
+    projectileSpeed = Vector(500, 0);
 }
 
 UserSpaceship::~UserSpaceship()
@@ -29,14 +34,20 @@ void UserSpaceship::run(UserSpaceship *ship)
         float crtTime;
 
         // get event
-        al_wait_for_event(ship->_timerQueue, &event);
+        // al_wait_for_event(ship->_eventQueue, &event);
         // timer
-        if (event.type == ALLEGRO_EVENT_TIMER)
-        {
-            crtTime = al_current_time();
-            ship->update(crtTime - prevTime);
-            prevTime = crtTime;
-        }
+        // if (event.type == ALLEGRO_EVENT_TIMER)
+        // {
+        //     std::cout << "run userSpaceship \n";
+        //     crtTime = al_current_time();
+        //     ship->update(crtTime - prevTime);
+        //     prevTime = crtTime;
+        // }
+
+        std::cout << "run userSpaceship \n";
+        crtTime = al_current_time();
+        ship->update(crtTime - prevTime);
+        prevTime = crtTime;
         Thread::yield();
     }
 }
@@ -48,6 +59,7 @@ void UserSpaceship::update(double dt)
     selectShipAnimation(); // must happen before we reset our speed
     speed = Vector(0, 0);  // reset our speed
     checkBoundary();
+    updateProjectiles(dt);
 }
 
 void UserSpaceship::increaseVerticalSpeed()
@@ -117,9 +129,45 @@ void UserSpaceship::loadSprite()
     al_append_path_component(path, "/resources");
     al_change_directory(al_path_cstr(path, '/'));
     // sprites
-    std::cout << "aaa\n";
     spaceShip = std::make_shared<Sprite>("Sprite2.png"); // espaçonave do usuário
-    std::cout << "aaa\n";
     // delete path
     al_destroy_path(path);
+}
+
+void UserSpaceship::updateProjectiles(double dt)
+{
+    std::list<std::shared_ptr<Projectile>> newProj;
+    if (_proj.empty() == false)
+    {
+        for (auto p = _proj.begin(); p != _proj.end(); ++p)
+        {
+            p->get()->update(dt);
+            if (p->get()->isAlive())
+            {
+                newProj.push_back(*p);
+            }
+        }
+        _proj.clear();
+        _proj.assign(newProj.begin(), newProj.end());
+    }
+}
+
+void UserSpaceship::addBullet()
+{
+    _proj.push_back(std::make_shared<Bullet>(centre + Point(-20, 0), color, projectileSpeed));
+}
+
+void UserSpaceship::drawProjectiles()
+{
+    if (_proj.empty() == false)
+    {
+        for (auto p = _proj.begin(); p != _proj.end(); ++p)
+        {
+            if (p->get()->isAlive())
+            {
+                std::cout << "chegou no if p desenhar\n";
+                p->get()->draw();
+            }
+        }
+    }
 }

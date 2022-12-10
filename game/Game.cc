@@ -7,6 +7,9 @@ KeyboardListener *Game::keyboardListener;
 ALLEGRO_TIMER *Game::_timer;
 int Game::_fps;
 ALLEGRO_EVENT_QUEUE *Game::_eventQueue;
+Thread *Game::_window_thread;
+Thread *Game::_userThread;
+Thread *Game::_kb_thread;
 
 /*
 

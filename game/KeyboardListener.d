@@ -192,7 +192,9 @@ KeyboardListener.o: KeyboardListener.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/c++/11/cerrno /usr/include/c++/11/bits/charconv.h \
  /usr/include/c++/11/bits/basic_string.tcc Action.h UserSpaceship.h \
- Sprite.h Point.h /usr/include/c++/11/cmath /usr/include/math.h \
+ /usr/include/c++/11/list /usr/include/c++/11/bits/stl_list.h \
+ /usr/include/c++/11/bits/list.tcc Sprite.h Point.h \
+ /usr/include/c++/11/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
@@ -226,4 +228,5 @@ KeyboardListener.o: KeyboardListener.cc /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/sys/ucontext.h \
  /usr/include/x86_64-linux-gnu/bits/types/stack_t.h debug.h list.h \
  /usr/include/c++/11/chrono /usr/include/c++/11/ratio \
- /usr/include/c++/11/limits /usr/include/c++/11/bits/parse_numbers.h
+ /usr/include/c++/11/limits /usr/include/c++/11/bits/parse_numbers.h \
+ Projectile.h /usr/include/allegro5/allegro_primitives.h Bullet.h

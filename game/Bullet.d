@@ -1,4 +1,4 @@
-Window.o: Window.cc /usr/include/stdc-predef.h Window.h \
+Bullet.o: Bullet.cc /usr/include/stdc-predef.h Bullet.h \
  /usr/include/allegro5/allegro.h /usr/include/allegro5/base.h \
  /usr/include/errno.h /usr/include/features.h \
  /usr/include/features-time64.h \
@@ -191,7 +191,7 @@ Window.o: Window.cc /usr/include/stdc-predef.h Window.h \
  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/c++/11/cerrno /usr/include/c++/11/bits/charconv.h \
- /usr/include/c++/11/bits/basic_string.tcc Vector.h Point.h \
+ /usr/include/c++/11/bits/basic_string.tcc Point.h \
  /usr/include/c++/11/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -202,11 +202,10 @@ Window.o: Window.cc /usr/include/stdc-predef.h Window.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/ctime UserSpaceship.h /usr/include/c++/11/list \
- /usr/include/c++/11/bits/stl_list.h /usr/include/c++/11/bits/list.tcc \
- Sprite.h /usr/include/allegro5/allegro_image.h \
- /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
- /usr/include/c++/11/ios /usr/include/c++/11/bits/ios_base.h \
+ /usr/include/c++/11/ctime Projectile.h \
+ /usr/include/allegro5/allegro_primitives.h /usr/include/c++/11/iostream \
+ /usr/include/c++/11/ostream /usr/include/c++/11/ios \
+ /usr/include/c++/11/bits/ios_base.h \
  /usr/include/c++/11/bits/locale_classes.h \
  /usr/include/c++/11/bits/locale_classes.tcc \
  /usr/include/c++/11/system_error \
@@ -222,14 +221,4 @@ Window.o: Window.cc /usr/include/stdc-predef.h Window.h \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc Action.h traits.h thread.h cpu.h \
- /usr/include/ucontext.h \
- /usr/include/x86_64-linux-gnu/bits/indirect-return.h \
- /usr/include/x86_64-linux-gnu/sys/ucontext.h \
- /usr/include/x86_64-linux-gnu/bits/types/stack_t.h debug.h list.h \
- /usr/include/c++/11/chrono /usr/include/c++/11/ratio \
- /usr/include/c++/11/limits /usr/include/c++/11/bits/parse_numbers.h \
- Projectile.h /usr/include/allegro5/allegro_primitives.h Bullet.h \
- /usr/include/allegro5/allegro_font.h /usr/include/allegro5/allegro_ttf.h \
- /usr/include/allegro5/allegro_audio.h \
- /usr/include/allegro5/allegro_acodec.h
+ /usr/include/c++/11/bits/istream.tcc Vector.h
