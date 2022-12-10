@@ -1,5 +1,13 @@
 #include "Game.h"
 
+bool Game::_finish;
+Window *Game::window;
+UserSpaceship *Game::userSpaceship;
+KeyboardListener *Game::keyboardListener;
+ALLEGRO_TIMER *Game::_timer;
+int Game::_fps;
+ALLEGRO_EVENT_QUEUE *Game::_eventQueue;
+
 /*
 
 Game::Game()
@@ -63,11 +71,3 @@ void Game::run()
 }
 
 */
-
-bool Game::_finish;
-Window Game::*window;
-UserSpaceship Game::*userSpaceship;
-KeyboardListener Game::*keyboardListener;
-ALLEGRO_TIMER Game::*_timer;
-int Game::_fps;
-ALLEGRO_EVENT_QUEUE Game::*_eventQueue;
