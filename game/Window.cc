@@ -81,7 +81,6 @@ void Window::gameLoop(float &prevTime)
     // timer
     if (event.type == ALLEGRO_EVENT_TIMER)
     {
-        std::cout << "evento timer";
         crtTime = al_current_time();
         update(crtTime - prevTime);
         prevTime = crtTime;

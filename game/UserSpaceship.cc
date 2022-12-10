@@ -2,7 +2,7 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer)
+UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer, int fps)
 {
     al_init();
     // initialize addons
@@ -15,9 +15,16 @@ UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer)
     }
     // Create Ship
     loadSprite();
-    std::cout << "aaa\n";
     _timer = timer;
     projectileSpeed = Vector(500, 0);
+
+    _bulletTimer = new Timer(fps);
+    _bulletTimer->create();
+    _bulletTimer->startTimer();
+
+    _missileTimer = new Timer(fps);
+    _missileTimer->create();
+    _missileTimer->startTimer();
 }
 
 UserSpaceship::~UserSpaceship()
@@ -154,7 +161,18 @@ void UserSpaceship::updateProjectiles(double dt)
 
 void UserSpaceship::addBullet()
 {
-    _proj.push_back(std::make_shared<Bullet>(centre + Point(-20, 0), color, projectileSpeed));
+    if (_bulletTimer->getCount() > 6)
+    {
+        _proj.push_back(std::make_shared<Bullet>(centre + Point(-20, 0), color, projectileSpeed));
+        _bulletTimer->srsTimer();
+    }
+}
+
+void UserSpaceship::addMissile() {
+    if (_missileTimer->getCount() > 20) {
+        _proj.push_back(std::make_shared<Missile>(centre + Point(-20, 0), color, projectileSpeed));
+        _missileTimer->srsTimer();
+    }
 }
 
 void UserSpaceship::drawProjectiles()

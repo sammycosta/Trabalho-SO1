@@ -24,7 +24,16 @@ public:
 
     virtual ~Projectile() {}
 
-    virtual void update(double dt) {}
+    void update(double dt) {
+        centre = centre + speed * dt;
+        if ((centre.x > 800) ||
+            (centre.x < 0) ||
+            (centre.y > 600) ||
+            (centre.y < 0))
+        {
+            live = false;
+        }
+    }
 
     virtual void draw(){};
 

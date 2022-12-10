@@ -35,7 +35,7 @@ public:
         al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
         al_start_timer(_timer);
 
-        UserSpaceship *userSpaceship = new UserSpaceship(_timer);
+        UserSpaceship *userSpaceship = new UserSpaceship(_timer, _fps);
         std::cout << "game\n";
         KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship);
 

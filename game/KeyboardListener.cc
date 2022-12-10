@@ -60,11 +60,11 @@ act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
     if (al_key_down(&kb, ALLEGRO_KEY_1))
     {
         std::cout << "missel\n";
+        userSpaceship->addMissile();
         return act::action::FIRE_PRIMARY;
     }
     if (al_key_down(&kb, ALLEGRO_KEY_SPACE))
     {
-        std::cout << "tiro normal\n";
         userSpaceship->addBullet();
         return act::action::FIRE_SECONDARY;
     }

@@ -12,7 +12,7 @@ class Bullet : public Projectile
 public:
     Bullet(Point point, ALLEGRO_COLOR color, Vector s);
     ~Bullet();
-    void update(double dt);
+    // void update(double dt);
     void draw();
 
 private:

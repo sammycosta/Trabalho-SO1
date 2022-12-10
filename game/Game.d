@@ -204,7 +204,6 @@ Game.o: Game.cc /usr/include/stdc-predef.h Game.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
  /usr/include/c++/11/ctime UserSpaceship.h /usr/include/c++/11/list \
  /usr/include/c++/11/bits/stl_list.h /usr/include/c++/11/bits/list.tcc \
- Sprite.h /usr/include/allegro5/allegro_image.h \
  /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
  /usr/include/c++/11/ios /usr/include/c++/11/bits/ios_base.h \
  /usr/include/c++/11/bits/locale_classes.h \
@@ -222,12 +221,16 @@ Game.o: Game.cc /usr/include/stdc-predef.h Game.h \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc Action.h traits.h thread.h cpu.h \
+ /usr/include/c++/11/bits/istream.tcc Sprite.h \
+ /usr/include/allegro5/allegro_image.h Action.h traits.h thread.h cpu.h \
  /usr/include/ucontext.h \
  /usr/include/x86_64-linux-gnu/bits/indirect-return.h \
  /usr/include/x86_64-linux-gnu/sys/ucontext.h \
  /usr/include/x86_64-linux-gnu/bits/types/stack_t.h debug.h list.h \
  /usr/include/c++/11/chrono /usr/include/c++/11/ratio \
  /usr/include/c++/11/limits /usr/include/c++/11/bits/parse_numbers.h \
- Projectile.h /usr/include/allegro5/allegro_primitives.h Bullet.h \
- KeyboardListener.h
+ Projectile.h /usr/include/allegro5/allegro_primitives.h Bullet.h Timer.h \
+ Missile.h /usr/include/c++/11/vector \
+ /usr/include/c++/11/bits/stl_vector.h \
+ /usr/include/c++/11/bits/stl_bvector.h \
+ /usr/include/c++/11/bits/vector.tcc KeyboardListener.h

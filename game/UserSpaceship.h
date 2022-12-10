@@ -6,21 +6,23 @@
 #include <string>
 #include <list>
 
+#include <iostream>
 #include "Sprite.h"
 #include "Vector.h"
 #include "Action.h"
 #include "traits.h"
 #include "thread.h"
 #include "Projectile.h"
-#include <iostream>
 #include "Bullet.h"
+#include "Timer.h"
+#include "Missile.h"
 
 __USING_API
 
 class UserSpaceship
 {
 public:
-    UserSpaceship(ALLEGRO_TIMER *timer);
+    UserSpaceship(ALLEGRO_TIMER *timer, int fps);
     ~UserSpaceship();
     static void run(UserSpaceship *ship);
 
@@ -67,7 +69,8 @@ private:
 
     std::list<std::shared_ptr<Projectile>> _proj;
     Vector projectileSpeed;
-    ALLEGRO_TIMER *_bulletTimer;
+    Timer *_bulletTimer;
+    Timer *_missileTimer;
 };
 
 #endif
