@@ -37,6 +37,7 @@ Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpace
     loadBackgroundSprite();
 
     window_thread = new Thread(run, this);
+    std::cout << "window\n";
 }
 
 Window::~Window()
@@ -56,7 +57,9 @@ void Window::run(Window *win)
     float prevTime = 0;
     while (!win->_finish)
     {
+        std::cout << "run window \n";
         win->gameLoop(prevTime);
+        Thread::yield();
     }
 }
 

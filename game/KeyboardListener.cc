@@ -35,6 +35,7 @@ void KeyboardListener::run(KeyboardListener *listener)
         ALLEGRO_KEYBOARD_STATE kb;
         al_get_keyboard_state(&kb); // de onde ele pega?? se não usa a fila
         listener->input(kb);
+        Thread::yield();
     }
 }
 

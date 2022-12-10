@@ -10,12 +10,13 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include "system.h"
 
 int main()
 {
     srand(time(0));
 
-    Game();
+    System::init((void (*)(void *)) & Game::run);
 
     return 0;
 }

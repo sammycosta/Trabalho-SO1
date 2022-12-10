@@ -1,11 +1,17 @@
 #include "UserSpaceship.h"
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_image.h>
 
 UserSpaceship::UserSpaceship(ALLEGRO_EVENT_QUEUE *timerQueue)
 {
+    al_init();
+    // create the display
+    // initialize addons
+    al_init_primitives_addon();
+    al_init_image_addon();
     // Create Ship
-    centre = Point(215, 245);
-    color = al_map_rgb(0, 200, 0);
     loadSprite();
+    std::cout << "aaa\n";
     _timerQueue = timerQueue;
 }
 
@@ -31,6 +37,7 @@ void UserSpaceship::run(UserSpaceship *ship)
             ship->update(crtTime - prevTime);
             prevTime = crtTime;
         }
+        Thread::yield();
     }
 }
 
@@ -103,12 +110,16 @@ void UserSpaceship::selectShipAnimation()
 
 void UserSpaceship::loadSprite()
 {
+    centre = Point(215, 245);
+    color = al_map_rgb(0, 200, 0);
     // Go to resources directory
     ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
-    al_append_path_component(path, "resources");
+    al_append_path_component(path, "/resources");
     al_change_directory(al_path_cstr(path, '/'));
     // sprites
+    std::cout << "aaa\n";
     spaceShip = std::make_shared<Sprite>("Sprite2.png"); // espaçonave do usuário
+    std::cout << "aaa\n";
     // delete path
     al_destroy_path(path);
 }
