@@ -50,6 +50,11 @@ public:
     {
         return spaceShip;
     }
+    inline std::list<std::shared_ptr<Projectile>> getProj() const
+    {
+        return _proj;
+    }
+
     void drawProjectiles();
 
 private:
