@@ -233,4 +233,5 @@ main.o: main.cc /usr/include/stdc-predef.h Game.h \
  Missile.h /usr/include/c++/11/vector \
  /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
- /usr/include/c++/11/bits/vector.tcc KeyboardListener.h system.h
+ /usr/include/c++/11/bits/vector.tcc EnemySpaceshipManager.h \
+ PurpleEnemy.h Enemy.h KeyboardListener.h system.h

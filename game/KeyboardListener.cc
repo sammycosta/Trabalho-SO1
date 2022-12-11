@@ -1,7 +1,7 @@
 #include "KeyboardListener.h"
 #include <iostream>
 
-KeyboardListener::KeyboardListener(UserSpaceship *ship)
+KeyboardListener::KeyboardListener(UserSpaceship *ship, Window *win)
 {
     // al_init() ??
 
@@ -20,7 +20,8 @@ KeyboardListener::KeyboardListener(UserSpaceship *ship)
 
     // register keyboard
     al_register_event_source(_eventQueue, al_get_keyboard_event_source());
-    userSpaceship = ship;
+    _userSpaceship = ship;
+    _window = win;
 }
 
 KeyboardListener::~KeyboardListener()
@@ -43,34 +44,33 @@ act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
 {
     if (al_key_down(&kb, ALLEGRO_KEY_UP))
     {
-        userSpaceship->decreaseVerticalSpeed();
+        _userSpaceship->decreaseVerticalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_RIGHT))
     {
-        userSpaceship->increaseHorizontalSpeed();
+        _userSpaceship->increaseHorizontalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_DOWN))
     {
-        userSpaceship->increaseVerticalSpeed();
+        _userSpaceship->increaseVerticalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_LEFT))
     {
-        userSpaceship->decreaseHorizontalSpeed();
+        _userSpaceship->decreaseHorizontalSpeed();
     }
     if (al_key_down(&kb, ALLEGRO_KEY_1))
     {
-        std::cout << "missel\n";
-        userSpaceship->addMissile();
+        _userSpaceship->addMissile();
         return act::action::FIRE_PRIMARY;
     }
     if (al_key_down(&kb, ALLEGRO_KEY_SPACE))
     {
-        userSpaceship->addBullet();
+        _userSpaceship->addBullet();
         return act::action::FIRE_SECONDARY;
     }
     if (al_key_down(&kb, ALLEGRO_KEY_ESCAPE))
     {
-        std::cout << "sair\n";
+        _window->setFinish(true);
         return act::action::QUIT_GAME;
     }
 

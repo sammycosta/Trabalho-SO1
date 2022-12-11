@@ -9,13 +9,14 @@
 #include "UserSpaceship.h"
 #include "traits.h"
 #include "thread.h"
+#include "EnemySpaceshipManager.h"
 
 __USING_API
 
 class Window
 {
 public:
-  Window(int w, int h, int fps, ALLEGRO_TIMER *_timer, UserSpaceship *userspaceship);
+  Window(int w, int h, int fps, ALLEGRO_TIMER *_timer, UserSpaceship *userspaceship, EnemySpaceshipManager *enemyShip);
   ~Window();
 
   static void run(Window *win);
@@ -40,6 +41,11 @@ public:
     return _fps;
   }
 
+  inline int setFinish(bool finish)
+  {
+    _finish = finish;
+  }
+
 private:
   Point bgMid; /**<point used by the background to draw from */
   Point fgMid;
@@ -58,6 +64,7 @@ private:
   bool _finish;
 
   UserSpaceship *userSpaceship;
+  EnemySpaceshipManager *enemyShip;
 };
 
 #endif

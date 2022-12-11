@@ -9,6 +9,7 @@
 #include "KeyboardListener.h"
 #include "traits.h"
 #include "thread.h"
+#include "EnemySpaceshipManager.h"
 
 __USING_API
 
@@ -36,23 +37,25 @@ public:
         al_start_timer(_timer);
 
         UserSpaceship *userSpaceship = new UserSpaceship(_timer, _fps);
-        std::cout << "game\n";
-        KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship);
+        EnemySpaceshipManager *enemyManager = new EnemySpaceshipManager(_fps);
+        Window *window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager);
+        KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship, window);
 
-        Window *window = new Window(800, 600, 60, _timer, userSpaceship);
-
-        _window_thread = new Thread(Window::run, window);
+        _windowThread = new Thread(Window::run, window);
         _userThread = new Thread(UserSpaceship::run, userSpaceship);
-        _kb_thread = new Thread(KeyboardListener::run, keyboardListener);
+        _kbThread = new Thread(KeyboardListener::run, keyboardListener);
+        _enemySpaceshipManagerThread = new Thread(EnemySpaceshipManager::run, enemyManager);
 
         int ec;
-        ec = _window_thread->join();
+        ec = _windowThread->join();
         ec = _userThread->join();
-        ec = _kb_thread->join();
+        ec = _kbThread->join();
+        ec = _enemySpaceshipManagerThread->join();
 
-        delete (_window_thread);
+        delete (_windowThread);
         delete (_userThread);
-        delete (_kb_thread);
+        delete (_kbThread);
+        delete (_enemySpaceshipManagerThread);
     }
 
 private:
@@ -63,9 +66,10 @@ private:
     static ALLEGRO_TIMER *_timer;
     static int _fps;
     static ALLEGRO_EVENT_QUEUE *_eventQueue;
-    static Thread *_window_thread;
+    static Thread *_windowThread;
     static Thread *_userThread;
-    static Thread *_kb_thread;
+    static Thread *_kbThread;
+    static Thread *_enemySpaceshipManagerThread;
 };
 
 #endif

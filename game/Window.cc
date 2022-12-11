@@ -7,13 +7,15 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
-Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *userspaceship) : _displayWidth(w),
-                                                                                            _displayHeight(h),
-                                                                                            _fps(fps)
+Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *userspaceship, EnemySpaceshipManager *enemyM) : _displayWidth(w),
+                                                                                                                           _displayHeight(h),
+                                                                                                                           _fps(fps)
 
 {
     _timer = timer;
     userSpaceship = userspaceship;
+
+    enemyShip = enemyM;
 
     if ((_display = al_create_display(_displayWidth, _displayHeight)) == NULL)
     {
@@ -100,6 +102,8 @@ void Window::draw()
 {
     drawBackground();
     drawShip(0);
+    std::cout << "draw window\n";
+    enemyShip->drawEnemies();
 }
 
 void Window::drawShip(int flags)
@@ -139,7 +143,6 @@ void Window::loadBackgroundSprite()
 void Window::update(double dt)
 {
     // background
-    std::cout << "update bg window \n";
     bgMid = bgMid + bgSpeed * dt;
     if (bgMid.x >= 800)
     {
