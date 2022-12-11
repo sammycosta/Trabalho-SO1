@@ -1,16 +1,17 @@
 #include "CollisionManager.h"
 
-CollisionManager::CollisionManager(UserSpaceship *user, EnemySpaceshipManager *enemy)
+CollisionManager::CollisionManager(UserSpaceship *user, EnemySpaceshipManager *enemy, MineManager *mineMan)
 {
     _userSpaceship = user;
     _enemyManager = enemy;
+    _mineManager = mineMan;
 }
 
 void CollisionManager::run(CollisionManager *manager)
 {
     while (true)
     {
-        std::cout << "run collision manager\n";
+        // std::cout << "run collision manager\n";
         manager->userCollision();
         manager->enemyCollision();
         manager->userWithEnemyCollision();
@@ -20,13 +21,18 @@ void CollisionManager::run(CollisionManager *manager)
 
 void CollisionManager::enemyCollision()
 {
-    std::list<std::shared_ptr<PurpleEnemy>> purpleEnemies = _enemyManager->getPurpleEnemies();
+    std::list<std::shared_ptr<Enemy>> enemies = _enemyManager->getPurpleEnemies();
+    if (_mineManager->mineExists())
+    {
+        enemies.push_back(_mineManager->getMine());
+    }
+
     std::list<std::shared_ptr<Projectile>> userProj = _userSpaceship->getProj();
-    if (!(purpleEnemies.empty()) && !(userProj.empty()))
+    if (!(enemies.empty()) && !(userProj.empty()))
     {
         for (auto p = userProj.begin(); p != userProj.end(); ++p)
         {
-            for (auto enemy = purpleEnemies.begin(); enemy != purpleEnemies.end(); ++enemy)
+            for (auto enemy = enemies.begin(); enemy != enemies.end(); ++enemy)
             {
                 Point projCentre = (*p)->getCentre();
                 Point enemyCentre = (*enemy)->getCentre();
@@ -51,22 +57,31 @@ void CollisionManager::enemyCollision()
 
 void CollisionManager::userCollision()
 {
-    std::list<std::shared_ptr<PurpleEnemy>> purpleEnemies = _enemyManager->getPurpleEnemies();
-    if (!(purpleEnemies.empty()))
+    std::list<std::shared_ptr<Enemy>> enemies = _enemyManager->getPurpleEnemies();
+
+    if (_mineManager->mineExists())
     {
-        for (auto en = purpleEnemies.begin(); en != purpleEnemies.end(); en++)
+        std::shared_ptr<Enemy> mine = _mineManager->getMine();
+        enemies.push_back(mine);
+    }
+
+    if (!(enemies.empty()))
+    {
+        // std::cout << enemies.size() << "\n";
+
+        for (auto en = enemies.begin(); en != enemies.end(); en++)
         {
-            if ((*en)->getFire())
+
+            std::list<std::shared_ptr<Projectile>> enemyProjectiles = (*en)->getProjectiles();
+            // std::cout << enemyProjectiles.size() << "\n";
+            for (auto p = enemyProjectiles.begin(); p != enemyProjectiles.end(); p++)
             {
-                std::list<std::shared_ptr<Projectile>> enemyProjectiles = (*en)->getProjectiles();
-                for (auto p = enemyProjectiles.begin(); p != enemyProjectiles.end(); p++)
+                // std::cout << "analisando balinha \n";
+                if (collisionPointBox((*p)->getCentre(), _userSpaceship->getCentre(), _userSpaceship->getSize()))
                 {
-                    if (collisionPointBox((*p)->getCentre(), _userSpaceship->getCentre(), _userSpaceship->getSize()))
-                    {
-                        (*p)->live = false;
-                        std::cout << "bala atingiu o jogador!\n";
-                        _userSpaceship->hit(1);
-                    }
+                    (*p)->live = false;
+                    std::cout << "bala atingiu o jogador!\n";
+                    _userSpaceship->hit(1);
                 }
             }
         }
@@ -74,9 +89,16 @@ void CollisionManager::userCollision()
 }
 void CollisionManager::userWithEnemyCollision()
 {
-    std::list<std::shared_ptr<PurpleEnemy>> purpleEnemies = _enemyManager->getPurpleEnemies();
-    if (!purpleEnemies.empty())
-        for (auto enemy = purpleEnemies.begin(); enemy != purpleEnemies.end(); ++enemy)
+    std::list<std::shared_ptr<Enemy>> enemies = _enemyManager->getPurpleEnemies();
+
+    if (_mineManager->mineExists())
+    {
+        std::shared_ptr<Enemy> mine = _mineManager->getMine();
+        enemies.push_back(mine);
+    }
+
+    if (!enemies.empty())
+        for (auto enemy = enemies.begin(); enemy != enemies.end(); ++enemy)
         {
             if (!((*enemy)->getDead()))
             {

@@ -9,10 +9,12 @@ Mine::Mine(Point centre, ALLEGRO_COLOR color, Vector s) : Enemy(centre, color, s
     _dAnim = 0;
     _dAnimComplete = false;
     _fire = false;
+    _fired = false;
     dead = false;
-    // _fireTimer = std::make_shared<Timer> (60);
-    // _fireTimer>create();
-    // _fireT->startTimer();
+
+    _delayTimer = std::make_shared<Timer>(60);
+    _delayTimer->create();
+    _delayTimer->startTimer();
 }
 
 Mine::~Mine()
@@ -65,9 +67,56 @@ void Mine::update(double dt)
     {
         _row++;
     }
-    if (centre.x < 400 && _fire)
+    if (_fire)
     {
-        std::cout << "minaaaaaaaaaa atirando\n";
+        addBullet();
         dead = true;
+    }
+}
+
+void Mine::addBullet()
+{
+    if (_delayTimer->getCount() > 3)
+    {
+        for (int i = -500; i <= 500; i += 325)
+        {
+            for (int j = -500; j <= 500; j += 325)
+            {
+                _proj.push_back(std::make_shared<Bullet>(centre, color, Vector(i, j)));
+            }
+        }
+        _delayTimer->srsTimer();
+    }
+}
+
+void Mine::updateProjectiles(double dt)
+{
+    std::list<std::shared_ptr<Projectile>> newProj;
+    if (_proj.empty() == false)
+    {
+        for (auto p = _proj.begin(); p != _proj.end(); ++p)
+        {
+            p->get()->update(dt);
+            if (p->get()->isAlive())
+            {
+                newProj.push_back(*p);
+            }
+        }
+        _proj.clear();
+        _proj.assign(newProj.begin(), newProj.end());
+    }
+}
+
+void Mine::drawProjectiles()
+{
+    if (_proj.empty() == false)
+    {
+        for (auto p = _proj.begin(); p != _proj.end(); ++p)
+        {
+            if (p->get()->isAlive())
+            {
+                p->get()->draw();
+            }
+        }
     }
 }

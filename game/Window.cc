@@ -61,7 +61,7 @@ void Window::run(Window *win)
     float prevTime = 0;
     while (!win->_finish)
     {
-        std::cout << "run window \n";
+        // std::cout << "run window \n";
         win->gameLoop(prevTime);
         Thread::yield();
     }
@@ -111,7 +111,7 @@ void Window::draw()
 {
     drawBackground();
     drawShip(0);
-    std::cout << "draw window\n";
+    // std::cout << "draw window\n";
     enemyShip->drawEnemies();
     mineMan->drawMine();
 }

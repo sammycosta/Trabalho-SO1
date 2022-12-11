@@ -186,13 +186,17 @@ PurpleEnemy.o: PurpleEnemy.cc /usr/include/stdc-predef.h PurpleEnemy.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/ctime Vector.h Timer.h /usr/include/c++/11/string \
+ /usr/include/c++/11/ctime Vector.h Projectile.h \
+ /usr/include/allegro5/allegro_primitives.h /usr/include/c++/11/iostream \
+ /usr/include/c++/11/ostream /usr/include/c++/11/ios \
  /usr/include/c++/11/bits/char_traits.h /usr/include/c++/11/cstdint \
  /usr/include/c++/11/bits/localefwd.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++locale.h \
  /usr/include/c++/11/clocale /usr/include/locale.h \
  /usr/include/x86_64-linux-gnu/bits/locale.h /usr/include/c++/11/cctype \
- /usr/include/ctype.h /usr/include/c++/11/bits/ostream_insert.h \
+ /usr/include/ctype.h /usr/include/c++/11/bits/ios_base.h \
+ /usr/include/c++/11/bits/locale_classes.h /usr/include/c++/11/string \
+ /usr/include/c++/11/bits/ostream_insert.h \
  /usr/include/c++/11/bits/cxxabi_forced.h \
  /usr/include/c++/11/bits/basic_string.h \
  /usr/include/c++/11/ext/string_conversions.h /usr/include/c++/11/cstdio \
@@ -202,12 +206,7 @@ PurpleEnemy.o: PurpleEnemy.cc /usr/include/stdc-predef.h PurpleEnemy.h \
  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
  /usr/include/c++/11/cerrno /usr/include/c++/11/bits/charconv.h \
- /usr/include/c++/11/bits/basic_string.tcc /usr/include/c++/11/list \
- /usr/include/c++/11/bits/stl_list.h /usr/include/c++/11/bits/list.tcc \
- Projectile.h /usr/include/allegro5/allegro_primitives.h \
- /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
- /usr/include/c++/11/ios /usr/include/c++/11/bits/ios_base.h \
- /usr/include/c++/11/bits/locale_classes.h \
+ /usr/include/c++/11/bits/basic_string.tcc \
  /usr/include/c++/11/bits/locale_classes.tcc \
  /usr/include/c++/11/system_error \
  /usr/include/x86_64-linux-gnu/c++/11/bits/error_constants.h \
@@ -222,5 +221,6 @@ PurpleEnemy.o: PurpleEnemy.cc /usr/include/stdc-predef.h PurpleEnemy.h \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc Sprite.h \
- /usr/include/allegro5/allegro_image.h Bullet.h
+ /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/list \
+ /usr/include/c++/11/bits/stl_list.h /usr/include/c++/11/bits/list.tcc \
+ Timer.h Sprite.h /usr/include/allegro5/allegro_image.h Bullet.h

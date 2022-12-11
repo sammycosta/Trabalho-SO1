@@ -18,11 +18,22 @@ public:
     void createMine();
     void drawMine();
 
+    std::shared_ptr<Mine> getMine()
+    {
+        return _mine;
+    }
+
+    bool mineExists()
+    {
+        return _mine != nullptr;
+    }
+
 private:
     Timer *_minesTimer;
+    Timer *_explosionTimer;
     std::shared_ptr<Sprite> _explosionSprite;
     std::shared_ptr<Sprite> _bombSprite;
-    Mine *_mine;
+    std::shared_ptr<Mine> _mine;
 };
 
 #endif

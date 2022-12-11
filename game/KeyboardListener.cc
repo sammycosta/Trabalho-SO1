@@ -32,7 +32,7 @@ void KeyboardListener::run(KeyboardListener *listener)
 {
     while (true)
     {
-        std::cout << "run keyboardListener \n";
+        // std::cout << "run keyboardListener \n";
         ALLEGRO_KEYBOARD_STATE kb;
         al_get_keyboard_state(&kb);
         listener->input(kb);

@@ -18,7 +18,7 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *EnemyManager)
     float prevTime = 0;
     while (true)
     {
-        std::cout << "run enemy manager\n";
+        // std::cout << "run enemy manager\n";
         float crtTime;
 
         crtTime = al_current_time();
@@ -26,7 +26,7 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *EnemyManager)
         prevTime = crtTime;
 
         // regra random
-        if (EnemyManager->purpleSpawnTimer->getCount() > 20 && EnemyManager->purpleEnemies.size() < 3)
+        if (EnemyManager->purpleSpawnTimer->getCount() > 800 && EnemyManager->purpleEnemies.size() < 3)
         {
             EnemyManager->spawnPurple();
             EnemyManager->purpleSpawnTimer->srsTimer();
@@ -80,7 +80,7 @@ void EnemySpaceshipManager::drawEnemies()
 
 void EnemySpaceshipManager::updateEnemies(double dt)
 {
-    std::list<std::shared_ptr<PurpleEnemy>> newPe;
+    std::list<std::shared_ptr<Enemy>> newPe;
     if (!purpleEnemies.empty())
     {
         for (auto p = purpleEnemies.begin(); p != purpleEnemies.end(); ++p)

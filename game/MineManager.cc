@@ -6,12 +6,16 @@ MineManager::MineManager()
     _minesTimer = new Timer(1);
     _minesTimer->create();
     _minesTimer->startTimer();
+    _explosionTimer = new Timer(1);
+    _explosionTimer->create();
+    _explosionTimer->startTimer();
     _mine = nullptr;
 }
 
 MineManager::~MineManager()
 {
     delete (_minesTimer);
+    delete (_explosionTimer);
     _explosionSprite.reset();
     _bombSprite.reset();
 }
@@ -21,36 +25,50 @@ void MineManager::run(MineManager *mineMan)
     float prevTime = 0;
     while (true)
     {
-        std::cout << "run mine manager\n";
+        // std::cout << "run mine manager\n";
+        float crtTime;
+        crtTime = al_current_time();
         if (mineMan->_mine != nullptr)
         {
-
-            float crtTime;
-            crtTime = al_current_time();
             mineMan->_mine->update(crtTime - prevTime);
-            prevTime = crtTime;
-
-            if (mineMan->_mine->getDead() && !mineMan->_mine->getFire())
-            {
-                delete (mineMan->_mine);
-                mineMan->_mine = nullptr;
-            }
+            mineMan->_mine->updateProjectiles(crtTime - prevTime);
+            // if (mineMan->_mine->getDead() && !mineMan->_mine->getFired())
+            // {
+            //     mineMan->_mine.reset();
+            //     // delete (mineMan->_mine);
+            //     mineMan->_mine = nullptr;
+            // }
         }
 
-        if (mineMan->_minesTimer->getCount() >= 5)
+        // std::cout << mineMan->_minesTimer->getCount() << "\n";
+        if (mineMan->_minesTimer->getCount() >= 30)
         {
+            mineMan->_explosionTimer->srsTimer();
+            mineMan->_minesTimer->srsTimer();
             if (mineMan->_mine == nullptr)
             {
-                std::cout << "criou mina\n";
                 mineMan->createMine();
             }
+        }
 
-            if (mineMan->_minesTimer->getCount() > 10)
+        if (mineMan->_mine != nullptr)
+        {
+            // std::cout << mineMan->_explosionTimer->getCount() << "\n";
+            if (mineMan->_explosionTimer->getCount() > 5)
             {
+                // std::cout << "set fire \n";
                 mineMan->_mine->setFire(true);
-                mineMan->_minesTimer->srsTimer();
+
+                if (mineMan->_explosionTimer->getCount() > 10)
+                {
+                    mineMan->_explosionTimer->srsTimer();
+                    mineMan->_mine.reset();
+                    mineMan->_mine = nullptr;
+                }
             }
         }
+
+        prevTime = crtTime;
         Thread::yield();
     }
 }
@@ -65,17 +83,20 @@ void MineManager::createMine()
 {
     Point pt(800, 200);
     pt.y = pt.y + (rand() % 200);
-    _mine = new Mine(pt, al_map_rgb(204, 3, 3), Vector(-60, 0));
+    _mine = std::make_shared<Mine>(pt, al_map_rgb(204, 3, 3), Vector(-60, 0));
 }
 
 void MineManager::drawMine()
 {
     if (_mine != nullptr)
     {
-        std::cout << "draw mine \n";
-        if (!_mine->getDead() || _mine->getFire())
+        // if (!_mine->getDead() || _mine->getFire())
         {
             _mine->draw(_bombSprite, _explosionSprite);
+        }
+        if (!_mine->getFired())
+        {
+            _mine->drawProjectiles();
         }
     }
 }

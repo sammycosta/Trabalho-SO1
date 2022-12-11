@@ -24,13 +24,13 @@ public:
     void drawEnemies();
     void updateEnemies(double dt);
 
-    std::list<std::shared_ptr<PurpleEnemy>> getPurpleEnemies()
+    std::list<std::shared_ptr<Enemy>> getPurpleEnemies()
     {
         return purpleEnemies;
     }
 
 private:
-    std::list<std::shared_ptr<PurpleEnemy>> purpleEnemies;
+    std::list<std::shared_ptr<Enemy>> purpleEnemies;
     std::shared_ptr<Sprite> purpleEnemySprite;
     std::shared_ptr<Sprite> enemyDeathSprite;
 

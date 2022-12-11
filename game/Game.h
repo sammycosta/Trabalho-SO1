@@ -43,7 +43,7 @@ public:
         MineManager *mineManager = new MineManager();
         Window *window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager, mineManager);
         KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship, window);
-        CollisionManager *collisionManager = new CollisionManager(userSpaceship, enemyManager);
+        CollisionManager *collisionManager = new CollisionManager(userSpaceship, enemyManager, mineManager);
 
         _windowThread = new Thread(Window::run, window);
         _userThread = new Thread(UserSpaceship::run, userSpaceship);

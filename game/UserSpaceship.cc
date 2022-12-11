@@ -58,7 +58,7 @@ void UserSpaceship::run(UserSpaceship *ship)
         //     prevTime = crtTime;
         // }
 
-        std::cout << "run userSpaceship \n";
+        // std::cout << "run userSpaceship \n";
         crtTime = al_current_time();
         ship->update(crtTime - prevTime);
         prevTime = crtTime;
@@ -200,7 +200,7 @@ void UserSpaceship::drawProjectiles()
 
 void UserSpaceship::hit(const int &damage)
 {
-    std::cout << _lives << "\n";
+    std::cout << _lives << " LEVOU HIIIIIIIIIIIIIIT\n";
     _lives -= damage;
     if (_lives <= 0)
     {

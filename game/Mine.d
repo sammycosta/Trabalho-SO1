@@ -186,8 +186,8 @@ Mine.o: Mine.cc /usr/include/stdc-predef.h Mine.h Enemy.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/ctime Vector.h Sprite.h \
- /usr/include/allegro5/allegro_image.h /usr/include/c++/11/iostream \
+ /usr/include/c++/11/ctime Vector.h Projectile.h \
+ /usr/include/allegro5/allegro_primitives.h /usr/include/c++/11/iostream \
  /usr/include/c++/11/ostream /usr/include/c++/11/ios \
  /usr/include/c++/11/bits/char_traits.h /usr/include/c++/11/cstdint \
  /usr/include/c++/11/bits/localefwd.h \
@@ -221,4 +221,6 @@ Mine.o: Mine.cc /usr/include/stdc-predef.h Mine.h Enemy.h \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc Timer.h
+ /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/list \
+ /usr/include/c++/11/bits/stl_list.h /usr/include/c++/11/bits/list.tcc \
+ Sprite.h /usr/include/allegro5/allegro_image.h Timer.h Bullet.h

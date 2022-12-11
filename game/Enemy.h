@@ -7,6 +7,8 @@
 
 #include "Point.h"
 #include "Vector.h"
+#include "Projectile.h"
+#include <list>
 
 class Sprite;
 
@@ -20,7 +22,7 @@ public:
 
     virtual ~Enemy() {}
 
-    void update(double dt) {}
+    virtual void update(double dt) {}
 
     // /** @fn set fire
     //  * @brief used to reset the boolean flag that represents when an enemy is able to fire
@@ -69,8 +71,16 @@ public:
         return lives;
     }
 
-    int getSize() {
+    int getSize()
+    {
         return _size;
+    }
+
+    virtual void addBullet() = 0;
+
+    std::list<std::shared_ptr<Projectile>> getProjectiles()
+    {
+        return _proj;
     }
 
     Point centre;
@@ -80,6 +90,7 @@ public:
     int lives;
     bool _dAnimComplete;
     int _size;
+    std::list<std::shared_ptr<Projectile>> _proj;
 };
 
 #endif
