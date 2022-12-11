@@ -18,11 +18,22 @@ MineManager::~MineManager()
 
 void MineManager::run(MineManager *mineMan)
 {
+    float prevTime = 0;
     while (true)
     {
+        float crtTime;
+        crtTime = al_current_time();
+
         std::cout << "run mine manager\n";
         if (mineMan->_mine != nullptr)
         {
+
+            float crtTime;
+            crtTime = al_current_time();
+
+            mineMan->_mine->update(crtTime - prevTime);
+            prevTime = crtTime;
+
             if (mineMan->_mine->getDead() && !mineMan->_mine->getFire())
             {
                 delete (mineMan->_mine);
@@ -70,5 +81,13 @@ void MineManager::drawMine()
         {
             _mine->draw(_bombSprite, _explosionSprite);
         }
+    }
+}
+
+void MineManager::updateMine(double dt)
+{
+    if (_mine != nullptr)
+    {
+        _mine->update(dt);
     }
 }

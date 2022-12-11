@@ -17,6 +17,7 @@ public:
     void loadSprites();
     void createMine();
     void drawMine();
+    void updateMine(double dt);
 
 private:
     Timer *_minesTimer;
