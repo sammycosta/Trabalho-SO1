@@ -69,11 +69,11 @@ public:
         return lives;
     }
 
+    Point centre;
     ALLEGRO_COLOR color;
     Vector speed;
     bool dead;
     int lives;
-    Point centre;
     bool _dAnimComplete;
 };
 

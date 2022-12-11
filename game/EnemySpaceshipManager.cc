@@ -50,7 +50,6 @@ void EnemySpaceshipManager::loadSprites()
 
 void EnemySpaceshipManager::spawnPurple()
 {
-    std::cout << "spawn purple \n";
     addPurple(Point(800, 300), al_map_rgb(246, 64, 234), Vector(-180, 0));
     addPurple(Point(900, 350), al_map_rgb(246, 64, 234), Vector(-180, 0));
     addPurple(Point(900, 250), al_map_rgb(246, 64, 234), Vector(-180, 0));
@@ -67,7 +66,6 @@ void EnemySpaceshipManager::addPurple(const Point &center, const ALLEGRO_COLOR &
 
 void EnemySpaceshipManager::drawEnemies()
 {
-    std::cout << "purpleEnemies = " << purpleEnemies.empty() << "\n";
     if (purpleEnemies.empty() == false)
     {
         for (auto p = purpleEnemies.begin(); p != purpleEnemies.end(); ++p)
@@ -82,7 +80,6 @@ void EnemySpaceshipManager::drawEnemies()
 
 void EnemySpaceshipManager::updateEnemies(double dt)
 {
-    std::cout << "update enemies \n";
     std::list<std::shared_ptr<PurpleEnemy>> newPe;
     if (!purpleEnemies.empty())
     {

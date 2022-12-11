@@ -168,8 +168,10 @@ void UserSpaceship::addBullet()
     }
 }
 
-void UserSpaceship::addMissile() {
-    if (_missileTimer->getCount() > 20) {
+void UserSpaceship::addMissile()
+{
+    if (_missileTimer->getCount() > 20)
+    {
         _proj.push_back(std::make_shared<Missile>(centre + Point(-20, 0), color, projectileSpeed));
         _missileTimer->srsTimer();
     }
@@ -183,7 +185,6 @@ void UserSpaceship::drawProjectiles()
         {
             if (p->get()->isAlive())
             {
-                std::cout << "chegou no if p desenhar\n";
                 p->get()->draw();
             }
         }

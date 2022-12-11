@@ -23,7 +23,6 @@ Bullet::~Bullet()
 
 void Bullet::draw()
 {
-    std::cout << "draw do bullet\n";
     Point tracer = centre + speed * (-0.05);
     al_draw_line(centre.x, centre.y,
                  tracer.x, tracer.y,

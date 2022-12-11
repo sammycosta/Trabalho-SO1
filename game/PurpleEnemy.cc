@@ -40,14 +40,12 @@ void PurpleEnemy::update(double dt)
 
 void PurpleEnemy::draw(std::shared_ptr<Sprite> enemyShip, std::shared_ptr<Sprite> enemyDeath)
 {
-    std::cout << "purple enemy draw \n";
     if (dead == false)
     {
         enemyShip->draw_tinted(centre, color, 0);
     }
     else
     {
-        // enemy has been hit and killed, proceed through death animation sequence
         if (_nDeathAnim < 5)
             deathAnimation(enemyDeath);
         else
@@ -64,7 +62,6 @@ void PurpleEnemy::deathAnimation(std::shared_ptr<Sprite> enemyDeath)
 
 void PurpleEnemy::addBullet()
 {
-    std::cout << "adicionou bullet no enemy \n";
     if (_delayTimer->getCount() > _fireSpeed)
     {
         _proj.push_back(std::make_shared<Bullet>(centre + Point(-20, 0), color, _bulletSpeed + Vector(0, 40)));
@@ -104,7 +101,6 @@ void PurpleEnemy::drawProjectiles()
         {
             if (p->get()->isAlive())
             {
-                std::cout << "chegou no if p desenhar\n";
                 p->get()->draw();
             }
         }

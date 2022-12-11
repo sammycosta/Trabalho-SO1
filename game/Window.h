@@ -41,7 +41,7 @@ public:
     return _fps;
   }
 
-  inline int setFinish(bool finish)
+  inline void setFinish(bool finish)
   {
     _finish = finish;
   }
