@@ -24,6 +24,11 @@ public:
     void updateProjectiles(double dt);
     void drawProjectiles();
 
+    std::list<std::shared_ptr<Projectile>> getProjectiles()
+    {
+        return _proj;
+    }
+
 private:
     Vector _bulletSpeed;
     int _fireSpeed;

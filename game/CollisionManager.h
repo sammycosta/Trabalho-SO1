@@ -23,6 +23,13 @@ public:
 private:
     void enemyCollision();
     void userCollision();
+    void userWithEnemyCollision();
+
+    bool hitBoxesIntersect(const Point &centre1, const int &size1,
+                                         const Point &centre2, const int &size2);
+
+    bool collisionPointBox(const Point &point1, const Point &point2,
+                                         const int &size2);
 
     UserSpaceship *_userSpaceship;
     EnemySpaceshipManager *_enemyManager;

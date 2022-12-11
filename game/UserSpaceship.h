@@ -33,6 +33,7 @@ public:
     void decreaseHorizontalSpeed();
     void addBullet();
     void addMissile();
+    void hit(const int &damage);
 
     inline int getRow() const
     {
@@ -54,8 +55,17 @@ public:
     {
         return _proj;
     }
+    inline int getSize() const
+    {
+        return _size;
+    }
+    inline bool isDead() const
+    {
+        return _dead;
+    }
 
     void drawProjectiles();
+    void drawLivesBar();
 
 private:
     void checkBoundary();
@@ -76,6 +86,10 @@ private:
     Vector projectileSpeed;
     Timer *_bulletTimer;
     Timer *_missileTimer;
+    int _size;
+    int _lives;
+    int _totalLives;
+    bool _dead;
 };
 
 #endif

@@ -10,13 +10,15 @@
 #include "traits.h"
 #include "thread.h"
 #include "EnemySpaceshipManager.h"
+#include "MineManager.h"
 
 __USING_API
 
 class Window
 {
 public:
-  Window(int w, int h, int fps, ALLEGRO_TIMER *_timer, UserSpaceship *userspaceship, EnemySpaceshipManager *enemyShip);
+  Window(int w, int h, int fps, ALLEGRO_TIMER *_timer, UserSpaceship *userspaceship,
+         EnemySpaceshipManager *enemyShip, MineManager *mineManager);
   ~Window();
 
   static void run(Window *win);
@@ -65,6 +67,7 @@ private:
 
   UserSpaceship *userSpaceship;
   EnemySpaceshipManager *enemyShip;
+  MineManager *mineMan;
 };
 
 #endif

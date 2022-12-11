@@ -10,6 +10,7 @@ PurpleEnemy::PurpleEnemy(Point c, ALLEGRO_COLOR color, Vector s) : Enemy(c, colo
     _delayTimer->create();
     _delayTimer->startTimer();
     _dAnimComplete = false;
+    _size = 20;
 }
 
 PurpleEnemy::~PurpleEnemy()
@@ -18,6 +19,7 @@ PurpleEnemy::~PurpleEnemy()
 
 void PurpleEnemy::hit()
 {
+    std::cout << "HITOU PURPLE ENEMY \n";
     lives = lives - 1;
     if (lives < 1)
     {

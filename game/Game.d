@@ -234,4 +234,5 @@ Game.o: Game.cc /usr/include/stdc-predef.h Game.h \
  /usr/include/c++/11/bits/stl_vector.h \
  /usr/include/c++/11/bits/stl_bvector.h \
  /usr/include/c++/11/bits/vector.tcc EnemySpaceshipManager.h \
- PurpleEnemy.h Enemy.h KeyboardListener.h
+ PurpleEnemy.h Enemy.h MineManager.h Mine.h KeyboardListener.h \
+ CollisionManager.h

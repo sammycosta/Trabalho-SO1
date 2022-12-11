@@ -7,15 +7,18 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
-Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *userspaceship, EnemySpaceshipManager *enemyM) : _displayWidth(w),
-                                                                                                                           _displayHeight(h),
-                                                                                                                           _fps(fps)
+Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *userspaceship,
+               EnemySpaceshipManager *enemyM, MineManager *mineManager) : _displayWidth(w),
+                                                                          _displayHeight(h),
+                                                                          _fps(fps)
 
 {
     _timer = timer;
     userSpaceship = userspaceship;
 
     enemyShip = enemyM;
+
+    mineMan = mineManager;
 
     if ((_display = al_create_display(_displayWidth, _displayHeight)) == NULL)
     {
@@ -66,6 +69,7 @@ void Window::run(Window *win)
 
 void Window::gameLoop(float &prevTime)
 {
+
     ALLEGRO_EVENT event;
     bool redraw = true;
     float crtTime;
@@ -96,6 +100,11 @@ void Window::gameLoop(float &prevTime)
         draw();
         al_flip_display();
     }
+
+    if (userSpaceship->isDead())
+    {
+        _finish = true;
+    }
 }
 
 void Window::draw()
@@ -104,6 +113,7 @@ void Window::draw()
     drawShip(0);
     std::cout << "draw window\n";
     enemyShip->drawEnemies();
+    mineMan->drawMine();
 }
 
 void Window::drawShip(int flags)
@@ -114,6 +124,7 @@ void Window::drawShip(int flags)
     Point centre = userSpaceship->getCentre();
     sprite->draw_region(row, col, 47.0, 40.0, centre, flags);
     userSpaceship->drawProjectiles();
+    userSpaceship->drawLivesBar();
 }
 
 void Window::drawBackground()

@@ -25,11 +25,18 @@ UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer, int fps)
     _missileTimer = new Timer(fps);
     _missileTimer->create();
     _missileTimer->startTimer();
+
+    _size = 16;
+    _lives = 9;
+    _totalLives = 9;
+    _dead = false;
 }
 
 UserSpaceship::~UserSpaceship()
 {
     spaceShip.reset();
+    delete (_bulletTimer);
+    delete (_missileTimer);
 }
 
 void UserSpaceship::run(UserSpaceship *ship)
@@ -189,4 +196,34 @@ void UserSpaceship::drawProjectiles()
             }
         }
     }
+}
+
+void UserSpaceship::hit(const int &damage)
+{
+    std::cout << _lives << "\n";
+    _lives -= damage;
+    if (_lives <= 0)
+    {
+        _dead = true;
+    }
+}
+
+void UserSpaceship::drawLivesBar()
+{
+    // ALLEGRO_COLOR barColor;
+
+    // if (_lives > 4)
+    // {
+    //     barColor =
+    // } else {
+
+    // }
+
+    al_draw_line(centre.x - _size * 2, centre.y + _size * 2,
+                 (centre.x - _size * 2) + (_lives / _totalLives) * (_size * 4),
+                 centre.y + _size * 2,
+                 al_map_rgb(255 * (1.0 - _lives / _totalLives),
+                            200 * (_lives / _totalLives),
+                            0),
+                 5);
 }

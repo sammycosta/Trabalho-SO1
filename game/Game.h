@@ -10,6 +10,8 @@
 #include "traits.h"
 #include "thread.h"
 #include "EnemySpaceshipManager.h"
+#include "CollisionManager.h"
+#include "MineManager.h"
 
 __USING_API
 
@@ -38,24 +40,32 @@ public:
 
         UserSpaceship *userSpaceship = new UserSpaceship(_timer, _fps);
         EnemySpaceshipManager *enemyManager = new EnemySpaceshipManager(_fps);
-        Window *window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager);
+        MineManager *mineManager = new MineManager();
+        Window *window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager, mineManager);
         KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship, window);
+        CollisionManager *collisionManager = new CollisionManager(userSpaceship, enemyManager);
 
         _windowThread = new Thread(Window::run, window);
         _userThread = new Thread(UserSpaceship::run, userSpaceship);
         _kbThread = new Thread(KeyboardListener::run, keyboardListener);
         _enemySpaceshipManagerThread = new Thread(EnemySpaceshipManager::run, enemyManager);
+        _collisionManagerThread = new Thread(CollisionManager::run, collisionManager);
+        _mineManagerThread = new Thread(MineManager::run, mineManager);
 
         int ec;
         ec = _windowThread->join();
         ec = _userThread->join();
         ec = _kbThread->join();
         ec = _enemySpaceshipManagerThread->join();
+        ec = _collisionManagerThread->join();
+        ec = _mineManagerThread->join();
 
         delete (_windowThread);
         delete (_userThread);
         delete (_kbThread);
         delete (_enemySpaceshipManagerThread);
+        delete (_collisionManagerThread);
+        delete (_mineManagerThread);
     }
 
 private:
@@ -70,6 +80,8 @@ private:
     static Thread *_userThread;
     static Thread *_kbThread;
     static Thread *_enemySpaceshipManagerThread;
+    static Thread *_collisionManagerThread;
+    static Thread *_mineManagerThread;
 };
 
 #endif

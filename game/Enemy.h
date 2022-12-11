@@ -69,12 +69,17 @@ public:
         return lives;
     }
 
+    int getSize() {
+        return _size;
+    }
+
     Point centre;
     ALLEGRO_COLOR color;
     Vector speed;
     bool dead;
     int lives;
     bool _dAnimComplete;
+    int _size;
 };
 
 #endif

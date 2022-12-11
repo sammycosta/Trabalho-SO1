@@ -41,6 +41,10 @@ public:
     {
         return live;
     };
+
+    Point getCentre() {
+        return centre;
+    }
 };
 
 #endif
