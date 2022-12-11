@@ -2,6 +2,8 @@
 
 Mine::Mine(Point centre, ALLEGRO_COLOR color, Vector s) : Enemy(centre, color, s)
 {
+    _row = 0;
+    _col = 0;
     lives = 3;
     _size = 20;
     _dAnim = 0;
@@ -13,8 +15,8 @@ Mine::Mine(Point centre, ALLEGRO_COLOR color, Vector s) : Enemy(centre, color, s
     // _fireT->startTimer();
 }
 
-Mine::~Mine() {
-
+Mine::~Mine()
+{
 }
 
 void Mine::hit()

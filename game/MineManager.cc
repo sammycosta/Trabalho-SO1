@@ -63,7 +63,7 @@ void MineManager::loadSprites()
 
 void MineManager::createMine()
 {
-    Point pt(700, 200);
+    Point pt(800, 200);
     pt.y = pt.y + (rand() % 200);
     _mine = new Mine(pt, al_map_rgb(204, 3, 3), Vector(-60, 0));
 }
