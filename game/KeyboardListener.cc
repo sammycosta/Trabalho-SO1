@@ -38,10 +38,9 @@ void KeyboardListener::run(KeyboardListener *listener)
         listener->input(kb);
         Thread::yield();
     }
-    std::cout << "fim da keyboard \n";
 }
 
-act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
+void KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
 {
     if (al_key_down(&kb, ALLEGRO_KEY_UP))
     {
@@ -62,19 +61,13 @@ act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
     if (al_key_down(&kb, ALLEGRO_KEY_1))
     {
         _userSpaceship->addMissile();
-        return act::action::FIRE_PRIMARY;
     }
     if (al_key_down(&kb, ALLEGRO_KEY_SPACE))
     {
         _userSpaceship->addBullet();
-        return act::action::FIRE_SECONDARY;
     }
     if (al_key_down(&kb, ALLEGRO_KEY_ESCAPE))
     {
-        // _window->setFinish(true);
         _finish = true;
-        return act::action::QUIT_GAME;
     }
-
-    return act::action::NO_ACTION;
 }

@@ -108,6 +108,7 @@ private:
     int _totalLives;
     bool _dead;
     bool _finish;
+    int _countDead;
 };
 
 #endif

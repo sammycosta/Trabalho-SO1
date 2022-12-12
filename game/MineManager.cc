@@ -19,6 +19,10 @@ MineManager::~MineManager()
     delete (_explosionTimer);
     _explosionSprite.reset();
     _bombSprite.reset();
+    if (_mine != nullptr)
+    {
+        _mine.reset();
+    }
 }
 
 void MineManager::run(MineManager *mineMan)
@@ -26,22 +30,14 @@ void MineManager::run(MineManager *mineMan)
     float prevTime = 0;
     while (!mineMan->_finish)
     {
-        // std::cout << "run mine manager\n";
         float crtTime;
         crtTime = al_current_time();
         if (mineMan->_mine != nullptr)
         {
             mineMan->_mine->update(crtTime - prevTime);
             mineMan->_mine->updateProjectiles(crtTime - prevTime);
-            // if (mineMan->_mine->getDead() && !mineMan->_mine->getFired())
-            // {
-            //     mineMan->_mine.reset();
-            //     // delete (mineMan->_mine);
-            //     mineMan->_mine = nullptr;
-            // }
         }
 
-        // std::cout << mineMan->_minesTimer->getCount() << "\n";
         if (mineMan->_minesTimer->getCount() >= 30)
         {
             mineMan->_explosionTimer->srsTimer();
@@ -54,10 +50,8 @@ void MineManager::run(MineManager *mineMan)
 
         if (mineMan->_mine != nullptr)
         {
-            // std::cout << mineMan->_explosionTimer->getCount() << "\n";
             if (mineMan->_explosionTimer->getCount() > 5)
             {
-                // std::cout << "set fire \n";
                 mineMan->_mine->setFire(true);
 
                 if (mineMan->_explosionTimer->getCount() > 10)
@@ -72,7 +66,6 @@ void MineManager::run(MineManager *mineMan)
         prevTime = crtTime;
         Thread::yield();
     }
-    std::cout << "saiu do while mine manager \n";
 }
 
 void MineManager::loadSprites()

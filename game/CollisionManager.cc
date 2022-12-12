@@ -57,10 +57,6 @@ void CollisionManager::enemyCollision()
                 {
                     (*p)->live = false;
                     (*enemy)->hit();
-                    if ((*enemy)->getDead())
-                    {
-                        // updateScore(player->color);
-                    }
                 }
             }
         }
@@ -87,20 +83,16 @@ void CollisionManager::userCollision()
 
     if (!(enemies.empty()))
     {
-        // std::cout << enemies.size() << "\n";
 
         for (auto en = enemies.begin(); en != enemies.end(); en++)
         {
 
             std::list<std::shared_ptr<Projectile>> enemyProjectiles = (*en)->getProjectiles();
-            // std::cout << enemyProjectiles.size() << "\n";
             for (auto p = enemyProjectiles.begin(); p != enemyProjectiles.end(); p++)
             {
-                // std::cout << "analisando balinha \n";
                 if (collisionPointBox((*p)->getCentre(), _userSpaceship->getCentre(), _userSpaceship->getSize()))
                 {
                     (*p)->live = false;
-                    std::cout << "bala atingiu o jogador!\n";
                     _userSpaceship->hit(1);
                 }
             }

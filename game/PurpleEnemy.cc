@@ -20,7 +20,6 @@ PurpleEnemy::~PurpleEnemy()
 
 void PurpleEnemy::hit()
 {
-    std::cout << "HITOU PURPLE ENEMY \n";
     lives = lives - 1;
     if (lives < 1)
     {

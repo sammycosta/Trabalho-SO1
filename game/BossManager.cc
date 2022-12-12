@@ -28,8 +28,6 @@ void BossManager::run(BossManager *bossManager)
         prevTime = crtTime;
         Thread::yield();
     }
-    // bossManager->_boss.reset();
-    // bossManager->_boss = nullptr;
 }
 
 void BossManager::loadSprites()
@@ -46,6 +44,6 @@ void BossManager::loadSprites()
 
 void BossManager::drawBoss()
 {
-    _boss->draw(_bossSprite, _deathSprite); // só ele, vai faltar a projectiles
+    _boss->draw(_bossSprite, _deathSprite);
     _boss->drawProjectiles();
 }

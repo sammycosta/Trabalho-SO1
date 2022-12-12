@@ -194,24 +194,32 @@ void UserSpaceship::hit(const int &damage)
     _lives -= damage;
     if (_lives <= 0)
     {
-        _dead = true;
+        _totalLives -= 1;
+        if (_totalLives <= 0)
+        {
+            _dead = true;
+        }
+        else
+        {
+            _lives = 3;
+        }
     }
 }
 
 void UserSpaceship::drawLivesBar()
 {
     int displayWidth = 800;
-    if (_lives > 0)
+    if (_totalLives > 0)
     {
         al_draw_rectangle(displayWidth - 70, 50, displayWidth - 50, 70,
                           al_map_rgb(0, 255, 0), 5);
     }
-    if (_lives > 1)
+    if (_totalLives > 1)
     {
         al_draw_rectangle(displayWidth - 110, 50, displayWidth - 90, 70,
                           al_map_rgb(0, 255, 0), 5);
     }
-    if (_lives > 2)
+    if (_totalLives > 2)
     {
         al_draw_rectangle(displayWidth - 150, 50, displayWidth - 130, 70,
                           al_map_rgb(0, 255, 0), 5);
@@ -221,7 +229,7 @@ void UserSpaceship::drawLivesBar()
     al_draw_line(centreP.x - _size * 2, centreP.y + _size * 2,
                  (centreP.x - _size * 2) + (_lives) * (_size * 1.5),
                  centreP.y + _size * 2,
-                 al_map_rgb(255 * (1.0 - _lives / _totalLives),
+                 al_map_rgb(255 * (1.0 - _lives / 3),
                             200 * (_lives),
                             0),
                  5);

@@ -2,8 +2,6 @@
 #define WINDOW_H
 
 #include <allegro5/allegro.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
 #include <memory>
 #include <string>
 #include "Vector.h"
@@ -34,8 +32,6 @@ public:
   void drawBackground();
   void loadBackgroundSprite();
   void update(double dt);
-  void gameOver();
-  void drawTextCentered(const ALLEGRO_COLOR &color, const std::string &message);
 
   inline int getWidth() const
   {
@@ -59,10 +55,8 @@ public:
     _keyboardListener->setFinish(true);
     if (_enemyShip != nullptr && _enemyShip->_bossManager != nullptr)
     {
-      std::cout << "dentro do if\n";
       _enemyShip->_bossManager->setFinish(true);
     }
-    std::cout << "fim da set finish \n";
   }
 
 private:
@@ -86,8 +80,6 @@ private:
   EnemySpaceshipManager *_enemyShip;
   MineManager *_mineManager;
   KeyboardListener *_keyboardListener;
-  Timer *_gameOverTimer;
-  ALLEGRO_FONT *_font;
 };
 
 #endif

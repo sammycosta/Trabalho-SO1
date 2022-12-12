@@ -82,17 +82,19 @@ void Boss::selectSprite()
 
 void Boss::hit()
 {
-    lives -= 1;
-    if (lives < 1)
+    if (_target)
     {
-        dead = true;
+        lives -= 1;
+        if (lives < 1)
+        {
+            dead = true;
+        }
     }
 }
 
 void Boss::update(double dt)
 {
-    // std::cout << "boss update";
-    // std::cout << centre.x << " e " << centre.y << "\n";
+
     centre = centre + speed * dt;
 
     if (centre.x < 650 && !_target)
@@ -106,12 +108,10 @@ void Boss::update(double dt)
     // mudança de direção do movimento
     if (centre.y > 450 && speed.y > 0)
     {
-        std::cout << speed.y << "\n ";
         speed.y = -1 * speed.y;
     }
     if (centre.y < 150 && speed.y < 0)
     {
-        std::cout << "segundo if\n";
         speed.y = -1 * speed.y;
     }
     // verifica se pode atirar

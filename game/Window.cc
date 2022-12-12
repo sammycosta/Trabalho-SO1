@@ -20,9 +20,6 @@ Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *users
     _mineManager = mineManager;
     _keyboardListener = keyboardListener;
 
-    _gameOverTimer = new Timer(fps);
-    _gameOverTimer->create();
-
     if ((_display = al_create_display(_displayWidth, _displayHeight)) == NULL)
     {
         std::cout << "Cannot initialize the display\n";
@@ -43,16 +40,7 @@ Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *users
     al_register_event_source(_eventQueue, al_get_display_event_source(_display));
     al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
 
-    std::cout << "vai fazer o font\n";
-    ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
-    al_append_path_component(path, "resources");
-    al_change_directory(al_path_cstr(path, '/'));
-
-    _font = al_load_font("DavidCLM-BoldItalic.ttf", 64, 0);
-
-    al_destroy_path(path);
     loadBackgroundSprite();
-    std::cout << "window\n";
     _finish = false;
 }
 
@@ -65,8 +53,6 @@ Window::~Window()
     if (_display != NULL)
         al_destroy_display(_display);
 
-    delete (_gameOverTimer);
-
     bg.reset();
     fg.reset();
 }
@@ -76,12 +62,9 @@ void Window::run(Window *win)
     float prevTime = 0;
     while (!win->_finish)
     {
-        // std::cout << "run window \n";
         win->gameLoop(prevTime);
         Thread::yield();
     }
-    std::cout << "fim do loop window\n";
-    // win->gameOver();
 }
 
 void Window::gameLoop(float &prevTime)
@@ -103,7 +86,6 @@ void Window::gameLoop(float &prevTime)
     if (_userSpaceship->isDead() || _keyboardListener->getFinish() || _enemyShip->getFinish())
     {
         setFinish(true);
-        std::cout << "saiu do finish\n";
         return;
     }
 
@@ -123,25 +105,18 @@ void Window::gameLoop(float &prevTime)
         draw();
         al_flip_display();
     }
-
-    // if (_enemyShip->bossExists() && _enemyShip->_bossManager->getBoss()->getDead())
-    // {
-    //     std::cout << "DA EXIT PELO WINDOW \n";
-    //     _enemyShip->_bossManagerThread->thread_exit(0);
-    // }
 }
 
 void Window::draw()
 {
     drawBackground();
     drawShip(0);
-    // std::cout << "draw window\n";
     _enemyShip->drawEnemies();
     _mineManager->drawMine();
 
     if (_enemyShip->_bossManager != nullptr && _enemyShip->_bossManager->getBoss())
     {
-        _enemyShip->_bossManager->drawBoss(); // ver quando vou injetar bossManager na window..
+        _enemyShip->_bossManager->drawBoss();
     }
 }
 
@@ -188,24 +163,4 @@ void Window::update(double dt)
     {
         bgMid.x = 0;
     }
-}
-
-void Window::gameOver()
-{
-    if (!_gameOverTimer->isRunning())
-    {
-        // start timer and update scores
-        _gameOverTimer->startTimer();
-    }
-    while (_gameOverTimer->getCount() < 100)
-    {
-        // game over message
-        // std::cout << "game over \n";
-        drawTextCentered(al_map_rgb(255, 0, 0), "GAME OVER");
-    }
-}
-
-void Window::drawTextCentered(const ALLEGRO_COLOR &color, const std::string &message)
-{
-    al_draw_text(_font, color, 400, 300, ALLEGRO_ALIGN_CENTRE, message.c_str());
 }

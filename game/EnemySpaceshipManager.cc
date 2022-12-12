@@ -32,22 +32,19 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)
     float prevTime = 0;
     while (!enemyManager->_finish)
     {
-        // std::cout << "run enemy manager\n";
         float crtTime;
 
         crtTime = al_current_time();
         enemyManager->updateEnemies(crtTime - prevTime);
 
-        // regra random
-        if (enemyManager->purpleSpawnTimer->getCount() > 400 && !enemyManager->bossExists())
+        if (enemyManager->purpleSpawnTimer->getCount() > 200 && !enemyManager->bossExists())
         {
             enemyManager->spawnPurple();
             enemyManager->purpleSpawnTimer->srsTimer();
         }
 
-        if (enemyManager->_bossTimer->getCount() > 10 && !enemyManager->bossExists())
+        if (enemyManager->_bossTimer->getCount() > 60 && !enemyManager->bossExists())
         {
-            std::cout << "cria thread boss\n";
             enemyManager->_bossManager = new BossManager(enemyManager->_playerCentre, prevTime);
             enemyManager->_bossManagerThread = new Thread(EnemySpaceshipManager::callRunBoss, enemyManager);
         }
@@ -59,10 +56,8 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)
         if (enemyManager->bossExists() && enemyManager->getPurpleEnemies().empty())
         {
             enemyManager->_bossManagerThread->join();
-            std::cout << "voltou pra enemy manager\n";
         }
     }
-    std::cout << "saiu do while enemyspaceship\n";
 }
 
 void EnemySpaceshipManager::loadSprites()
@@ -134,7 +129,5 @@ void EnemySpaceshipManager::callRunBoss(EnemySpaceshipManager *manager)
 
     manager->setFinish(true);
     delete manager->_bossManager;
-    manager->_bossManager = nullptr;
-    std::cout << "agora boss manager foi setado nullptr \n";
     manager->_bossManagerThread->thread_exit(6);
 }
