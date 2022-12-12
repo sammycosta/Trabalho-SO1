@@ -160,6 +160,6 @@ void Boss::addBullet(Point c, Vector speed)
 void Boss::addMissile(Point c, Vector speed)
 {
 
-    _proj.push_back(std::make_shared<Missile>(centre + Point(-20, 0), al_map_rgb(204, 3, 3), speed));
+    _proj.push_back(std::make_shared<Missile>(c + Point(-20, 0), al_map_rgb(204, 3, 3), speed));
     _delayTimer->srsTimer();
 }
