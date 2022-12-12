@@ -19,11 +19,18 @@ public:
     ~EnemySpaceshipManager();
 
     static void run(EnemySpaceshipManager *EnemyManager);
+    static void callRunBoss(EnemySpaceshipManager *manager);
+
     void loadSprites();
     void spawnPurple();
     void addPurple(const Point &center, const ALLEGRO_COLOR &color, const Vector &speed);
     void drawEnemies();
     void updateEnemies(double dt);
+
+    inline bool getFinish() const
+    {
+        return _finish;
+    }
 
     inline void setFinish(bool finish)
     {

@@ -52,12 +52,17 @@ public:
 
   inline void setFinish(bool finish)
   {
-    std::cout << "setando finish na window; \n";
     _finish = finish;
     _userSpaceship->setFinish(true);
     _enemyShip->setFinish(true);
     _mineManager->setFinish(true);
     _keyboardListener->setFinish(true);
+    if (_enemyShip != nullptr && _enemyShip->_bossManager != nullptr)
+    {
+      std::cout << "dentro do if\n";
+      _enemyShip->_bossManager->setFinish(true);
+    }
+    std::cout << "fim da set finish \n";
   }
 
 private:

@@ -26,11 +26,17 @@ public:
         return _boss;
     }
 
+    void setFinish(bool fin)
+    {
+        _finish = fin;
+    }
+
 private:
     std::shared_ptr<Sprite> _deathSprite;
     std::shared_ptr<Sprite> _bossSprite;
     std::shared_ptr<Boss> _boss;
     float _prevTime;
+    bool _finish;
 };
 
 #endif

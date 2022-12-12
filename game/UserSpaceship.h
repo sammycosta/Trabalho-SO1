@@ -65,6 +65,12 @@ public:
     {
         return _size;
     }
+
+    inline bool getFinish() const
+    {
+        return _finish;
+    }
+
     inline bool isDead() const
     {
         return _dead;

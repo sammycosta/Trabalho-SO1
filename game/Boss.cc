@@ -34,7 +34,6 @@ Boss::~Boss()
 
 void Boss::draw(std::shared_ptr<Sprite> ship, std::shared_ptr<Sprite> death)
 {
-    std::cout << "draw boss na boss class \n";
     selectSprite();
     if (!dead)
     {

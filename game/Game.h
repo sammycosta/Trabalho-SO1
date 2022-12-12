@@ -45,7 +45,6 @@ public:
         keyboardListener = new KeyboardListener(userSpaceship);
         window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager, mineManager, keyboardListener);
         collisionManager = new CollisionManager(userSpaceship, enemyManager, mineManager);
-        // BossManager *bossManager = new BossManager();
 
         _windowThread = new Thread(runWindow);
         _userThread = new Thread(runUser);
@@ -53,23 +52,27 @@ public:
         _enemySpaceshipManagerThread = new Thread(runEnemyManager);
         _collisionManagerThread = new Thread(runCollisionManager);
         _mineManagerThread = new Thread(runMineManager);
-        // _bossManagerThread = new Thread(BossManager::run, bossManager);
 
-        int ec;
-        ec = _windowThread->join();
-        ec = _userThread->join();
-        ec = _kbThread->join();
-        ec = _enemySpaceshipManagerThread->join();
-        ec = _collisionManagerThread->join();
-        ec = _mineManagerThread->join();
-        // ec = _bossManagerThread->join();
-        std::cout << "chegou no fim do game.h ! \n";
+        _windowThread->join();
+        _userThread->join();
+        _kbThread->join();
+        _enemySpaceshipManagerThread->join();
+        _collisionManagerThread->join();
+        _mineManagerThread->join();
+
         delete (_windowThread);
         delete (_userThread);
         delete (_kbThread);
         delete (_enemySpaceshipManagerThread);
         delete (_collisionManagerThread);
         delete (_mineManagerThread);
+
+        delete window;
+        delete enemyManager;
+        delete userSpaceship;
+        delete keyboardListener;
+        delete mineManager;
+        delete collisionManager;
     }
 
 private:
@@ -80,7 +83,10 @@ private:
     static void runMineManager();
     static void runCollisionManager();
 
-    static bool _finish;
+    static ALLEGRO_TIMER *_timer;
+    static int _fps;
+    static ALLEGRO_EVENT_QUEUE *_eventQueue;
+
     static Window *window;
     static UserSpaceship *userSpaceship;
     static KeyboardListener *keyboardListener;
@@ -88,9 +94,6 @@ private:
     static CollisionManager *collisionManager;
     static MineManager *mineManager;
 
-    static ALLEGRO_TIMER *_timer;
-    static int _fps;
-    static ALLEGRO_EVENT_QUEUE *_eventQueue;
     static Thread *_windowThread;
     static Thread *_userThread;
     static Thread *_kbThread;

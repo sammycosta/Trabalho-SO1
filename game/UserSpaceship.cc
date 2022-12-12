@@ -44,14 +44,12 @@ void UserSpaceship::run(UserSpaceship *ship)
     float prevTime = 0;
     while (!ship->_finish)
     {
-        // std::cout << "run userSpaceship \n";
         float crtTime;
         crtTime = al_current_time();
         ship->update(crtTime - prevTime);
         prevTime = crtTime;
         Thread::yield();
     }
-    std::cout << "saiu do while thread userspaceship\n";
 }
 
 void UserSpaceship::update(double dt)
@@ -193,8 +191,7 @@ void UserSpaceship::drawProjectiles()
 
 void UserSpaceship::hit(const int &damage)
 {
-    std::cout << _lives << " LEVOU HIIIIIIIIIIIIIIT\n";
-    //_lives -= damage;
+    _lives -= damage;
     if (_lives <= 0)
     {
         _dead = true;

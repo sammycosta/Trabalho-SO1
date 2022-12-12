@@ -6,18 +6,22 @@ CollisionManager::CollisionManager(UserSpaceship *user, EnemySpaceshipManager *e
     _userSpaceship = user;
     _enemyManager = enemy;
     _mineManager = mineMan;
+    _finish = false;
 }
 
 void CollisionManager::run(CollisionManager *manager)
 {
-    bool condition = true;
-    while (manager->_finish && condition)
+    while (!manager->_finish)
     {
         manager->userCollision();
         manager->enemyCollision();
         manager->userWithEnemyCollision();
         Thread::yield();
-        condition = manager->_userSpaceship != nullptr && manager->_enemyManager != nullptr && manager->_mineManager != nullptr;
+
+        if (manager->_userSpaceship->getFinish() || manager->_enemyManager->getFinish() || manager->_mineManager->getFinish())
+        {
+            manager->setFinish(true);
+        }
     }
 }
 

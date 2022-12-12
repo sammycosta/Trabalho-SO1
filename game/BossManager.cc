@@ -5,8 +5,10 @@ BossManager::BossManager(std::shared_ptr<Point> playerCentre, float prevTime)
     loadSprites();
     _boss = std::make_shared<Boss>(Point(850, 300), al_map_rgb(155, 0, 0), Vector(-50, 0), playerCentre);
     _prevTime = prevTime;
+    _finish = false;
 }
-BossManager::~BossManager() {
+BossManager::~BossManager()
+{
     _deathSprite.reset();
     _bossSprite.reset();
     _boss.reset();
@@ -15,9 +17,8 @@ BossManager::~BossManager() {
 void BossManager::run(BossManager *bossManager)
 {
     // classe só entra aqui no momento que o boss deve aparece
-    std::cout << "run boss manager\n";
     float prevTime = bossManager->_prevTime;
-    while (!bossManager->_boss->getDead())
+    while (!bossManager->_boss->getDead() && !bossManager->_finish)
     {
         float crtTime;
         crtTime = al_current_time();
@@ -27,10 +28,8 @@ void BossManager::run(BossManager *bossManager)
         prevTime = crtTime;
         Thread::yield();
     }
-    std::cout << "saiu do while da boss manager \n";
     // bossManager->_boss.reset();
     // bossManager->_boss = nullptr;
-    Thread::yield();
 }
 
 void BossManager::loadSprites()

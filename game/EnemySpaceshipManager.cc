@@ -14,6 +14,7 @@ EnemySpaceshipManager::EnemySpaceshipManager(int fps, std::shared_ptr<Point> pla
     _bossTimer = new Timer(1);
     _bossTimer->create();
     _bossTimer->startTimer();
+    _finish = false;
 }
 
 EnemySpaceshipManager::~EnemySpaceshipManager()
@@ -48,22 +49,18 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)
         {
             std::cout << "cria thread boss\n";
             enemyManager->_bossManager = new BossManager(enemyManager->_playerCentre, prevTime);
-            enemyManager->_bossManagerThread = new Thread(BossManager::run, enemyManager->_bossManager);
+            enemyManager->_bossManagerThread = new Thread(EnemySpaceshipManager::callRunBoss, enemyManager);
         }
+
+        prevTime = crtTime;
+
+        Thread::yield();
+
         if (enemyManager->bossExists() && enemyManager->getPurpleEnemies().empty())
         {
             enemyManager->_bossManagerThread->join();
             std::cout << "voltou pra enemy manager\n";
         }
-        if (enemyManager->bossExists() && enemyManager->_bossManager->getBoss()->getDead())
-        {
-            std::cout << "indo rodar thread exit PELA ENEMY\n";
-            enemyManager->_bossManagerThread->thread_exit(0);
-            std::cout << "thread exit PELA ENEMY\n";
-        }
-        prevTime = crtTime;
-
-        Thread::yield();
     }
     std::cout << "saiu do while enemyspaceship\n";
 }
@@ -129,4 +126,15 @@ void EnemySpaceshipManager::updateEnemies(double dt)
         purpleEnemies.clear();
         purpleEnemies.assign(newPe.begin(), newPe.end());
     }
+}
+
+void EnemySpaceshipManager::callRunBoss(EnemySpaceshipManager *manager)
+{
+    BossManager::run(manager->_bossManager);
+
+    manager->setFinish(true);
+    delete manager->_bossManager;
+    manager->_bossManager = nullptr;
+    std::cout << "agora boss manager foi setado nullptr \n";
+    manager->_bossManagerThread->thread_exit(6);
 }

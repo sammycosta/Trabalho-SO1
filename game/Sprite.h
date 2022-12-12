@@ -26,7 +26,6 @@ public:
    // filename is where the image is located, must have set path
    Sprite(const char *filename)
    {
-      std::cout << "B";
       image = al_load_bitmap(filename);
       width = al_get_bitmap_width(image);
       height = al_get_bitmap_height(image);

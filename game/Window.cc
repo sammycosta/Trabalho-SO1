@@ -81,7 +81,7 @@ void Window::run(Window *win)
         Thread::yield();
     }
     std::cout << "fim do loop window\n";
-    win->gameOver();
+    // win->gameOver();
 }
 
 void Window::gameLoop(float &prevTime)
@@ -98,6 +98,13 @@ void Window::gameLoop(float &prevTime)
     if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
     {
         setFinish(true);
+    }
+
+    if (_userSpaceship->isDead() || _keyboardListener->getFinish() || _enemyShip->getFinish())
+    {
+        setFinish(true);
+        std::cout << "saiu do finish\n";
+        return;
     }
 
     // timer
@@ -117,11 +124,6 @@ void Window::gameLoop(float &prevTime)
         al_flip_display();
     }
 
-    if (_userSpaceship->isDead())
-    {
-        setFinish(true);
-    }
-
     // if (_enemyShip->bossExists() && _enemyShip->_bossManager->getBoss()->getDead())
     // {
     //     std::cout << "DA EXIT PELO WINDOW \n";
@@ -139,7 +141,6 @@ void Window::draw()
 
     if (_enemyShip->_bossManager != nullptr && _enemyShip->_bossManager->getBoss())
     {
-        std::cout << "draw boss\n";
         _enemyShip->_bossManager->drawBoss(); // ver quando vou injetar bossManager na window..
     }
 }

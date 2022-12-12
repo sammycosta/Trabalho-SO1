@@ -28,6 +28,11 @@ public:
         return _mine != nullptr;
     }
 
+    inline bool getFinish() const
+    {
+        return _finish;
+    }
+
     inline void setFinish(bool finish)
     {
         _finish = finish;

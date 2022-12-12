@@ -10,6 +10,7 @@ MineManager::MineManager()
     _explosionTimer->create();
     _explosionTimer->startTimer();
     _mine = nullptr;
+    _finish = false;
 }
 
 MineManager::~MineManager()
