@@ -28,12 +28,18 @@ public:
         return _mine != nullptr;
     }
 
+    inline void setFinish(bool finish)
+    {
+        _finish = finish;
+    }
+
 private:
     Timer *_minesTimer;
     Timer *_explosionTimer;
     std::shared_ptr<Sprite> _explosionSprite;
     std::shared_ptr<Sprite> _bombSprite;
     std::shared_ptr<Mine> _mine;
+    bool _finish;
 };
 
 #endif

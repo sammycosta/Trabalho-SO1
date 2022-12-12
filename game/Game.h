@@ -39,20 +39,20 @@ public:
         al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
         al_start_timer(_timer);
 
-        UserSpaceship *userSpaceship = new UserSpaceship(_timer, _fps);
-        EnemySpaceshipManager *enemyManager = new EnemySpaceshipManager(_fps, userSpaceship->getCentreShared());
-        MineManager *mineManager = new MineManager();
-        Window *window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager, mineManager);
-        KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship, window);
-        CollisionManager *collisionManager = new CollisionManager(userSpaceship, enemyManager, mineManager);
+        userSpaceship = new UserSpaceship(_timer, _fps);
+        enemyManager = new EnemySpaceshipManager(_fps, userSpaceship->getCentreShared());
+        mineManager = new MineManager();
+        keyboardListener = new KeyboardListener(userSpaceship);
+        window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager, mineManager, keyboardListener);
+        collisionManager = new CollisionManager(userSpaceship, enemyManager, mineManager);
         // BossManager *bossManager = new BossManager();
 
-        _windowThread = new Thread(Window::run, window);
-        _userThread = new Thread(UserSpaceship::run, userSpaceship);
-        _kbThread = new Thread(KeyboardListener::run, keyboardListener);
-        _enemySpaceshipManagerThread = new Thread(EnemySpaceshipManager::run, enemyManager);
-        _collisionManagerThread = new Thread(CollisionManager::run, collisionManager);
-        _mineManagerThread = new Thread(MineManager::run, mineManager);
+        _windowThread = new Thread(runWindow);
+        _userThread = new Thread(runUser);
+        _kbThread = new Thread(runKeyboardManager);
+        _enemySpaceshipManagerThread = new Thread(runEnemyManager);
+        _collisionManagerThread = new Thread(runCollisionManager);
+        _mineManagerThread = new Thread(runMineManager);
         // _bossManagerThread = new Thread(BossManager::run, bossManager);
 
         int ec;
@@ -70,21 +70,24 @@ public:
         delete (_enemySpaceshipManagerThread);
         delete (_collisionManagerThread);
         delete (_mineManagerThread);
-
-        delete window;
-        delete userSpaceship;
-        delete keyboardListener;
-        delete enemyManager;
-        delete collisionManager;
-        delete mineManager;
-
     }
 
 private:
+    static void runWindow();
+    static void runUser();
+    static void runKeyboardManager();
+    static void runEnemyManager();
+    static void runMineManager();
+    static void runCollisionManager();
+
     static bool _finish;
     static Window *window;
     static UserSpaceship *userSpaceship;
     static KeyboardListener *keyboardListener;
+    static EnemySpaceshipManager *enemyManager;
+    static CollisionManager *collisionManager;
+    static MineManager *mineManager;
+
     static ALLEGRO_TIMER *_timer;
     static int _fps;
     static ALLEGRO_EVENT_QUEUE *_eventQueue;
@@ -94,7 +97,6 @@ private:
     static Thread *_enemySpaceshipManagerThread;
     static Thread *_collisionManagerThread;
     static Thread *_mineManagerThread;
-    // static Thread *_bossManagerThread;
 };
 
 #endif

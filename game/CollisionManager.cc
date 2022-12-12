@@ -10,13 +10,14 @@ CollisionManager::CollisionManager(UserSpaceship *user, EnemySpaceshipManager *e
 
 void CollisionManager::run(CollisionManager *manager)
 {
-    while (true)
+    bool condition = true;
+    while (manager->_finish && condition)
     {
-        // std::cout << "run collision manager\n";
         manager->userCollision();
         manager->enemyCollision();
         manager->userWithEnemyCollision();
         Thread::yield();
+        condition = manager->_userSpaceship != nullptr && manager->_enemyManager != nullptr && manager->_mineManager != nullptr;
     }
 }
 

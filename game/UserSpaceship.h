@@ -48,7 +48,8 @@ public:
         return *(centre);
     }
 
-    inline std::shared_ptr<Point> getCentreShared () const {
+    inline std::shared_ptr<Point> getCentreShared() const
+    {
         return centre;
     }
 
@@ -67,6 +68,11 @@ public:
     inline bool isDead() const
     {
         return _dead;
+    }
+
+    inline void setFinish(bool finish)
+    {
+        _finish = finish;
     }
 
     void drawProjectiles();
@@ -95,6 +101,7 @@ private:
     int _lives;
     int _totalLives;
     bool _dead;
+    bool _finish;
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "KeyboardListener.h"
 #include <iostream>
 
-KeyboardListener::KeyboardListener(UserSpaceship *ship, Window *win)
+KeyboardListener::KeyboardListener(UserSpaceship *ship)
 {
     // al_init() ??
 
@@ -21,7 +21,8 @@ KeyboardListener::KeyboardListener(UserSpaceship *ship, Window *win)
     // register keyboard
     al_register_event_source(_eventQueue, al_get_keyboard_event_source());
     _userSpaceship = ship;
-    _window = win;
+    // _window = win;
+    _finish = false;
 }
 
 KeyboardListener::~KeyboardListener()
@@ -30,14 +31,14 @@ KeyboardListener::~KeyboardListener()
 
 void KeyboardListener::run(KeyboardListener *listener)
 {
-    while (true)
+    while (!listener->_finish && listener->_userSpaceship != nullptr)
     {
-        // std::cout << "run keyboardListener \n";
         ALLEGRO_KEYBOARD_STATE kb;
         al_get_keyboard_state(&kb);
         listener->input(kb);
         Thread::yield();
     }
+    std::cout << "fim da keyboard \n";
 }
 
 act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
@@ -70,7 +71,8 @@ act::action KeyboardListener::input(ALLEGRO_KEYBOARD_STATE &kb)
     }
     if (al_key_down(&kb, ALLEGRO_KEY_ESCAPE))
     {
-        _window->setFinish(true);
+        // _window->setFinish(true);
+        _finish = true;
         return act::action::QUIT_GAME;
     }
 

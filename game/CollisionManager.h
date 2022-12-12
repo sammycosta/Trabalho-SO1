@@ -22,6 +22,11 @@ public:
 
     static void run(CollisionManager *collisionManager);
 
+    inline void setFinish(bool finish)
+    {
+        _finish = finish;
+    }
+
 private:
     void enemyCollision();
     void userCollision();
@@ -36,6 +41,7 @@ private:
     UserSpaceship *_userSpaceship;
     EnemySpaceshipManager *_enemyManager;
     MineManager *_mineManager;
+    bool _finish;
 };
 
 #endif

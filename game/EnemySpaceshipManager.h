@@ -25,6 +25,11 @@ public:
     void drawEnemies();
     void updateEnemies(double dt);
 
+    inline void setFinish(bool finish)
+    {
+        _finish = finish;
+    }
+
     std::list<std::shared_ptr<Enemy>> getPurpleEnemies()
     {
         return purpleEnemies;
@@ -46,6 +51,7 @@ private:
     std::shared_ptr<Timer> purpleSpawnTimer;
     Timer *_bossTimer;
     std::shared_ptr<Point> _playerCentre;
+    bool _finish;
 };
 
 #endif

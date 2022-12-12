@@ -23,7 +23,7 @@ MineManager::~MineManager()
 void MineManager::run(MineManager *mineMan)
 {
     float prevTime = 0;
-    while (true)
+    while (!mineMan->_finish)
     {
         // std::cout << "run mine manager\n";
         float crtTime;
@@ -71,6 +71,7 @@ void MineManager::run(MineManager *mineMan)
         prevTime = crtTime;
         Thread::yield();
     }
+    std::cout << "saiu do while mine manager \n";
 }
 
 void MineManager::loadSprites()

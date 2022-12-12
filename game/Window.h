@@ -10,6 +10,7 @@
 #include "Point.h"
 #include "UserSpaceship.h"
 #include "traits.h"
+#include "KeyboardListener.h"
 #include "thread.h"
 #include "EnemySpaceshipManager.h"
 #include "MineManager.h"
@@ -22,7 +23,7 @@ class Window
 {
 public:
   Window(int w, int h, int fps, ALLEGRO_TIMER *_timer, UserSpaceship *userspaceship,
-         EnemySpaceshipManager *enemyShip, MineManager *mineManager);
+         EnemySpaceshipManager *enemyShip, MineManager *mineManager, KeyboardListener *KeyboardListener);
   ~Window();
 
   static void run(Window *win);
@@ -34,7 +35,7 @@ public:
   void loadBackgroundSprite();
   void update(double dt);
   void gameOver();
-  void drawTextCentered(const ALLEGRO_COLOR& color, const std::string& message);
+  void drawTextCentered(const ALLEGRO_COLOR &color, const std::string &message);
 
   inline int getWidth() const
   {
@@ -51,7 +52,12 @@ public:
 
   inline void setFinish(bool finish)
   {
+    std::cout << "setando finish na window; \n";
     _finish = finish;
+    _userSpaceship->setFinish(true);
+    _enemyShip->setFinish(true);
+    _mineManager->setFinish(true);
+    _keyboardListener->setFinish(true);
   }
 
 private:
@@ -71,12 +77,12 @@ private:
   ALLEGRO_DISPLAY *_display;
   bool _finish;
 
-  UserSpaceship *userSpaceship;
-  EnemySpaceshipManager *enemyShip;
-  MineManager *mineMan;
+  UserSpaceship *_userSpaceship;
+  EnemySpaceshipManager *_enemyShip;
+  MineManager *_mineManager;
+  KeyboardListener *_keyboardListener;
   Timer *_gameOverTimer;
-  ALLEGRO_FONT* _font;
-
+  ALLEGRO_FONT *_font;
 };
 
 #endif

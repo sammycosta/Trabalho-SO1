@@ -8,15 +8,17 @@
 #include <allegro5/allegro_acodec.h>
 
 Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *userspaceship,
-               EnemySpaceshipManager *enemyM, MineManager *mineManager) : _displayWidth(w),
-                                                                          _displayHeight(h),
-                                                                          _fps(fps)
+               EnemySpaceshipManager *enemyShip, MineManager *mineManager,
+               KeyboardListener *keyboardListener) : _displayWidth(w),
+                                                     _displayHeight(h),
+                                                     _fps(fps)
 
 {
     _timer = timer;
-    userSpaceship = userspaceship;
-    enemyShip = enemyM;
-    mineMan = mineManager;
+    _userSpaceship = userspaceship;
+    _enemyShip = enemyShip;
+    _mineManager = mineManager;
+    _keyboardListener = keyboardListener;
 
     _gameOverTimer = new Timer(fps);
     _gameOverTimer->create();
@@ -51,6 +53,7 @@ Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *users
     al_destroy_path(path);
     loadBackgroundSprite();
     std::cout << "window\n";
+    _finish = false;
 }
 
 Window::~Window()
@@ -77,6 +80,7 @@ void Window::run(Window *win)
         win->gameLoop(prevTime);
         Thread::yield();
     }
+    std::cout << "fim do loop window\n";
     win->gameOver();
 }
 
@@ -93,8 +97,7 @@ void Window::gameLoop(float &prevTime)
     // _display closes
     if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
     {
-        _finish = true;
-        return;
+        setFinish(true);
     }
 
     // timer
@@ -114,15 +117,16 @@ void Window::gameLoop(float &prevTime)
         al_flip_display();
     }
 
-    if (userSpaceship->isDead())
+    if (_userSpaceship->isDead())
     {
-        _finish = true;
+        setFinish(true);
     }
 
-    if(enemyShip->bossExists() && enemyShip->_bossManager->getBoss()->getDead()) {
-        std::cout << "DA EXIT PELO WINDOW \n";
-        enemyShip->_bossManagerThread->thread_exit(0);
-    }
+    // if (_enemyShip->bossExists() && _enemyShip->_bossManager->getBoss()->getDead())
+    // {
+    //     std::cout << "DA EXIT PELO WINDOW \n";
+    //     _enemyShip->_bossManagerThread->thread_exit(0);
+    // }
 }
 
 void Window::draw()
@@ -130,25 +134,25 @@ void Window::draw()
     drawBackground();
     drawShip(0);
     // std::cout << "draw window\n";
-    enemyShip->drawEnemies();
-    mineMan->drawMine();
+    _enemyShip->drawEnemies();
+    _mineManager->drawMine();
 
-    if (enemyShip->_bossManager != nullptr && enemyShip->_bossManager->getBoss())
+    if (_enemyShip->_bossManager != nullptr && _enemyShip->_bossManager->getBoss())
     {
         std::cout << "draw boss\n";
-        enemyShip->_bossManager->drawBoss(); // ver quando vou injetar bossManager na window..
+        _enemyShip->_bossManager->drawBoss(); // ver quando vou injetar bossManager na window..
     }
 }
 
 void Window::drawShip(int flags)
 {
-    std::shared_ptr<Sprite> sprite = userSpaceship->getSpaceShip();
-    int row = userSpaceship->getRow();
-    int col = userSpaceship->getCol();
-    Point centre = userSpaceship->getCentre();
+    std::shared_ptr<Sprite> sprite = _userSpaceship->getSpaceShip();
+    int row = _userSpaceship->getRow();
+    int col = _userSpaceship->getCol();
+    Point centre = _userSpaceship->getCentre();
     sprite->draw_region(row, col, 47.0, 40.0, centre, flags);
-    userSpaceship->drawProjectiles();
-    userSpaceship->drawLivesBar();
+    _userSpaceship->drawProjectiles();
+    _userSpaceship->drawLivesBar();
 }
 
 void Window::drawBackground()
@@ -195,7 +199,7 @@ void Window::gameOver()
     while (_gameOverTimer->getCount() < 100)
     {
         // game over message
-        std::cout << "game over \n";
+        // std::cout << "game over \n";
         drawTextCentered(al_map_rgb(255, 0, 0), "GAME OVER");
     }
 }

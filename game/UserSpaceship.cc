@@ -29,6 +29,7 @@ UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer, int fps)
     _lives = 3;
     _totalLives = 3;
     _dead = false;
+    _finish = false;
 }
 
 UserSpaceship::~UserSpaceship()
@@ -41,7 +42,7 @@ UserSpaceship::~UserSpaceship()
 void UserSpaceship::run(UserSpaceship *ship)
 {
     float prevTime = 0;
-    while (true)
+    while (!ship->_finish)
     {
         // std::cout << "run userSpaceship \n";
         float crtTime;
@@ -50,6 +51,7 @@ void UserSpaceship::run(UserSpaceship *ship)
         prevTime = crtTime;
         Thread::yield();
     }
+    std::cout << "saiu do while thread userspaceship\n";
 }
 
 void UserSpaceship::update(double dt)

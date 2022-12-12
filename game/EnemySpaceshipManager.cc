@@ -29,7 +29,7 @@ EnemySpaceshipManager::~EnemySpaceshipManager()
 void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)
 {
     float prevTime = 0;
-    while (true)
+    while (!enemyManager->_finish)
     {
         // std::cout << "run enemy manager\n";
         float crtTime;
@@ -61,11 +61,11 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)
             enemyManager->_bossManagerThread->thread_exit(0);
             std::cout << "thread exit PELA ENEMY\n";
         }
-        std::cout << "voltou pra enemy manager2\n";
         prevTime = crtTime;
 
         Thread::yield();
     }
+    std::cout << "saiu do while enemyspaceship\n";
 }
 
 void EnemySpaceshipManager::loadSprites()
