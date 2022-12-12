@@ -22,6 +22,10 @@ void BossManager::run(BossManager *bossManager)
         prevTime = crtTime;
         Thread::yield();
     }
+    std::cout << "saiu do while da boss manager \n";
+    // bossManager->_boss.reset();
+    // bossManager->_boss = nullptr;
+    Thread::yield();
 }
 
 void BossManager::loadSprites()

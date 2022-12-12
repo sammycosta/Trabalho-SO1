@@ -2,6 +2,8 @@
 #define WINDOW_H
 
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <memory>
 #include <string>
 #include "Vector.h"
@@ -12,6 +14,7 @@
 #include "EnemySpaceshipManager.h"
 #include "MineManager.h"
 #include "BossManager.h"
+#include "Timer.h"
 
 __USING_API
 
@@ -30,6 +33,8 @@ public:
   void drawBackground();
   void loadBackgroundSprite();
   void update(double dt);
+  void gameOver();
+  void drawTextCentered(const ALLEGRO_COLOR& color, const std::string& message);
 
   inline int getWidth() const
   {
@@ -69,6 +74,9 @@ private:
   UserSpaceship *userSpaceship;
   EnemySpaceshipManager *enemyShip;
   MineManager *mineMan;
+  Timer *_gameOverTimer;
+  ALLEGRO_FONT* _font;
+
 };
 
 #endif

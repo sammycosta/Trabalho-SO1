@@ -67,6 +67,7 @@ void Thread::thread_exit(int exit_code)
 
 Thread::~Thread()
 {
+  db<Thread>(TRC) << "Delete da thread " << this->_id<< "\n";
   delete _context;
 }
 
@@ -81,9 +82,14 @@ inline void Thread::dispatcher()
     db<Thread>(TRC) << "Head antes de remover: " << Thread::_ready.head()->object()->id() << "\n";
 
     Thread *next_running = Thread::_ready.remove_head()->object(); // escolhe a próxima thread para executar
+    // if(next_running->_state == FINISHING) {
+    //   db<Thread>(TRC) << "troca next running \n";
+    //   db<Thread>(TRC) << "Head antes de remover: " << Thread::_ready.head()->object()->id() << "\n";
+    //   Thread *next_running = Thread::_ready.remove_head()->object();
+    // }
+
     _dispatcher._state = READY;
     _ready.insert(&_dispatcher._link); // reinsire dispatcher na fila
-
     Thread::set_running(next_running);
     next_running->_state = RUNNING;
 
@@ -119,11 +125,11 @@ void Thread::init(void (*main)(void *))
 void Thread::yield()
 {
   db<Thread>(TRC) << "Yield chamado com running sendo " << _running->_id << "\n";
-
   Thread *next_running = Thread::_ready.remove_head()->object();
 
   if ((_main)._state != RUNNING && _running->_state == RUNNING)
   {
+    db<Thread>(TRC) << "reinserindo thread" << _running->_id << "\n";
     int now = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
     _running->_link.rank(now);         // Atualiza prioridade da tarefa
     _ready.insert(&(_running->_link)); // Reinsere a que está em execução

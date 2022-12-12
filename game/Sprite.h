@@ -128,7 +128,6 @@ public:
    }
    void draw_boss(int r, int c, float bw, float bh, Point destination, int f)
    {
-      std::cout << "draw boss do sprite \n";
       al_draw_bitmap_region(image,
                             c * bw, r * bh,
                             bw, bh,

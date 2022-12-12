@@ -28,7 +28,7 @@ void CollisionManager::enemyCollision()
         enemies.push_back(_mineManager->getMine());
     }
 
-    if (_enemyManager->_bossManager != nullptr)
+    if (_enemyManager->_bossManager != nullptr && (_enemyManager->_bossManager->getBoss() != nullptr))
     {
         std::shared_ptr<Enemy> boss = _enemyManager->_bossManager->getBoss();
         enemies.push_back(boss);
@@ -72,7 +72,7 @@ void CollisionManager::userCollision()
         enemies.push_back(mine);
     }
 
-    if (_enemyManager->_bossManager != nullptr)
+    if (_enemyManager->_bossManager != nullptr && _enemyManager->_bossManager->getBoss())
     {
         std::shared_ptr<Enemy> boss = _enemyManager->_bossManager->getBoss();
         enemies.push_back(boss);
@@ -110,7 +110,7 @@ void CollisionManager::userWithEnemyCollision()
         enemies.push_back(mine);
     }
 
-    if (_enemyManager->_bossManager != nullptr)
+    if (_enemyManager->_bossManager != nullptr && _enemyManager->_bossManager->getBoss())
     {
         std::shared_ptr<Enemy> boss = _enemyManager->_bossManager->getBoss();
         enemies.push_back(boss);

@@ -40,14 +40,22 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)
 
         if (enemyManager->_bossTimer->getCount() > 10 && !enemyManager->bossExists())
         {
+            std::cout << "cria thread boss\n";
             enemyManager->_bossManager = new BossManager(enemyManager->_playerCentre, prevTime);
             enemyManager->_bossManagerThread = new Thread(BossManager::run, enemyManager->_bossManager);
-            // parar essa thread aqui?
         }
         if (enemyManager->bossExists() && enemyManager->getPurpleEnemies().empty())
         {
             enemyManager->_bossManagerThread->join();
+            std::cout << "voltou pra enemy manager\n";
         }
+        if (enemyManager->bossExists() && enemyManager->_bossManager->getBoss()->getDead())
+        {
+            std::cout << "indo rodar thread exit PELA ENEMY\n";
+            enemyManager->_bossManagerThread->thread_exit(0);
+            std::cout << "thread exit PELA ENEMY\n";
+        }
+        std::cout << "voltou pra enemy manager2\n";
         prevTime = crtTime;
 
         Thread::yield();

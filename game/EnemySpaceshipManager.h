@@ -36,6 +36,7 @@ public:
     }
 
     BossManager *_bossManager;
+    Thread *_bossManagerThread;
 
 private:
     std::list<std::shared_ptr<Enemy>> purpleEnemies;
@@ -45,7 +46,6 @@ private:
     std::shared_ptr<Timer> purpleSpawnTimer;
     Timer *_bossTimer;
     std::shared_ptr<Point> _playerCentre;
-    Thread *_bossManagerThread;
 };
 
 #endif
