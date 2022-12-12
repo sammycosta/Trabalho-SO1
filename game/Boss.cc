@@ -29,6 +29,7 @@ Boss::Boss(Point c, ALLEGRO_COLOR _color, Vector s, std::shared_ptr<Point> playe
 Boss::~Boss()
 {
     delete (_delayTimer);
+    _playerLocation.reset();
 }
 
 void Boss::draw(std::shared_ptr<Sprite> ship, std::shared_ptr<Sprite> death)
@@ -41,7 +42,7 @@ void Boss::draw(std::shared_ptr<Sprite> ship, std::shared_ptr<Sprite> death)
     }
     else
     {
-        // Boss is dead and we proceed to the death animation
+        // boss está morto; animação de morte
         if (_nDeathAnim < 5)
         {
             death->draw_death_anim(_nDeathAnim, centre, 0);
@@ -59,23 +60,23 @@ void Boss::selectSprite()
     {
         _spriteIndex = 0;
     }
-    // middle damage animation--fire speed goes up.
+    // sprite depois que sofreu dano
     if (lives <= _totalLives && _spriteIndex < 3)
     {
         _fireSpeed = rand() % 50 + 20;
-        speed = speed * 1.1; // increase speed
+        speed = speed * 1.1; // velocidade aumenta
         _size = 70;
         _spriteIndex++;
     }
-    // final damage animation-- fire speed up again
+    // sprite final de dano
     if (lives <= 20 && _spriteIndex < 8)
     {
         _fireSpeed = rand() % 30 + 20;
-        speed = speed * 1.1; // increase speed
+        speed = speed * 1.1; // velocidade aumenta
         _size = 60;
         _spriteIndex++;
     }
-    // interpret index as row and col of sprite sheet
+
     _row = _spriteIndex / 3;
     _col = _spriteIndex % 3;
 }
@@ -103,7 +104,7 @@ void Boss::update(double dt)
         speed.y = 100; // movimentação vertical
         _target = true;
     }
-    // mudaça de direção
+    // mudança de direção do movimento
     if (centre.y > 450 && speed.y > 0)
     {
         std::cout << speed.y << "\n ";
@@ -140,11 +141,7 @@ void Boss::addProjectile()
         for (int i = -70; i <= 70; i += 20)
             addBullet(centre + Point(50, 0), aim + Vector(-30, i));
         break;
-    // case 3:
-    //     addCreepB(e->centre + Point(50, 0), al_map_rgb(204, 3, 3), Vector(-100, 0));
-    //     break;
     default:
-
         aim.Angle(*(_playerLocation), centre + Point(0, 50), 0.9);
         addMissile(centre + Point(0, 50), aim);
         aim.Angle(*(_playerLocation), centre + Point(0, -50), 0.9);
@@ -165,36 +162,4 @@ void Boss::addMissile(Point c, Vector speed)
 
     _proj.push_back(std::make_shared<Missile>(centre + Point(-20, 0), al_map_rgb(204, 3, 3), speed));
     _delayTimer->srsTimer();
-}
-
-void Boss::updateProjectiles(double dt)
-{
-    std::list<std::shared_ptr<Projectile>> newProj;
-    if (_proj.empty() == false)
-    {
-        for (auto p = _proj.begin(); p != _proj.end(); ++p)
-        {
-            p->get()->update(dt);
-            if (p->get()->isAlive())
-            {
-                newProj.push_back(*p);
-            }
-        }
-        _proj.clear();
-        _proj.assign(newProj.begin(), newProj.end());
-    }
-}
-
-void Boss::drawProjectiles()
-{
-    if (_proj.empty() == false)
-    {
-        for (auto p = _proj.begin(); p != _proj.end(); ++p)
-        {
-            if (p->get()->isAlive())
-            {
-                p->get()->draw();
-            }
-        }
-    }
 }

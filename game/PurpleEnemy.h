@@ -21,8 +21,6 @@ public:
     void deathAnimation(std::shared_ptr<Sprite> enemyDeath);
     void addProjectile();
     bool getFire();
-    void updateProjectiles(double dt);
-    void drawProjectiles();
 
 private:
     Vector _bulletSpeed;

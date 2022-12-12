@@ -18,6 +18,12 @@ EnemySpaceshipManager::EnemySpaceshipManager(int fps, std::shared_ptr<Point> pla
 
 EnemySpaceshipManager::~EnemySpaceshipManager()
 {
+    purpleEnemies.clear();
+    purpleEnemySprite.reset();
+    enemyDeathSprite.reset();
+    purpleSpawnTimer.reset();
+    delete _bossTimer;
+    _playerCentre.reset();
 }
 
 void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)

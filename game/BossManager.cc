@@ -6,6 +6,11 @@ BossManager::BossManager(std::shared_ptr<Point> playerCentre, float prevTime)
     _boss = std::make_shared<Boss>(Point(850, 300), al_map_rgb(155, 0, 0), Vector(-50, 0), playerCentre);
     _prevTime = prevTime;
 }
+BossManager::~BossManager() {
+    _deathSprite.reset();
+    _bossSprite.reset();
+    _boss.reset();
+}
 
 void BossManager::run(BossManager *bossManager)
 {

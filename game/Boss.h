@@ -19,8 +19,6 @@ public:
     void selectSprite();
     void deathAnimation(std::shared_ptr<Sprite> death);
     void update(double dt);
-    void updateProjectiles(double dt);
-    void drawProjectiles();
     void hit();
     void addProjectile();
     void addMissile(Point c, Vector speed);

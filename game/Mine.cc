@@ -19,6 +19,7 @@ Mine::Mine(Point centre, ALLEGRO_COLOR color, Vector s) : Enemy(centre, color, s
 
 Mine::~Mine()
 {
+    _delayTimer.reset();
 }
 
 void Mine::hit()
@@ -29,7 +30,7 @@ void Mine::hit()
         dead = true;
 }
 
-void Mine::draw(std::shared_ptr<Sprite> mine, std::shared_ptr<Sprite> death)
+void Mine::draw(std::shared_ptr<Sprite> mine, std::shared_ptr<Sprite> deathSprite)
 {
     if (!dead)
     {
@@ -38,7 +39,7 @@ void Mine::draw(std::shared_ptr<Sprite> mine, std::shared_ptr<Sprite> death)
     else
     {
         if (_dAnim < 5)
-            deathAnimation(death);
+            deathAnimation(deathSprite);
         else
         {
             _dAnimComplete = true;
@@ -86,37 +87,5 @@ void Mine::addProjectile()
             }
         }
         _delayTimer->srsTimer();
-    }
-}
-
-void Mine::updateProjectiles(double dt)
-{
-    std::list<std::shared_ptr<Projectile>> newProj;
-    if (_proj.empty() == false)
-    {
-        for (auto p = _proj.begin(); p != _proj.end(); ++p)
-        {
-            p->get()->update(dt);
-            if (p->get()->isAlive())
-            {
-                newProj.push_back(*p);
-            }
-        }
-        _proj.clear();
-        _proj.assign(newProj.begin(), newProj.end());
-    }
-}
-
-void Mine::drawProjectiles()
-{
-    if (_proj.empty() == false)
-    {
-        for (auto p = _proj.begin(); p != _proj.end(); ++p)
-        {
-            if (p->get()->isAlive())
-            {
-                p->get()->draw();
-            }
-        }
     }
 }

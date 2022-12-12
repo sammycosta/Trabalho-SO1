@@ -15,7 +15,7 @@ class BossManager
 {
 public:
     BossManager(std::shared_ptr<Point> playerCentre, float prevtime);
-    ~BossManager(){};
+    ~BossManager();
 
     static void run(BossManager *bossManager);
     void loadSprites();

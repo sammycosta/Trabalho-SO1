@@ -60,6 +60,8 @@ void CollisionManager::enemyCollision()
             }
         }
     }
+    enemies.clear();
+    userProj.clear();
 }
 
 void CollisionManager::userCollision()
@@ -97,8 +99,10 @@ void CollisionManager::userCollision()
                     _userSpaceship->hit(1);
                 }
             }
+            enemyProjectiles.clear();
         }
     }
+    enemies.clear();
 }
 void CollisionManager::userWithEnemyCollision()
 {
@@ -130,6 +134,7 @@ void CollisionManager::userWithEnemyCollision()
                 }
             }
         }
+    enemies.clear();
 }
 
 bool CollisionManager::hitBoxesIntersect(const Point &centre1, const int &size1,

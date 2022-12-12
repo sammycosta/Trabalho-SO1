@@ -9,18 +9,6 @@ Bullet::~Bullet()
 {
 }
 
-// void Bullet::update(double dt)
-// {
-//     centre = centre + speed * dt;
-//     if ((centre.x > 800) ||
-//         (centre.x < 0) ||
-//         (centre.y > 600) ||
-//         (centre.y < 0))
-//     {
-//         live = false;
-//     }
-// }
-
 void Bullet::draw()
 {
     Point tracer = centre + speed * (-0.05);

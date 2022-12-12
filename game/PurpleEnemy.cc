@@ -15,6 +15,7 @@ PurpleEnemy::PurpleEnemy(Point c, ALLEGRO_COLOR color, Vector s) : Enemy(c, colo
 
 PurpleEnemy::~PurpleEnemy()
 {
+    _delayTimer.reset();
 }
 
 void PurpleEnemy::hit()
@@ -75,36 +76,4 @@ void PurpleEnemy::addProjectile()
 bool PurpleEnemy::getFire()
 {
     return !_proj.empty();
-}
-
-void PurpleEnemy::updateProjectiles(double dt)
-{
-    std::list<std::shared_ptr<Projectile>> newProj;
-    if (_proj.empty() == false)
-    {
-        for (auto p = _proj.begin(); p != _proj.end(); ++p)
-        {
-            p->get()->update(dt);
-            if (p->get()->isAlive())
-            {
-                newProj.push_back(*p);
-            }
-        }
-        _proj.clear();
-        _proj.assign(newProj.begin(), newProj.end());
-    }
-}
-
-void PurpleEnemy::drawProjectiles()
-{
-    if (_proj.empty() == false)
-    {
-        for (auto p = _proj.begin(); p != _proj.end(); ++p)
-        {
-            if (p->get()->isAlive())
-            {
-                p->get()->draw();
-            }
-        }
-    }
 }

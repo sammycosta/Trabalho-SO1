@@ -65,6 +65,7 @@ Window::~Window()
     delete (_gameOverTimer);
 
     bg.reset();
+    fg.reset();
 }
 
 void Window::run(Window *win)

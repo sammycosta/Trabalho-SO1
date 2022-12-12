@@ -24,26 +24,13 @@ public:
 
     virtual void update(double dt) {}
 
-    // /** @fn set fire
-    //  * @brief used to reset the boolean flag that represents when an enemy is able to fire
-    //  * @param f boolean value to Fire to
-    //  */
-    // virtual void setFire(bool f) = 0;
+    virtual void hit() = 0;
 
-    // /** @fn getColor
-    //  * @brief getter method to return the color value of an enemy
-    //  */
-    // virtual ALLEGRO_COLOR getColor() = 0;
+    virtual void draw(std::shared_ptr<Sprite> sprite, std::shared_ptr<Sprite> deathSprite) = 0;
 
-    // /** @fn getProjSpeed
-    //  *   @return returns a vector representing Projectile Speed
-    //  */
-    // virtual Vector getProjSpeed() = 0;
+    virtual bool getFire() = 0;
 
-    // // /** @fn getSize
-    // //  *   @return returns size integer
-    // //  */
-    // // virtual int getSize() = 0;
+    virtual void addProjectile() = 0;
 
     bool getdAnim_complete()
     {
@@ -55,16 +42,10 @@ public:
         return dead;
     }
 
-    virtual bool getFire() = 0;
-
     Point getCentre()
     {
         return centre;
     }
-
-    virtual void hit() = 0;
-
-    virtual void draw(std::shared_ptr<Sprite> ship, std::shared_ptr<Sprite> death) = 0;
 
     int getLives()
     {
@@ -76,11 +57,45 @@ public:
         return _size;
     }
 
-    virtual void addProjectile() = 0;
-
     std::list<std::shared_ptr<Projectile>> getProjectiles()
     {
         return _proj;
+    }
+
+    ALLEGRO_COLOR getColor() {
+        return color;
+    }
+
+    void updateProjectiles(double dt)
+    {
+        std::list<std::shared_ptr<Projectile>> newProj;
+        if (_proj.empty() == false)
+        {
+            for (auto p = _proj.begin(); p != _proj.end(); ++p)
+            {
+                p->get()->update(dt);
+                if (p->get()->isAlive())
+                {
+                    newProj.push_back(*p);
+                }
+            }
+            _proj.clear();
+            _proj.assign(newProj.begin(), newProj.end());
+        }
+    }
+
+    void drawProjectiles()
+    {
+        if (_proj.empty() == false)
+        {
+            for (auto p = _proj.begin(); p != _proj.end(); ++p)
+            {
+                if (p->get()->isAlive())
+                {
+                    p->get()->draw();
+                }
+            }
+        }
     }
 
     Point centre;

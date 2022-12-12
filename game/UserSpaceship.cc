@@ -5,7 +5,6 @@
 UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer, int fps)
 {
     al_init();
-    // initialize addons
     al_init_primitives_addon();
     al_init_image_addon();
     if ((_eventQueue = al_create_event_queue()) == NULL)
@@ -44,21 +43,8 @@ void UserSpaceship::run(UserSpaceship *ship)
     float prevTime = 0;
     while (true)
     {
-        ALLEGRO_EVENT event;
-        float crtTime;
-
-        // get event
-        // al_wait_for_event(ship->_eventQueue, &event);
-        // timer
-        // if (event.type == ALLEGRO_EVENT_TIMER)
-        // {
-        //     std::cout << "run userSpaceship \n";
-        //     crtTime = al_current_time();
-        //     ship->update(crtTime - prevTime);
-        //     prevTime = crtTime;
-        // }
-
         // std::cout << "run userSpaceship \n";
+        float crtTime;
         crtTime = al_current_time();
         ship->update(crtTime - prevTime);
         prevTime = crtTime;
@@ -72,8 +58,8 @@ void UserSpaceship::update(double dt)
     Point centreP = (*centre);
     centreP = centreP + speed * dt;
     centre = std::make_shared<Point>(centreP.x, centreP.y);
-    selectShipAnimation(); // must happen before we reset our speed
-    speed = Vector(0, 0);  // reset our speed
+    selectShipAnimation();
+    speed = Vector(0, 0);
     checkBoundary();
     updateProjectiles(dt);
 }
@@ -215,9 +201,7 @@ void UserSpaceship::hit(const int &damage)
 
 void UserSpaceship::drawLivesBar()
 {
-    // o que isso vai fazer? idk
     int displayWidth = 800;
-    // Point centre(displayWidth - 70, displayWidth - 50);
     if (_lives > 0)
     {
         al_draw_rectangle(displayWidth - 70, 50, displayWidth - 50, 70,
@@ -233,9 +217,6 @@ void UserSpaceship::drawLivesBar()
         al_draw_rectangle(displayWidth - 150, 50, displayWidth - 130, 70,
                           al_map_rgb(0, 255, 0), 5);
     }
-    //    if (!player && playerLives > 0) {
-    //       gameOverFont->drawTextCenteredF(al_map_rgb(255, 0, 0), "%i LIVES REMAINING", playerLives);
-    //    }
 
     Point centreP = (*centre);
     al_draw_line(centreP.x - _size * 2, centreP.y + _size * 2,

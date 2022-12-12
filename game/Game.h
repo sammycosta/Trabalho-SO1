@@ -63,14 +63,21 @@ public:
         ec = _collisionManagerThread->join();
         ec = _mineManagerThread->join();
         // ec = _bossManagerThread->join();
-
+        std::cout << "chegou no fim do game.h ! \n";
         delete (_windowThread);
         delete (_userThread);
         delete (_kbThread);
         delete (_enemySpaceshipManagerThread);
         delete (_collisionManagerThread);
         delete (_mineManagerThread);
-        // delete (_bossManagerThread);
+
+        delete window;
+        delete userSpaceship;
+        delete keyboardListener;
+        delete enemyManager;
+        delete collisionManager;
+        delete mineManager;
+
     }
 
 private:
