@@ -45,8 +45,13 @@ public:
     }
     inline Point getCentre() const
     {
+        return *(centre);
+    }
+
+    inline std::shared_ptr<Point> getCentreShared () const {
         return centre;
     }
+
     inline std::shared_ptr<Sprite> getSpaceShip() const
     {
         return spaceShip;
@@ -74,7 +79,7 @@ private:
     void updateProjectiles(double dt);
 
     std::shared_ptr<Sprite> spaceShip;
-    Point centre;
+    std::shared_ptr<Point> centre;
     ALLEGRO_COLOR color; /**< ship color */
     Vector speed;
     int row; /**<row of animation to be played */

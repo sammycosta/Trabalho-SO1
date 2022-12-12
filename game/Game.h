@@ -12,6 +12,7 @@
 #include "EnemySpaceshipManager.h"
 #include "CollisionManager.h"
 #include "MineManager.h"
+#include "BossManager.h"
 
 __USING_API
 
@@ -39,11 +40,12 @@ public:
         al_start_timer(_timer);
 
         UserSpaceship *userSpaceship = new UserSpaceship(_timer, _fps);
-        EnemySpaceshipManager *enemyManager = new EnemySpaceshipManager(_fps);
+        EnemySpaceshipManager *enemyManager = new EnemySpaceshipManager(_fps, userSpaceship->getCentreShared());
         MineManager *mineManager = new MineManager();
         Window *window = new Window(800, 600, 60, _timer, userSpaceship, enemyManager, mineManager);
         KeyboardListener *keyboardListener = new KeyboardListener(userSpaceship, window);
         CollisionManager *collisionManager = new CollisionManager(userSpaceship, enemyManager, mineManager);
+        // BossManager *bossManager = new BossManager();
 
         _windowThread = new Thread(Window::run, window);
         _userThread = new Thread(UserSpaceship::run, userSpaceship);
@@ -51,6 +53,7 @@ public:
         _enemySpaceshipManagerThread = new Thread(EnemySpaceshipManager::run, enemyManager);
         _collisionManagerThread = new Thread(CollisionManager::run, collisionManager);
         _mineManagerThread = new Thread(MineManager::run, mineManager);
+        // _bossManagerThread = new Thread(BossManager::run, bossManager);
 
         int ec;
         ec = _windowThread->join();
@@ -59,6 +62,7 @@ public:
         ec = _enemySpaceshipManagerThread->join();
         ec = _collisionManagerThread->join();
         ec = _mineManagerThread->join();
+        // ec = _bossManagerThread->join();
 
         delete (_windowThread);
         delete (_userThread);
@@ -66,6 +70,7 @@ public:
         delete (_enemySpaceshipManagerThread);
         delete (_collisionManagerThread);
         delete (_mineManagerThread);
+        // delete (_bossManagerThread);
     }
 
 private:
@@ -82,6 +87,7 @@ private:
     static Thread *_enemySpaceshipManagerThread;
     static Thread *_collisionManagerThread;
     static Thread *_mineManagerThread;
+    // static Thread *_bossManagerThread;
 };
 
 #endif

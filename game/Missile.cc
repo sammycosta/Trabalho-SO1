@@ -20,7 +20,7 @@ Missile::~Missile()
 
 void Missile::draw()
 {
-    std::cout << "draw missile\n";
+    // std::cout << "draw missile\n";
     _spritesVector[_imageNum]->draw_rotated(centre, _angle, 0);
     _imageNum = (_imageNum + 1) % 8;
 }

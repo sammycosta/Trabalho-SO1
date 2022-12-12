@@ -69,12 +69,12 @@ void Mine::update(double dt)
     }
     if (_fire)
     {
-        addBullet();
+        addProjectile();
         dead = true;
     }
 }
 
-void Mine::addBullet()
+void Mine::addProjectile()
 {
     if (_delayTimer->getCount() > 3)
     {

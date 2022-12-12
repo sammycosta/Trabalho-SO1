@@ -8,13 +8,14 @@
 #include "thread.h"
 #include "Point.h"
 #include "traits.h"
+#include "BossManager.h"
 
 __USING_API
 
 class EnemySpaceshipManager
 {
 public:
-    EnemySpaceshipManager(int fps);
+    EnemySpaceshipManager(int fps, std::shared_ptr<Point> playerCentre);
     ~EnemySpaceshipManager();
 
     static void run(EnemySpaceshipManager *EnemyManager);
@@ -29,12 +30,22 @@ public:
         return purpleEnemies;
     }
 
+    bool bossExists()
+    {
+        return _bossManager != nullptr;
+    }
+
+    BossManager *_bossManager;
+
 private:
     std::list<std::shared_ptr<Enemy>> purpleEnemies;
     std::shared_ptr<Sprite> purpleEnemySprite;
     std::shared_ptr<Sprite> enemyDeathSprite;
 
     std::shared_ptr<Timer> purpleSpawnTimer;
+    Timer *_bossTimer;
+    std::shared_ptr<Point> _playerCentre;
+    Thread *_bossManagerThread;
 };
 
 #endif

@@ -62,7 +62,7 @@ void PurpleEnemy::deathAnimation(std::shared_ptr<Sprite> enemyDeath)
     _nDeathAnim++;
 }
 
-void PurpleEnemy::addBullet()
+void PurpleEnemy::addProjectile()
 {
     if (_delayTimer->getCount() > _fireSpeed)
     {

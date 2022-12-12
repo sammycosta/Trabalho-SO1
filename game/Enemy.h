@@ -76,7 +76,7 @@ public:
         return _size;
     }
 
-    virtual void addBullet() = 0;
+    virtual void addProjectile() = 0;
 
     std::list<std::shared_ptr<Projectile>> getProjectiles()
     {

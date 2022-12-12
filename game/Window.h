@@ -11,6 +11,7 @@
 #include "thread.h"
 #include "EnemySpaceshipManager.h"
 #include "MineManager.h"
+#include "BossManager.h"
 
 __USING_API
 

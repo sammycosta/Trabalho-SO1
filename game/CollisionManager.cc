@@ -1,6 +1,7 @@
 #include "CollisionManager.h"
 
-CollisionManager::CollisionManager(UserSpaceship *user, EnemySpaceshipManager *enemy, MineManager *mineMan)
+CollisionManager::CollisionManager(UserSpaceship *user, EnemySpaceshipManager *enemy,
+                                   MineManager *mineMan)
 {
     _userSpaceship = user;
     _enemyManager = enemy;
@@ -25,6 +26,12 @@ void CollisionManager::enemyCollision()
     if (_mineManager->mineExists())
     {
         enemies.push_back(_mineManager->getMine());
+    }
+
+    if (_enemyManager->_bossManager != nullptr)
+    {
+        std::shared_ptr<Enemy> boss = _enemyManager->_bossManager->getBoss();
+        enemies.push_back(boss);
     }
 
     std::list<std::shared_ptr<Projectile>> userProj = _userSpaceship->getProj();
@@ -65,6 +72,12 @@ void CollisionManager::userCollision()
         enemies.push_back(mine);
     }
 
+    if (_enemyManager->_bossManager != nullptr)
+    {
+        std::shared_ptr<Enemy> boss = _enemyManager->_bossManager->getBoss();
+        enemies.push_back(boss);
+    }
+
     if (!(enemies.empty()))
     {
         // std::cout << enemies.size() << "\n";
@@ -95,6 +108,12 @@ void CollisionManager::userWithEnemyCollision()
     {
         std::shared_ptr<Enemy> mine = _mineManager->getMine();
         enemies.push_back(mine);
+    }
+
+    if (_enemyManager->_bossManager != nullptr)
+    {
+        std::shared_ptr<Enemy> boss = _enemyManager->_bossManager->getBoss();
+        enemies.push_back(boss);
     }
 
     if (!enemies.empty())

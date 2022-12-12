@@ -15,9 +15,7 @@ Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *users
 {
     _timer = timer;
     userSpaceship = userspaceship;
-
     enemyShip = enemyM;
-
     mineMan = mineManager;
 
     if ((_display = al_create_display(_displayWidth, _displayHeight)) == NULL)
@@ -114,6 +112,12 @@ void Window::draw()
     // std::cout << "draw window\n";
     enemyShip->drawEnemies();
     mineMan->drawMine();
+
+    if (enemyShip->_bossManager != nullptr)
+    {
+        std::cout << "draw boss\n";
+        enemyShip->_bossManager->drawBoss(); // ver quando vou injetar bossManager na window..
+    }
 }
 
 void Window::drawShip(int flags)

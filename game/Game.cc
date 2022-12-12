@@ -13,4 +13,6 @@ Thread *Game::_kbThread;
 Thread *Game::_enemySpaceshipManagerThread;
 Thread *Game::_collisionManagerThread;
 Thread *Game::_mineManagerThread;
+// Thread *Game::_bossManagerThread;
+
 

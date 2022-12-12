@@ -1,19 +1,26 @@
 #include "EnemySpaceshipManager.h"
 
-EnemySpaceshipManager::EnemySpaceshipManager(int fps)
+EnemySpaceshipManager::EnemySpaceshipManager(int fps, std::shared_ptr<Point> playerCentre)
 {
+    _playerCentre = playerCentre;
+    _bossManager = nullptr;
+
     loadSprites();
 
     purpleSpawnTimer = std::make_shared<Timer>(fps);
     purpleSpawnTimer->create();
     purpleSpawnTimer->startTimer();
+
+    _bossTimer = new Timer(1);
+    _bossTimer->create();
+    _bossTimer->startTimer();
 }
 
 EnemySpaceshipManager::~EnemySpaceshipManager()
 {
 }
 
-void EnemySpaceshipManager::run(EnemySpaceshipManager *EnemyManager)
+void EnemySpaceshipManager::run(EnemySpaceshipManager *enemyManager)
 {
     float prevTime = 0;
     while (true)
@@ -22,15 +29,26 @@ void EnemySpaceshipManager::run(EnemySpaceshipManager *EnemyManager)
         float crtTime;
 
         crtTime = al_current_time();
-        EnemyManager->updateEnemies(crtTime - prevTime);
-        prevTime = crtTime;
+        enemyManager->updateEnemies(crtTime - prevTime);
 
         // regra random
-        if (EnemyManager->purpleSpawnTimer->getCount() > 800 && EnemyManager->purpleEnemies.size() < 3)
+        if (enemyManager->purpleSpawnTimer->getCount() > 400 && !enemyManager->bossExists())
         {
-            EnemyManager->spawnPurple();
-            EnemyManager->purpleSpawnTimer->srsTimer();
+            enemyManager->spawnPurple();
+            enemyManager->purpleSpawnTimer->srsTimer();
         }
+
+        if (enemyManager->_bossTimer->getCount() > 10 && !enemyManager->bossExists())
+        {
+            enemyManager->_bossManager = new BossManager(enemyManager->_playerCentre, prevTime);
+            enemyManager->_bossManagerThread = new Thread(BossManager::run, enemyManager->_bossManager);
+            // parar essa thread aqui?
+        }
+        if (enemyManager->bossExists() && enemyManager->getPurpleEnemies().empty())
+        {
+            enemyManager->_bossManagerThread->join();
+        }
+        prevTime = crtTime;
 
         Thread::yield();
     }
@@ -87,7 +105,7 @@ void EnemySpaceshipManager::updateEnemies(double dt)
         {
             (*p)->update(dt);
 
-            (*p)->addBullet();
+            (*p)->addProjectile();
 
             if (!((*p)->getDead()))
             {

@@ -19,10 +19,9 @@ public:
     void draw(std::shared_ptr<Sprite> ship, std::shared_ptr<Sprite> death);
     void deathAnimation(std::shared_ptr<Sprite> enemyDeath);
     void update(double dt);
-    void addBullet();
+    void addProjectile();
     void updateProjectiles(double dt);
     void drawProjectiles();
-
 
     bool getFire() { return _fire; }
     bool getFired() { return _fired; }

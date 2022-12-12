@@ -27,8 +27,8 @@ UserSpaceship::UserSpaceship(ALLEGRO_TIMER *timer, int fps)
     _missileTimer->startTimer();
 
     _size = 16;
-    _lives = 9;
-    _totalLives = 9;
+    _lives = 3;
+    _totalLives = 3;
     _dead = false;
 }
 
@@ -69,7 +69,9 @@ void UserSpaceship::run(UserSpaceship *ship)
 void UserSpaceship::update(double dt)
 {
     // Spaceship
-    centre = centre + speed * dt;
+    Point centreP = (*centre);
+    centreP = centreP + speed * dt;
+    centre = std::make_shared<Point>(centreP.x, centreP.y);
     selectShipAnimation(); // must happen before we reset our speed
     speed = Vector(0, 0);  // reset our speed
     checkBoundary();
@@ -98,16 +100,17 @@ void UserSpaceship::decreaseHorizontalSpeed()
 
 void UserSpaceship::checkBoundary()
 {
-    // check x bound and adjust if out
-    if (centre.x > 800 - 16)
-        centre.x = 800 - 16;
-    else if (centre.x < 16)
-        centre.x = 16;
-    // check y bound and adjust if out
-    if (centre.y > 600 - 16)
-        centre.y = 600 - 16;
-    else if (centre.y < 16)
-        centre.y = 16;
+    Point centreP = (*centre);
+    if (centreP.x > 800 - 16)
+        centreP.x = 800 - 16;
+    else if (centreP.x < 16)
+        centreP.x = 16;
+
+    if (centreP.y > 600 - 16)
+        centreP.y = 600 - 16;
+    else if (centreP.y < 16)
+        centreP.y = 16;
+    centre = std::make_shared<Point>(centreP.x, centreP.y);
 }
 
 void UserSpaceship::selectShipAnimation()
@@ -136,7 +139,7 @@ void UserSpaceship::selectShipAnimation()
 
 void UserSpaceship::loadSprite()
 {
-    centre = Point(215, 245);
+    centre = std::make_shared<Point>(215, 245);
     color = al_map_rgb(0, 200, 0);
     // Go to resources directory
     ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
@@ -170,7 +173,8 @@ void UserSpaceship::addBullet()
 {
     if (_bulletTimer->getCount() > 6)
     {
-        _proj.push_back(std::make_shared<Bullet>(centre + Point(-20, 0), color, projectileSpeed));
+        Point p = ((*centre) + Point(-20, 0));
+        _proj.push_back(std::make_shared<Bullet>(p, color, projectileSpeed));
         _bulletTimer->srsTimer();
     }
 }
@@ -179,7 +183,8 @@ void UserSpaceship::addMissile()
 {
     if (_missileTimer->getCount() > 20)
     {
-        _proj.push_back(std::make_shared<Missile>(centre + Point(-20, 0), color, projectileSpeed));
+        Point p = ((*centre) + Point(-20, 0));
+        _proj.push_back(std::make_shared<Missile>(p, color, projectileSpeed));
         _missileTimer->srsTimer();
     }
 }
@@ -201,7 +206,7 @@ void UserSpaceship::drawProjectiles()
 void UserSpaceship::hit(const int &damage)
 {
     std::cout << _lives << " LEVOU HIIIIIIIIIIIIIIT\n";
-    _lives -= damage;
+    //_lives -= damage;
     if (_lives <= 0)
     {
         _dead = true;
@@ -210,20 +215,34 @@ void UserSpaceship::hit(const int &damage)
 
 void UserSpaceship::drawLivesBar()
 {
-    // ALLEGRO_COLOR barColor;
+    // o que isso vai fazer? idk
+    int displayWidth = 800;
+    // Point centre(displayWidth - 70, displayWidth - 50);
+    if (_lives > 0)
+    {
+        al_draw_rectangle(displayWidth - 70, 50, displayWidth - 50, 70,
+                          al_map_rgb(0, 255, 0), 5);
+    }
+    if (_lives > 1)
+    {
+        al_draw_rectangle(displayWidth - 110, 50, displayWidth - 90, 70,
+                          al_map_rgb(0, 255, 0), 5);
+    }
+    if (_lives > 2)
+    {
+        al_draw_rectangle(displayWidth - 150, 50, displayWidth - 130, 70,
+                          al_map_rgb(0, 255, 0), 5);
+    }
+    //    if (!player && playerLives > 0) {
+    //       gameOverFont->drawTextCenteredF(al_map_rgb(255, 0, 0), "%i LIVES REMAINING", playerLives);
+    //    }
 
-    // if (_lives > 4)
-    // {
-    //     barColor =
-    // } else {
-
-    // }
-
-    al_draw_line(centre.x - _size * 2, centre.y + _size * 2,
-                 (centre.x - _size * 2) + (_lives / _totalLives) * (_size * 4),
-                 centre.y + _size * 2,
+    Point centreP = (*centre);
+    al_draw_line(centreP.x - _size * 2, centreP.y + _size * 2,
+                 (centreP.x - _size * 2) + (_lives) * (_size * 1.5),
+                 centreP.y + _size * 2,
                  al_map_rgb(255 * (1.0 - _lives / _totalLives),
-                            200 * (_lives / _totalLives),
+                            200 * (_lives),
                             0),
                  5);
 }
