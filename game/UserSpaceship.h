@@ -9,7 +9,6 @@
 #include <iostream>
 #include "Sprite.h"
 #include "Vector.h"
-#include "Action.h"
 #include "traits.h"
 #include "thread.h"
 #include "Projectile.h"

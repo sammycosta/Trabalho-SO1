@@ -39,6 +39,7 @@ Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *users
     }
     al_register_event_source(_eventQueue, al_get_display_event_source(_display));
     al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
+    al_register_event_source(_eventQueue, al_get_keyboard_event_source());
 
     loadBackgroundSprite();
     _finish = false;
