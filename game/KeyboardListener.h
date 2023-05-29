@@ -4,25 +4,32 @@
 #include <allegro5/allegro.h>
 #include <memory>
 #include <string>
-#include "Action.h"
 #include "UserSpaceship.h"
 
 class KeyboardListener
 {
 public:
-    KeyboardListener(ALLEGRO_EVENT_QUEUE *timerQueue);
+    KeyboardListener(UserSpaceship *ship);
     ~KeyboardListener();
 
     static void run(KeyboardListener *listener);
 
-    Thread *kb_thread;
+    inline bool getFinish() const
+    {
+        return _finish;
+    }
+
+    inline void setFinish(bool finish)
+    {
+        _finish = finish;
+    }
 
 private:
-    act::action input(ALLEGRO_KEYBOARD_STATE &);
+    void input(ALLEGRO_KEYBOARD_STATE &);
     ALLEGRO_EVENT_QUEUE *_eventQueue;
-    ALLEGRO_EVENT_QUEUE *_timerQueue;
 
-    UserSpaceship *userSpaceship;
+    UserSpaceship *_userSpaceship;
+    bool _finish;
 };
 
 #endif

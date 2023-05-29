@@ -1,3 +1,4 @@
+
 # Cody Barnson
 # Thur Mar 31, 2016
 # Makefile for allegro game project
@@ -45,7 +46,3 @@ main: $(OBJECTS)
 # clean out the directory but keep executables with command "clean"
 clean : 
 	rm -f *~ *.o *.d *.gch main
-
-
-
-

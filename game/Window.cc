@@ -7,13 +7,18 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 
-Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpaceship *userspaceship) : _displayWidth(w),
-                                                                                                       _displayHeight(h),
-                                                                                                       _fps(fps)
+Window::Window(int w, int h, int fps, ALLEGRO_TIMER *timer, UserSpaceship *userspaceship,
+               EnemySpaceshipManager *enemyShip, MineManager *mineManager,
+               KeyboardListener *keyboardListener) : _displayWidth(w),
+                                                     _displayHeight(h),
+                                                     _fps(fps)
 
 {
-    _timerQueue = timerQueue;
-    userSpaceship = userspaceship;
+    _timer = timer;
+    _userSpaceship = userspaceship;
+    _enemyShip = enemyShip;
+    _mineManager = mineManager;
+    _keyboardListener = keyboardListener;
 
     if ((_display = al_create_display(_displayWidth, _displayHeight)) == NULL)
     {
@@ -33,10 +38,11 @@ Window::Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpace
         exit(1);
     }
     al_register_event_source(_eventQueue, al_get_display_event_source(_display));
+    al_register_event_source(_eventQueue, al_get_timer_event_source(_timer));
+    al_register_event_source(_eventQueue, al_get_keyboard_event_source());
 
     loadBackgroundSprite();
-
-    window_thread = new Thread(run, this);
+    _finish = false;
 }
 
 Window::~Window()
@@ -49,6 +55,7 @@ Window::~Window()
         al_destroy_display(_display);
 
     bg.reset();
+    fg.reset();
 }
 
 void Window::run(Window *win)
@@ -57,11 +64,13 @@ void Window::run(Window *win)
     while (!win->_finish)
     {
         win->gameLoop(prevTime);
+        Thread::yield();
     }
 }
 
 void Window::gameLoop(float &prevTime)
 {
+
     ALLEGRO_EVENT event;
     bool redraw = true;
     float crtTime;
@@ -72,7 +81,12 @@ void Window::gameLoop(float &prevTime)
     // _display closes
     if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
     {
-        _finish = true;
+        setFinish(true);
+    }
+
+    if (_userSpaceship->isDead() || _keyboardListener->getFinish() || _enemyShip->getFinish())
+    {
+        setFinish(true);
         return;
     }
 
@@ -98,15 +112,24 @@ void Window::draw()
 {
     drawBackground();
     drawShip(0);
+    _enemyShip->drawEnemies();
+    _mineManager->drawMine();
+
+    if (_enemyShip->_bossManager != nullptr && _enemyShip->_bossManager->getBoss())
+    {
+        _enemyShip->_bossManager->drawBoss();
+    }
 }
 
 void Window::drawShip(int flags)
 {
-    std::shared_ptr<Sprite> sprite = userSpaceship->getSpaceShip();
-    int row = userSpaceship->getRow();
-    int col = userSpaceship->getCol();
-    Point centre = userSpaceship->getCentre();
+    std::shared_ptr<Sprite> sprite = _userSpaceship->getSpaceShip();
+    int row = _userSpaceship->getRow();
+    int col = _userSpaceship->getCol();
+    Point centre = _userSpaceship->getCentre();
     sprite->draw_region(row, col, 47.0, 40.0, centre, flags);
+    _userSpaceship->drawProjectiles();
+    _userSpaceship->drawLivesBar();
 }
 
 void Window::drawBackground()
@@ -116,6 +139,13 @@ void Window::drawBackground()
 
 void Window::loadBackgroundSprite()
 {
+    // represents the middle of the image width-wise, and top height-wise
+    bgMid = Point(0, 0);
+    fgMid = Point(800, 0);
+    fg2Mid = Point(300, 300);
+    bgSpeed = Vector(50, 0);
+    fgSpeed = Vector(-90, 0);
+
     // Go to resources directory
     ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
     al_append_path_component(path, "resources");
@@ -128,7 +158,6 @@ void Window::loadBackgroundSprite()
 
 void Window::update(double dt)
 {
-    userSpaceship->update(dt);
     // background
     bgMid = bgMid + bgSpeed * dt;
     if (bgMid.x >= 800)

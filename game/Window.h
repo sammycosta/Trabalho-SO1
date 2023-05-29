@@ -7,15 +7,21 @@
 #include "Vector.h"
 #include "Point.h"
 #include "UserSpaceship.h"
-#include "./library_threads/traits.h"
-#include "./library_threads/thread.h"
+#include "traits.h"
+#include "KeyboardListener.h"
+#include "thread.h"
+#include "EnemySpaceshipManager.h"
+#include "MineManager.h"
+#include "BossManager.h"
+#include "Timer.h"
 
 __USING_API
 
 class Window
 {
 public:
-  Window(int w, int h, int fps, ALLEGRO_EVENT_QUEUE *timerQueue, UserSpaceship *userspaceship);
+  Window(int w, int h, int fps, ALLEGRO_TIMER *_timer, UserSpaceship *userspaceship,
+         EnemySpaceshipManager *enemyShip, MineManager *mineManager, KeyboardListener *KeyboardListener);
   ~Window();
 
   static void run(Window *win);
@@ -40,7 +46,18 @@ public:
     return _fps;
   }
 
-  Thread *window_thread;
+  inline void setFinish(bool finish)
+  {
+    _finish = finish;
+    _userSpaceship->setFinish(true);
+    _enemyShip->setFinish(true);
+    _mineManager->setFinish(true);
+    _keyboardListener->setFinish(true);
+    if (_enemyShip != nullptr && _enemyShip->_bossManager != nullptr)
+    {
+      _enemyShip->_bossManager->setFinish(true);
+    }
+  }
 
 private:
   Point bgMid; /**<point used by the background to draw from */
@@ -55,11 +72,14 @@ private:
   int _displayHeight;
   int _fps;
   ALLEGRO_EVENT_QUEUE *_eventQueue;
-  ALLEGRO_EVENT_QUEUE *_timerQueue;
+  ALLEGRO_TIMER *_timer;
   ALLEGRO_DISPLAY *_display;
   bool _finish;
 
-  UserSpaceship *userSpaceship;
+  UserSpaceship *_userSpaceship;
+  EnemySpaceshipManager *_enemyShip;
+  MineManager *_mineManager;
+  KeyboardListener *_keyboardListener;
 };
 
 #endif
